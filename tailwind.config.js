@@ -18,7 +18,10 @@ module.exports = {
     extend: {
       textColor: {
         'link': '#2469d6',
-        'test': '#123452'
+        'txt_nav': '#797979'
+      },
+      backgroundColor: {
+        'bg_nav': '#EDEDED',
       },
       colors: {
         border: "hsl(var(--border))",

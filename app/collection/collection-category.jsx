@@ -7,7 +7,7 @@ const CollectionCategory = ({ category }) => {
         alt="Collection Category"
         src={category.imageUrl}
         fill
-        className="hover:opacity-80 transition-opacity duration-300 rounded-2xl"
+        className="hover:brightness-50 transition-opacity duration-300 rounded-2xl"
       />
     </div>
   )

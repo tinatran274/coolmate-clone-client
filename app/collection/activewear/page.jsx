@@ -4,7 +4,7 @@ import CollectionFilter from '../collection-filter'
 import CollectionList from '../collection-list'
 
 const imageUrl =
-  'https://media.coolmate.me/cdn-cgi/image/width=1920,quality=80,format=auto/uploads/August2023/sBanner_TT_LDP.jpg'
+  'https://media.coolmate.me/cdn-cgi/image/width=1920,quality=80,format=auto/uploads/October2023/ac161920-x-475.jpg'
 const categories = [
   {
     imageUrl: 'https://mcdn.coolmate.me/image/August2023/mceclip1_71.png'
@@ -33,7 +33,7 @@ const categories = [
 ]
 const CasualPage = () => {
   return (
-    <div className="h-full pt-[145px]">
+    <div className="pt-[145px]">
       <CollectionBanner imageUrl={imageUrl} />
       <div className="flex flex-col items-center text-center justify-center py-8">
         <h1 className="font-bold text-[32px]">Coolmate Active</h1>

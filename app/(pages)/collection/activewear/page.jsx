@@ -33,7 +33,7 @@ const categories = [
 ]
 const CasualPage = () => {
   return (
-    <div className="pt-[145px]">
+    <div className="pb-[145px]">
       <CollectionBanner imageUrl={imageUrl} />
       <div className="flex flex-col items-center text-center justify-center py-8">
         <h1 className="font-bold text-[32px]">Coolmate Active</h1>

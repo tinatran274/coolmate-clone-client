@@ -1,5 +1,5 @@
-import CardProduct from '../../components/card/card-product'
-import CardBanner from '../../components/card/card-banner'
+import CardProduct from '../../../components/card/card-product'
+import CardBanner from '../../../components/card/card-banner'
 
 const CollectionList = () => {
   return (

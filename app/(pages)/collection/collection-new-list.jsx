@@ -2,13 +2,14 @@ import CardProduct from '../../../components/card/card-product'
 import CardBanner from '../../../components/card/card-banner'
 import { Button } from '@/components/ui/button'
 
-const CollectionList = () => {
+const CollectionNewList = () => {
   return (
-    <div className="max-w-full">
-      <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-5 grid-cols-2 pt-[80px] max-w-full px-[30px] mx-auto">
+    <div className="max-w-full px-[30px] not-italic">
+      <h2 className="text-[2.875rem] font-[600] mb-[30px]">Sản phẩm mới</h2>
+      <div className="grid lg:grid-cols-5 md:grid-cols-3 gap-5 grid-cols-2 max-w-full mx-auto">
         <CardBanner
           bannerUrl={
-            'https://media.coolmate.me/cdn-cgi/image/quality=80/image/August2023/Rectangle_245_(11).png'
+            'https://mcdn.coolmate.me/image/September2023/mceclip2_42.png'
           }
         />
         <CardProduct />
@@ -35,4 +36,4 @@ const CollectionList = () => {
   )
 }
 
-export default CollectionList
+export default CollectionNewList

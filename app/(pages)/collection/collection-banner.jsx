@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 const CollectionBanner = ({ imageUrl }) => {
   return (
-    <div className="w-full h-fit ">
+    <div className="w-full h-fit">
       <Image
         alt="Collection Banner"
         src={imageUrl}

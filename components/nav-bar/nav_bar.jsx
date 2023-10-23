@@ -8,6 +8,7 @@ import { Input, Space } from 'antd';
 import { UserOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import SaleNavBar from './UI_component/sale_nav_bar';
 import { MenuItem } from './UI_component/nav_bar_test';
+import { ShoppingCart } from './UI_component/shopping_cart';
 
 const NavBar = () => {
 
@@ -30,7 +31,7 @@ const NavBar = () => {
                     <div className="flex items-center mr-7">
                         <Input placeholder="Search..." prefix={<SearchOutlined />}/>
                         <UserOutlined className="text-white text-3xl" onClick={handleSignIn}/>
-                        <ShoppingCartOutlined className="text-white text-3xl"/>
+                        <ShoppingCart/>
                     </div>
                 </div>
                 

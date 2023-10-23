@@ -90,7 +90,7 @@ const ListComment = ({ productId  }) => {
                 <div className={'flex flex-row flex-wrap'}>
                     {cmtData.list_cmt.map((cmt, index) => (
                         
-                        <div className={`my-2 text-sm w-1/2 pr-8 pb-8`}>
+                        <div key={index} className={`my-2 text-sm w-1/2 pr-8 pb-8`}>
                             <Rate className='text-blue-800  mb-3' disabled defaultValue={4} />
                             <p className={`font-bold`}>{cmt.user_name}</p>
                             <p className={`italic text-gray-500 mb-7`}>{cmt.bought}</p>

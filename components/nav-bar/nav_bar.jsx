@@ -4,11 +4,13 @@ import Image from 'next/image'
 import Link from 'next/link';
 import React, { useState} from 'react'
 import { useRouter } from 'next/navigation'
-import { Input, Space } from 'antd';
+// import { Input, Space } from 'antd';
+import { Input } from "@/components/ui/input"
 import { UserOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import SaleNavBar from './UI_component/sale_nav_bar';
 import { MenuItem } from './UI_component/nav_bar_test';
 import { ShoppingCart } from './UI_component/shopping_cart';
+import { UserDetailIcon } from './UI_component/user_detail_icon';
 
 const NavBar = () => {
 
@@ -20,6 +22,9 @@ const NavBar = () => {
     const handleHome = () => {
         router.push('/')
     }
+    const handleCart = () => {
+        router.push('/cart')
+    }
     return(
         <div>
             <nav className="bg-black py-1">
@@ -30,8 +35,8 @@ const NavBar = () => {
                     </div>
                     <div className="flex items-center mr-7">
                         <Input placeholder="Search..." prefix={<SearchOutlined />}/>
-                        <UserOutlined className="text-white text-3xl" onClick={handleSignIn}/>
-                        <ShoppingCart/>
+                        <UserDetailIcon/>
+                        <ShoppingCartOutlined onClick={handleCart} className="text-white text-3xl"/>
                     </div>
                 </div>
                 

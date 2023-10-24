@@ -107,7 +107,7 @@ const DetailPayment = (props) => {
                     <p className='text-sm my-1'>{props.data.email}</p>
                     <p className='text-sm my-1'>{props.data.phone}</p>
                     <p className='text-sm my-1'>{props.data.optionPay}</p>
-                    <p className='text-sm my-1'>{props.data.address}, {props.data.district}, {props.data.city}, {props.data.province}</p>
+                    <p className='text-sm my-1'>{props.data.adress}, {props.data.district}, {props.data.city}, {props.data.province}</p>
                 </div>
             </div>
         </div>

@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import Header from '../../../../components/header/header'
-import Footer from '../../../../components/footer/footer'
 import NavBar from '../../../../components/nav-bar/nav_bar'
-import ListItemCart from '../../../../components/list_item_cart/list_item_cart'
+import Footer from '../../../../components/footer/footer'
+import DetailOrder from '../../../../components/detail_order/detail_order'
 import { Button } from "@/components/ui/button"
 import {UpOutlined} from '@ant-design/icons'
 
-const Info = () => {
+const DetailOrderPage = ({ params }) => {
 
+    const orderData = params ? JSON.parse(decodeURIComponent(params.orderId)) : null;
     const [isVisible, setIsVisible] = useState(false);
 
     const scrollToTop = () => {
@@ -29,17 +30,17 @@ const Info = () => {
       window.addEventListener('scroll', toggleVisibility);
       return () => window.removeEventListener('scroll', toggleVisibility);
     }, []);
-    
 
-    return(
-        <div className="">
-            <Header />
-            <NavBar />
-            <p>trang user info</p>
-            {/* <ListItemCart/> */}
+    return (
+        <div>
+            <Header/>
+            <NavBar/>
+            <DetailOrder orderData={orderData} />
             <Footer/>
             <Button className={`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${isVisible ? 'block' : 'hidden'}`} onClick={scrollToTop}><UpOutlined /></Button>
+
         </div>
-    )
+  )
 }
-export default Info
+export default DetailOrderPage
+

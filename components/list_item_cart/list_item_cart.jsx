@@ -298,6 +298,7 @@ const ListItemCart = () => {
                     "flex items-center space-x-2 px-6 py-5 border border-blue-500 rounded-xl gap-8 mb-2 hover:border-blue-500" : 
                     "flex items-center space-x-2 px-6 py-5 border rounded-xl gap-8 mb-2 hover:border-blue-500 opacity-50"}>
                         <RadioGroupItem value="Momo" id="Momo" />
+                        <label htmlFor='Momo' className='h-[10%] w-full absolute cursor-pointer'/>
                         <img className='w-8 object-contain mr-4' src="https://www.coolmate.me/images/momo-icon.png" alt="icon"/>
                         <p className=''>Thanh toán Momo</p>
                     </div>
@@ -305,6 +306,7 @@ const ListItemCart = () => {
                     "flex items-center space-x-2 px-6 py-5 border border-blue-500 rounded-xl gap-8 mb-2 hover:border-blue-500" : 
                     "flex items-center space-x-2 px-6 py-5 border rounded-xl gap-8 mb-2 hover:border-blue-500 opacity-50"}>
                         <RadioGroupItem value="COD" id="COD" />
+                        <label htmlFor='COD' className='h-[10%] w-full absolute cursor-pointer'/>
                         <img className='w-8 object-contain mr-4' src="https://www.coolmate.me/images/COD.svg" alt="icon"/>
                         <p className=''>Thanh toán khi nhận hàng</p>
                     </div>
@@ -312,6 +314,7 @@ const ListItemCart = () => {
                     "flex items-center space-x-2 px-6 py-5 border border-blue-500 rounded-xl gap-8 mb-2 hover:border-blue-500" : 
                     "flex items-center space-x-2 px-6 py-5 border rounded-xl gap-8 mb-2 hover:border-blue-500 opacity-50"}>
                         <RadioGroupItem value="ZaloPay" id="ZaloPay" />
+                        <label htmlFor='ZaloPay' className='h-[10%] w-full absolute cursor-pointer'/>
                         <img className='w-8 object-contain mr-4' src="https://www.coolmate.me/images/logo-zalopay.svg" alt="icon"/>
                         <p className=''>Ví điện tử ZaloPay</p>
                     </div>
@@ -319,6 +322,7 @@ const ListItemCart = () => {
                     "flex items-center space-x-2 px-6 py-5 border border-blue-500 rounded-xl gap-8 mb-2 hover:border-blue-500" : 
                     "flex items-center space-x-2 px-6 py-5 border rounded-xl gap-8 mb-2 hover:border-blue-500 opacity-50"}>
                         <RadioGroupItem value="VNPay" id="VNPay" />
+                        <label htmlFor='VNPay' className='h-[10%] w-full absolute cursor-pointer'/>
                         <img className='w-8 object-contain mr-4' src="https://www.coolmate.me/images/vnpay.png" alt="icon"/>
                         <p className=''>Thẻ ATM/Thẻ tín dụng (Credit card)/Thẻ ghi nợ (Debit card)</p>
                     </div>
@@ -326,6 +330,7 @@ const ListItemCart = () => {
                     "flex items-center space-x-2 px-6 py-5 border border-blue-500 rounded-xl gap-8 mb-2 hover:border-blue-500" : 
                     "flex items-center space-x-2 px-6 py-5 border rounded-xl gap-8 mb-2 hover:border-blue-500 opacity-50"}>
                         <RadioGroupItem value="Flex Money" id="Flex Money" />
+                        <label htmlFor='Flex Money' className='h-[10%] w-full absolute cursor-pointer'/>
                         <img className='w-8 object-contain mr-4' src="https://sandbox.flexmoney.vn/static/media/logo-login.cd69de6e7b8ff1cc0e4d74762ee7d40b.svg" alt="icon"/>
                         <p className=''>Chuyển khoản liên ngân hàng bằng QR Code</p>
                     </div>

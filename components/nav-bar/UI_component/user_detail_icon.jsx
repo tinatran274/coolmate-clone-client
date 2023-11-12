@@ -31,7 +31,7 @@ export function UserDetailIcon() {
         setIsHovered(false);
       };
     const handleMoveToUserDetail = () => {
-        router.push('/account/info')
+        router.push('/account')
     }
 
 

@@ -34,7 +34,7 @@ const FilterProduct = ({ title }) => {
       </div>
       <div
         className="flex items-center underline whitespace-normal text-[14px] font-medium cursor-pointer"
-        onClick={() => setValueFilter('')}
+        onClick={() => setValueFilter('new')}
       >
         Xoá lọc
       </div>

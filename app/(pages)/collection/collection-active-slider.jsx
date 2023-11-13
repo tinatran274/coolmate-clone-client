@@ -25,7 +25,7 @@ const CollectionActiveSlider = () => {
     'https://media.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/October2023/mceclip0_108.jpg'
   ]
   return (
-    <div className="pt-[30px]">
+    <div className="pt-[30px] mb-4">
       <h3 className="mb-[10px] text-3xl px-[16px]">
         #Coolmate đồng hành trên các chặng đường
       </h3>

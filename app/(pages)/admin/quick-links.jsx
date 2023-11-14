@@ -8,7 +8,7 @@ const QuickLink = () => {
   const link = usePathname().split('/').slice(-1)[0] // get the last part of the url
   const router = useRouter()
   return (
-    <div className="flex items-start flex-col pt-4">
+    <div className="flex items-start flex-col pt-2">
       <div className="uppercase text-xs font-[600]">Quick links</div>
       <div className="pt-[14px] space-y-3 w-full pr-2 relative">
         <div

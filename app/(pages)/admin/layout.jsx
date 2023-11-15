@@ -8,7 +8,7 @@ const AdminLayout = ({ children }) => {
     <div>
       <Header />
       <NavBar />
-      <div className="flex h-screen">
+      <div className="flex">
         <SideBar />
         {children}
       </div>

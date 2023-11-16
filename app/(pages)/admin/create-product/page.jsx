@@ -1,5 +1,9 @@
+import CreateProduct from '../../../../components/create_product/create_product'
+
 const CreateProductPage = () => {
-  return <div>123</div>
-}
+  
+  return (
+      <CreateProduct  className="w-[100%"/>
+)}
 
 export default CreateProductPage

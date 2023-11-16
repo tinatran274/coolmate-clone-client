@@ -1,13 +1,13 @@
 'use client'
 import * as React from 'react'
+import { CiFilter } from 'react-icons/ci'
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-  setPageSize
+  useReactTable
 } from '@tanstack/react-table'
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
 
@@ -19,6 +19,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
@@ -46,129 +48,132 @@ import {
 const data = [
   {
     id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
+    price: 316,
+    quantity: 835,
+    product_name:
+      'ken99@yahoo.codasssssssssssssssssssssssssssssssssssssssssssssssssssfdsfdsfdsfdfsdfsdfdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkm',
+    deleted: 'true'
   },
   {
     id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
+    price: 242,
+    quantity: 835,
+    product_name: 'Abe45@gmail.com',
+    deleted: 'false'
   },
   {
     id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
+    price: 837,
+    quantity: 835,
+    product_name: 'Monserrat44@gmail.com'
   },
   {
     id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
+    price: 874,
+    quantity: 835,
+    product_name: 'Silas22@gmail.com'
   },
   {
     id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
+    price: 316,
+    quantity: 835,
+    product_name: 'ken99@yahoo.com'
   },
   {
     id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
+    price: 242,
+    quantity: 835,
+    product_name: 'Abe45@gmail.com'
   },
   {
     id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
+    price: 837,
+    quantity: 835,
+    product_name: 'Monserrat44@gmail.com'
   },
   {
     id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
+    price: 874,
+    quantity: 835,
+    product_name: 'Silas22@gmail.com'
   },
   {
     id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
+    price: 316,
+    quantity: 835,
+    product_name: 'ken99@yahoo.com'
   },
   {
     id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
+    price: 242,
+    quantity: 835,
+    product_name: 'Abe45@gmail.com'
   },
   {
     id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
+    price: 837,
+    quantity: 835,
+    product_name: 'Monserrat44@gmail.com'
   },
   {
     id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
+    price: 874,
+    quantity: 835,
+    product_name: 'Silas22@gmail.com'
   },
   {
     id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
+    price: 316,
+    quantity: 835,
+    product_name: 'ken99@yahoo.com'
   },
   {
     id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
+    price: 242,
+    quantity: 835,
+    product_name: 'Abe45@gmail.com'
   },
   {
     id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
+    price: 837,
+    quantity: 835,
+    product_name: 'Monserrat44@gmail.com'
   },
   {
     id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
+    price: 874,
+    quantity: 835,
+    product_name: 'Silas22@gmail.com'
   },
   {
     id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
+    price: 316,
+    quantity: 835,
+    product_name: 'ken99@yahoo.com'
   },
   {
     id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
+    price: 242,
+    quantity: 835,
+    product_name: 'Abe45@gmail.com'
   },
   {
     id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
+    price: 837,
+    quantity: 837,
+    product_name: 'Monserrat44@gmail.com'
   },
   {
     id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
+    price: 874,
+    quantity: 835,
+    product_name: 'Silas22@gmail.com'
   },
   {
     id: 'bhqecj4p',
-    amount: 721,
-    status: 'failed',
-    email: 'carmella@hotmail.com'
+    price: 721,
+    quantity: 835,
+    product_name: 'carmella@hotmail.com'
   }
 ]
 
@@ -193,47 +198,68 @@ export const columns = [
     enableHiding: false
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'id',
+    header: 'ID',
+    cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
+  },
+  {
+    accessorKey: 'product_name',
+    header: 'Product Name',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('status')}</div>
+      <div className="capitalize truncate w-[600px]">
+        {row.getValue('product_name')}
+      </div>
     )
   },
   {
-    accessorKey: 'email',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>
-  },
-  {
-    accessorKey: 'amount',
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: 'price',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Price
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue('amount'))
+      const price = parseFloat(row.getValue('price'))
 
-      // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-      }).format(amount)
+      }).format(price)
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="font-medium">{formatted}</div>
     }
+  },
+  {
+    accessorKey: 'quantity',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Quantity
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue('quantity')}</div>
+    )
+  },
+  {
+    accessorKey: 'deleted',
+    header: 'Deleted',
+    cell: ({ row }) => (
+      <div className="uppercase">{row.getValue('deleted')}</div>
+    )
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const product = row.original
 
       return (
         <DropdownMenu>
@@ -246,14 +272,14 @@ export const columns = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
-              Copy payment ID
+              Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>Edit product</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View product details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -263,6 +289,7 @@ export const columns = [
 
 const ProductsPage = () => {
   const [sorting, setSorting] = React.useState()
+  const [filters, setFilters] = React.useState('product_name')
   const [columnFilters, setColumnFilters] = React.useState()
   const [columnVisibility, setColumnVisibility] = React.useState()
   const [rowSelection, setRowSelection] = React.useState({})
@@ -290,9 +317,9 @@ const ProductsPage = () => {
     }
   })
   return (
-    <div className="w-full p-4 h-screen">
+    <div className="w-full p-4 pt-6 h-fit">
       <div className="justify-between flex">
-        <h2 className="font-bold mb-1 text-lg">Products</h2>
+        <h2 className="font-bold mb-1 text-xl">Products</h2>
         <Button
           variant="outline"
           size="sm"
@@ -304,14 +331,43 @@ const ProductsPage = () => {
       <div className="flex items-center py-4">
         <div className="w-full">
           <div className="flex">
-            <Input
-              placeholder="Filter products..."
-              value={table.getColumn('email')?.getFilterValue() ?? ''}
-              onChange={(event) =>
-                table.getColumn('email')?.setFilterValue(event.target.value)
-              }
-              className="max-w-[300px]"
-            />
+            <div className="flex relative">
+              <Input
+                placeholder={
+                  filters === 'id'
+                    ? 'Search by #id...'
+                    : 'Search by product name...'
+                }
+                value={table.getColumn(filters)?.getFilterValue() ?? ''}
+                onChange={(event) =>
+                  table.getColumn(filters)?.setFilterValue(event.target.value)
+                }
+                className="max-w-[300px] min-w-[300px] pr-[30px]"
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="none"
+                    className="absolute right-0 cursor-pointer hover:bg-none"
+                  >
+                    <CiFilter />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuLabel>Options</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuRadioGroup
+                    value={filters}
+                    onValueChange={setFilters}
+                  >
+                    <DropdownMenuRadioItem value="id">ID</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="product_name">
+                      Product name
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">
@@ -332,7 +388,9 @@ const ProductsPage = () => {
                           column.toggleVisibility(!!value)
                         }
                       >
-                        {column.id}
+                        {column.id === 'product_name'
+                          ? 'Product name'
+                          : column.id}
                       </DropdownMenuCheckboxItem>
                     )
                   })}
@@ -356,11 +414,16 @@ const ProductsPage = () => {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-base">
-                      Enable {Object.keys(rowSelection).length} products
+                      Enable {Object.keys(rowSelection).length}{' '}
+                      {Object.keys(rowSelection).length > 1
+                        ? 'products'
+                        : 'product'}
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                       Are you sure enable {Object.keys(rowSelection).length}{' '}
-                      products?
+                      {Object.keys(rowSelection).length > 1
+                        ? 'products?'
+                        : 'product?'}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -381,11 +444,16 @@ const ProductsPage = () => {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-base">
-                      Disable {Object.keys(rowSelection).length} products
+                      Disable {Object.keys(rowSelection).length}{' '}
+                      {Object.keys(rowSelection).length > 1
+                        ? 'products'
+                        : 'product'}
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                       Are you sure disable {Object.keys(rowSelection).length}{' '}
-                      products?
+                      {Object.keys(rowSelection).length > 1
+                        ? 'products?'
+                        : 'product?'}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -441,7 +509,7 @@ const ProductsPage = () => {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No results found!
                 </TableCell>
               </TableRow>
             )}

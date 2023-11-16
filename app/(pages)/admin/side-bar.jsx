@@ -1,4 +1,4 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import QuickLink from './quick-links'
 import Catalog from './catalog'
 import Sale from './sale'
@@ -8,7 +8,7 @@ import Banner from './banner'
 
 const SideBar = () => {
   return (
-    <ScrollArea className="h-full w-[15rem] p-[4px] border pl-2">
+    <ScrollArea className="h-auto w-[15rem] p-[4px] border-r-2 border-black pl-2 max-w-[200px]">
       <div className="py-4">
         <QuickLink />
         <Catalog />

@@ -19,9 +19,10 @@ import {
 import { DeleteFilled } from '@ant-design/icons';
 import {notification, Space } from 'antd';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useRouter } from 'next/navigation'
 
 const CreateProduct = () => {
-
+    const router = useRouter()
     const listCategory = [{
         category_name: 'Chạy bộ',
         parent_category: {
@@ -59,7 +60,7 @@ const CreateProduct = () => {
     const listSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
     const [productName, setProductName] = useState("");
     const [costProduct, setCostProduct] = useState(0);
-    const [numProduct, setNumProduct] = useState(0);
+    const [numProduct, setNumProduct] = useState(1);
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [color, setColor] = useState({});
@@ -72,8 +73,8 @@ const CreateProduct = () => {
     const [api, contextHolder] = notification.useNotification();
     const openNotificationWithIcon = (type, content) => {
         api[type]({
-        message: type,
-        description: content,
+            message: type,
+            description: content,
         });
     }
     
@@ -84,7 +85,8 @@ const CreateProduct = () => {
         setProductName(e.target.value);
     }
     const handleNumProductChange = (e) => {
-        setNumProduct(e.target.value);
+        if(e.target.value > 0)
+            setNumProduct(e.target.value);
     }
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
@@ -125,12 +127,17 @@ const CreateProduct = () => {
         } 
     }
     const deleteImage = (index) => {
-        const newImageUrls = [...listImage];
-        newImageUrls.splice(index, 1);
-        setListImage(newImageUrls);
+        const newImageUrls = [...listImage]
+        newImageUrls.splice(index, 1)
+        setListImage(newImageUrls)
+    }
+    const deleteColorChose = (index) => {
+        const newImageUrls = [...listColorChose]
+        listColorChose.splice(index, 1)
+        setListImage(listColorChose)
     }
     const handleAddColor = () => {
-        if (!color || numProduct < 0 ||listSizeChose.length < 1 || listImage.length < 1)
+        if (!color ||  listSizeChose.length < 1 || listImage.length < 1)
             openNotificationWithIcon('error', "Bạn chưa điền đủ thông tin màu sắc")
         else {
             openNotificationWithIcon('success', `Thêm màu ${color.name} thành công`)
@@ -139,6 +146,7 @@ const CreateProduct = () => {
             setNumProduct(0)
             setListSizeChose([])
             setListImage([])
+            console.log([...listColorChose, {color: color, size: listSizeChose, num: numProduct, image: listImage}])
         }
     }
     const handleStatusChange = (value) => {
@@ -178,7 +186,7 @@ const CreateProduct = () => {
             <div className="w-[100%] bg-gray-100 flex flex-row">
                 {contextHolder}
                 <div className="w-[65%] p-8">   
-                    <div className='flex flex-row items-center mb-8'>
+                    <div className='flex flex-row items-center mb-8 cursor-pointer' onClick={() => {router.push("/admin/products")}}>
                         <LeftCircleOutlined className="text-black text-2xl"/>
                         <p className='text-xl font-bold mx-3'>Tạo sản phẩm mới</p>
                     </div>
@@ -246,7 +254,7 @@ const CreateProduct = () => {
                             {listImage.map((item, index) => (
                                 <div key={index} className="relative">
                                     <img className='h-44 w-44 object-contain border' src={item.image} alt={`image ${index + 1}`} />
-                                    <Button className='absolute top-2 left-2 rounded-full w-8 h-8 px-2 hover:bg-gray-600 ' onClick={() => deleteImage(index)}>
+                                    <Button className='absolute top-2 left-2 rounded-full w-8 h-8 px-2 bg-red-500 hover:bg-red-700' onClick={() => deleteImage(index)}>
                                         <DeleteFilled className="text-white text-md "/></Button>
                                 </div>
                             ))}
@@ -256,9 +264,11 @@ const CreateProduct = () => {
                         <div className='mb-6 flex flex-row flex-wrap gap-4'>
                         {listColorChose.length > 0 ? 
                             listColorChose.map((item, index) => (
-                                <div key={index} className='flex flex-row items-center'>
-                                    <img className="w-10 h-6 object-cover rounded-full mr-1" src={item.color.img} alt="color"/>
+                                <div key={index} className='relative flex flex-row items-center'>
+                                    <img className="w-10 h-6 object-cover rounded-full mr-1 ml-2" src={item.color.img} alt="color"/>
                                     <span>{item.color.name}</span>
+                                    <Button className='absolute top-2 left-0 rounded-full w-5 h-5 px-2 bg-red-500 hover:bg-red-700' onClick={() => deleteColorChose(index)}>
+                                        <DeleteFilled className="text-white text-xs "/></Button>
                                 </div>
                             ))
                         : <p className='text-sm'>Chưa có màu nào</p>

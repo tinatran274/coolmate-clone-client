@@ -239,7 +239,7 @@ const CategoriesPage = () => {
     onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
-        pageSize: 7
+        pageSize: 10
       }
     },
     state: {

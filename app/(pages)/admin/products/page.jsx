@@ -206,7 +206,7 @@ export const columns = [
     accessorKey: 'product_name',
     header: 'Product Name',
     cell: ({ row }) => (
-      <div className="capitalize truncate w-[600px]">
+      <div className="capitalize truncate w-[400px]">
         {row.getValue('product_name')}
       </div>
     )
@@ -214,13 +214,13 @@ export const columns = [
   {
     accessorKey: 'price',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
+      <div
+        className='flex cursor-pointer hover:bg-gray-100/10 p-2 rounded-md'
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Price
         <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
+      </div>
     ),
     cell: ({ row }) => {
       const price = parseFloat(row.getValue('price'))
@@ -236,13 +236,13 @@ export const columns = [
   {
     accessorKey: 'quantity',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
+      <div
+        className='flex cursor-pointer hover:bg-gray-100/10 p-2 rounded-md'
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Quantity
         <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
+      </div>
     ),
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('quantity')}</div>
@@ -306,7 +306,7 @@ const ProductsPage = () => {
     onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
-        pageSize: 7
+        pageSize: 10
       }
     },
     state: {
@@ -531,7 +531,7 @@ const ProductsPage = () => {
             Previous
           </Button>
           <Button
-            variant="outline"
+            
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

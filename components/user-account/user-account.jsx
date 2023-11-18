@@ -1,18 +1,26 @@
 'use client'
 
 import React, { useState } from 'react'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { ArrowRightOutlined, UserOutlined } from '@ant-design/icons'
 import Info from './UI_component/info'
 import Orders from './UI_component/orders'
 import UserAdress from './UI_component/user_adress'
 import Review from './UI_component/review'
+import { useRouter } from 'next/navigation'
 
 const UserAccount = () => {
+
+  const router = useRouter();
   const [option, setOption] = useState('Info')
 
   const handleSetOption = (param) => {
     setOption(param)
   }
+  const handleGoToAdmin = () => {
+    console.log('ad')
+    router.push('/admin')
+}
+
 
   return (
     <div className="flex flex-row mt-8 items-start">
@@ -42,6 +50,30 @@ const UserAccount = () => {
           <ArrowRightOutlined
             className={
               option === 'Info' ? 'text-white text-2xl' : 'text-black text-2xl'
+            }
+          />
+        </div>
+        <div
+          className={
+            option === 'Admin'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+          }
+          onClick={handleGoToAdmin}
+        >
+          <UserOutlined className="text-white bg-black rounded-[10px] p-[5px] text-xl" />
+          <p
+            className={
+              option === 'Admin'
+                ? 'text-white w-[84%] ml-3'
+                : 'text-black w-[84%] ml-3'
+            }
+          >
+            Admin
+          </p>
+          <ArrowRightOutlined
+            className={
+              option === 'Admin' ? 'text-white text-2xl' : 'text-black text-2xl'
             }
           />
         </div>

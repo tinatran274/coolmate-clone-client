@@ -271,13 +271,13 @@ export const columns = [
   {
     accessorKey: 'total',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
+      <div
+        className='flex cursor-pointer hover:bg-gray-100/10 p-2 rounded-md'
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Total
         <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
+      </div>
     ),
     cell: ({ row }) => {
       const price = parseFloat(row.getValue('total'))
@@ -346,7 +346,7 @@ const OrdersPage = () => {
     onRowSelectionChange: setRowSelection,
     initialState: {
       pagination: {
-        pageSize: 5
+        pageSize: 10
       }
     },
     state: {

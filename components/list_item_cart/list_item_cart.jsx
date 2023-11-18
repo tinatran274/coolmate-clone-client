@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {notification, Space } from 'antd';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const ListItemCart = () => {
 
@@ -69,6 +70,25 @@ const ListItemCart = () => {
         listSize: ['M', 'L', 'XL', '2XL', '3XL'],
         }
     ]
+
+    const [data, setData] = useState(null);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
+            console.log(response.data)
+            // setData(response.data);
+        } catch (error) {
+            console.log('Error fetching data:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+
+
 
     const router = useRouter();
     const [listProvince, setListProvince] = useState(Object.entries(TinhTP).map(([key, value]) => ({ name: value.name, code: value.code })));

@@ -57,11 +57,12 @@ const components = [
 ]
 
 export function MenuItem() {
+  const router = useRouter()
   return (
     <NavigationMenu >
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Mặc hằng ngày</NavigationMenuTrigger>
+          <NavigationMenuTrigger onClick={() => {router.push("/collection/docasual")}}>Mặc hằng ngày</NavigationMenuTrigger>
           <NavigationMenuContent>
           <div className="bg-bg_nav p-5 flex justify-between w-[1050px]">
             <div className="flex justify-between">
@@ -115,7 +116,7 @@ export function MenuItem() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Đồ thể thao</NavigationMenuTrigger>
+          <NavigationMenuTrigger onClick={() => {router.push("/collection/activewear")}}>Đồ thể thao</NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="bg-bg_nav p-5 flex justify-between w-[1050px]">
               <div className="flex justify-between">

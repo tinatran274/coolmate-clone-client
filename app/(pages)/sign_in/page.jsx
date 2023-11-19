@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import axios from 'axios'
 
 const SignIn = () => {
 
@@ -14,7 +15,7 @@ const SignIn = () => {
     const [password, setPassword] = useState('');
     const router = useRouter()
 
-    const handleSignin = () => {
+    const handleSignIn = () => {
         try {
             const options = {
                 method: 'POST',
@@ -23,10 +24,8 @@ const SignIn = () => {
                     {
                         "email": email,
                         "password": password
-                    }
-                ,
-            };
-            
+                    },
+            }   
             axios
             .request(options)
             .then(function (response) {
@@ -79,7 +78,7 @@ const SignIn = () => {
         
             <div className="flex justify-between items-center">
                     <p className="text-link cursor-pointer">Quên mật khẩu</p>
-                    <Button disabled={!email.length || !password.length} className="my-10 rounded-full p-6 hover:bg-gray-200 hover:text-black" onClick={handleSignUp} >Đăng nhập</Button >
+                    <Button disabled={!email.length || !password.length} className="my-10 rounded-full p-6 hover:bg-gray-200 hover:text-black" onClick={handleSignIn} >Đăng nhập</Button >
             </div>
             <div className="flex flex-row gap-2">
                 <p>Bạn đã có tài khoản?</p>

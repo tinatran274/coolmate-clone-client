@@ -42,7 +42,7 @@ const Home = () => {
       <BodyHome />
       <Footer />
       <Button
-        className={`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${
+        className = {`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${
           isVisible ? 'block' : 'hidden'
         }`}
         onClick={scrollToTop}

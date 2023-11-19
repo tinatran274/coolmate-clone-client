@@ -1,3 +1,4 @@
+const { nextui } = require('@nextui-org/theme')
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -5,7 +6,8 @@ module.exports = {
     './pages/**/*.{js,jsx}',
     './components/**/*.{js,jsx}',
     './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}'
+    './src/**/*.{js,jsx}',
+    './node_modules/@nextui-org/theme/dist/components/(accordion|chip|select).js'
   ],
   theme: {
     container: {
@@ -79,5 +81,5 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [require('tailwindcss-animate'), nextui()]
 }

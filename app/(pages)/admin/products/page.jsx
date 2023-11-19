@@ -215,7 +215,7 @@ export const columns = [
     accessorKey: 'price',
     header: ({ column }) => (
       <div
-        className='flex cursor-pointer hover:bg-gray-100/10 p-2 rounded-md'
+        className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Price
@@ -237,7 +237,7 @@ export const columns = [
     accessorKey: 'quantity',
     header: ({ column }) => (
       <div
-        className='flex cursor-pointer hover:bg-gray-100/10 p-2 rounded-md'
+        className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Quantity
@@ -531,7 +531,6 @@ const ProductsPage = () => {
             Previous
           </Button>
           <Button
-            
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

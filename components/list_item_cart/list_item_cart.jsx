@@ -71,25 +71,94 @@ const ListItemCart = () => {
         }
     ]
 
-    const [data, setData] = useState(null);
-
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
-            console.log(response.data)
-            // setData(response.data);
-        } catch (error) {
-            console.log('Error fetching data:', error);
+    const responseGetCart = [
+        {
+          "productItemId": 4,
+          "productId": 1,
+          "name": "Polo Ice Cooling",
+          "price": 349000,
+          "color": "Xanh Navy",
+          "size": "M",
+          "img": "https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/image/November2023/23CMCW.PL001.2_68_70.jpg",
+          "qty": 10,
+          "allItemsOfProduct": [
+            {
+              "productItemId": 4,
+              "size": "M",
+              "color": "Xanh Navy"
+            },
+            {
+              "productItemId": 1,
+              "size": "M",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 2,
+              "size": "L",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 3,
+              "size": "XL",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 5,
+              "size": "L",
+              "color": "Xanh Navy"
+            },
+            {
+              "productItemId": 6,
+              "size": "XL",
+              "color": "Xanh Navy"
+            }
+          ]
+        },
+        {
+          "productItemId": 3,
+          "productId": 1,
+          "name": "Polo Ice Cooling",
+          "price": 349000,
+          "color": "Đen",
+          "size": "XL",
+          "img": "https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/image/November2023/23CMCW.PL001.2_68_70.jpg",
+          "qty": 2,
+          "allItemsOfProduct": [
+            {
+              "productItemId": 4,
+              "size": "M",
+              "color": "Xanh Navy"
+            },
+            {
+              "productItemId": 1,
+              "size": "M",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 2,
+              "size": "L",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 3,
+              "size": "XL",
+              "color": "Đen"
+            },
+            {
+              "productItemId": 5,
+              "size": "L",
+              "color": "Xanh Navy"
+            },
+            {
+              "productItemId": 6,
+              "size": "XL",
+              "color": "Xanh Navy"
+            }
+          ]
         }
-    }
+      ]
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-
-
-
+    const [data, setData] = useState(null);
     const router = useRouter();
     const [listProvince, setListProvince] = useState(Object.entries(TinhTP).map(([key, value]) => ({ name: value.name, code: value.code })));
     const [listCity, setListCity] = useState([]);
@@ -112,6 +181,30 @@ const ListItemCart = () => {
       description: content,
     });
     }
+
+    const handleGetCart = () => {
+        try {
+            const options = {
+                method: 'GET',
+                url: 'https://localhost:7107/api/cart',
+            }   
+            axios
+            .request(options)
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+            // responseData(response.data);
+        } catch (error) {
+            console.log('Error fetching data:', error);
+        }
+    }
+
+    useEffect(() => {
+        handleGetCart();
+    }, []);
 
     const handleSetProvince = (value) => {
         for (const code in TinhTP) {

@@ -33,11 +33,14 @@ const Home = () => {
     window.addEventListener('scroll', toggleVisibility)
     return () => window.removeEventListener('scroll', toggleVisibility)
   }, [])
-
+  const [searchComponent, showSearchComponent] = useState(false)
   return (
     <Provider store={store} className="relative">
-      <Header />
-      <NavBar />
+      <Header searchComponent={searchComponent} />
+      <NavBar
+        searchComponent={searchComponent}
+        showSearchComponent={() => showSearchComponent(!searchComponent)}
+      />
       <ImgSlider />
       <BodyHome />
       <Footer />

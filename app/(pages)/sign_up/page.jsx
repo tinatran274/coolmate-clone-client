@@ -36,20 +36,12 @@ const SignUp = () => {
             const options = {
                 method: 'POST',
                 url: 'https://localhost:7107/api/auth/register',
-                data: 
-                    {
+                data: {
                         "email": email,
                         "password": password
-                    }
-                ,
-            };
-            // const response = await axios.post("https://localhost:7107/api/auth/register", data)
-            // .then(response => {
-
-            //     console.log(response.data)
-            // });
-            axios
-            .request(options)
+                    },
+            }
+            axios.request(options)
             .then(function (response) {
                 console.log(response.data);
             })

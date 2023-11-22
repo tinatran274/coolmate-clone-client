@@ -1,10 +1,7 @@
 'use client'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { AiFillStar } from 'react-icons/ai'
 
 const SearchProduct = (props) => {
   const handleNomalize = (product) => {

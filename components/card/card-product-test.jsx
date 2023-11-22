@@ -6,28 +6,26 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { AiFillStar } from 'react-icons/ai'
 
-const CardProduct = (props) => {
-
+const CardProductTest = (props) => {
   const [isHover, setIsHover] = useState(false)
 
   const handleNomalize = (product) => {
-    const imageURLs = product.productItems.map(color => ({
+    const imageURLs = product.productItems.map((color) => ({
       color_name: color.color,
       color_image: color.colorImage,
-      color_item_image: color.productItemImages.map(image => image.url)
+      color_item_image: color.productItemImages.map((image) => image.url)
     }))
 
     return {
       name: product?.name || '',
       price: product?.priceStr || 0,
       size: ['M', 'L', 'XL', '2XL', '3XL', '4XL'],
-      images: imageURLs,
-     }
+      images: imageURLs
+    }
   }
 
   const product = handleNomalize(props.product)
   const [isColorCurrent, setIsColorCurrent] = useState(product?.images[0])
-  
 
   return (
     <AspectRatio ratio={9 / 16}>
@@ -41,7 +39,9 @@ const CardProduct = (props) => {
                 width={672}
                 height={990}
                 src={
-                  !isHover ? isColorCurrent?.color_item_image[0] : isColorCurrent?.color_item_image[1]
+                  !isHover
+                    ? isColorCurrent?.color_item_image[0]
+                    : isColorCurrent?.color_item_image[1]
                 }
                 className="cursor-pointer"
                 onMouseEnter={() => setIsHover(true)}
@@ -150,4 +150,4 @@ const CardProduct = (props) => {
   )
 }
 
-export default CardProduct
+export default CardProductTest

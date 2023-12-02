@@ -4,23 +4,20 @@ import React, { useState } from 'react'
 import { ArrowRightOutlined, UserOutlined } from '@ant-design/icons'
 import Info from './UI_component/info'
 import Orders from './UI_component/orders'
-import UserAdress from './UI_component/user_adress'
+import UserAdress from './UI_component/user_address'
 import Review from './UI_component/review'
 import { useRouter } from 'next/navigation'
 
 const UserAccount = () => {
-
-  const router = useRouter();
+  const router = useRouter()
   const [option, setOption] = useState('Info')
 
   const handleSetOption = (param) => {
     setOption(param)
   }
   const handleGoToAdmin = () => {
-    console.log('ad')
     router.push('/admin')
-}
-
+  }
 
   return (
     <div className="flex flex-row mt-8 items-start">
@@ -198,7 +195,7 @@ const UserAccount = () => {
           />
         </div>
       </div>
-      <div className="bg-white py-12 px-12 w-[59%] rounded-md">
+      <div className="bg-white py-12 px-12 w-[59%] h-auto rounded-md">
         {option === 'Info' ? (
           <Info />
         ) : option === 'Orders' ? (

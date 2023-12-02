@@ -357,7 +357,7 @@ const OrdersPage = () => {
     }
   })
   return (
-    <div className="w-full p-4 pt-6 h-fit">
+    <div className="w-full p-4 pt-6 h-full">
       <div className="justify-between flex">
         <h2 className="font-bold mb-1 text-xl">Orders</h2>
       </div>

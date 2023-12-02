@@ -1,31 +1,37 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, use } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
+
 import { Label } from '@/components/ui/label'
 import { notification, Space } from 'antd'
 import { PlusCircleFilled, LeftCircleOutlined } from '@ant-design/icons'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Menu } from 'antd'
+import { useParams, useSearchParams } from 'next/navigation'
+import { findParents } from '@/lib/utils'
+import { set } from 'lodash'
 
-const CreateCategory = () => {
+const EditCategory = () => {
   const convertCategory = [
     {
       category_name: 'Đồ thể thao',
+      id: 1,
       children: [
         {
           category_name: 'Theo nhu cầu',
-          children: null
+          children: null,
+          id: 2
         },
         {
           category_name: 'Theo sản phẩm',
+          id: 4,
           children: [
             {
               category_name: 'Quần short',
-              children: null
+              children: null,
+              id: 3
             }
           ]
         }
@@ -33,24 +39,30 @@ const CreateCategory = () => {
     },
     {
       category_name: 'Mặc hàng ngày',
+      id: 5,
       children: [
         {
           category_name: 'Bộ sưu tập',
+          id: 6,
           children: null
         },
         {
           category_name: 'Theo sản phẩm',
+          id: 7,
           children: [
             {
               category_name: 'Quần short',
+              id: 8,
               children: null
             },
             {
               category_name: 'Quần đùi',
+              id: 9,
               children: null
             },
             {
               category_name: 'Quần dài',
+              id: 15,
               children: null
             }
           ]
@@ -58,12 +70,29 @@ const CreateCategory = () => {
       ]
     }
   ]
+  const param = useParams()
+  const data = useSearchParams()
 
-  const [categoryName, setCategoryName] = useState('')
-  const [parentCategory, setParentCategory] = useState({})
-  const [status, setStatus] = useState('')
-  const [visibility, setVisibility] = useState('')
+  const [categoryName, setCategoryName] = useState(data.get('name'))
 
+  const [parentCategory, setParentCategory] = useState(param.categoryID)
+
+  const [status, setStatus] = useState(!data.get('status') && 'Disabled')
+  const [visibility, setVisibility] = useState(
+    !data.get('visibility') && 'Not visible'
+  )
+
+  const [parentIds, setParentIds] = useState(null)
+  useEffect(() => {
+    const fetchParentIds = async () => {
+      const parents = await findParents(
+        convertCategory,
+        Number(param.categoryID)
+      )
+      setParentIds(parents)
+    }
+    fetchParentIds()
+  }, [param.categoryID])
   const [api, contextHolder] = notification.useNotification()
   const openNotificationWithIcon = (type, content) => {
     api[type]({
@@ -75,12 +104,12 @@ const CreateCategory = () => {
     return { key, icon, children, label, type }
   }
 
-  const convertCategoryToItems = (categoryList, parentKey = '0') => {
-    return categoryList.map((category, index) => {
-      const key = `${parentKey}-${index}`
+  const convertCategoryToItems = (categoryList) => {
+    return categoryList.map((category) => {
+      const key = `${category.id}`
       const item = getItem(category.category_name, key, null)
       if (category.children && category.children.length > 0) {
-        item.children = convertCategoryToItems(category.children, key)
+        item.children = convertCategoryToItems(category.children)
       }
       return item
     })
@@ -105,17 +134,22 @@ const CreateCategory = () => {
   }
 
   const handleChooseParent = (e) => {
-    const indices = e.key.split('-').map(Number).slice(1)
+    // const indices = e.key.split('-').map(Number).slice(1)
+    // console.log(
+    //   '🚀 ~ file: edit-category.jsx:127 ~ handleChooseParent ~ indices:',
+    //   indices
+    // )
 
-    const result = indices.reduce((acc, index) => {
-      if (acc && Array.isArray(acc) && acc[index]) {
-        return acc[index].children
-      } else {
-        return null
-      }
-    }, convertCategory)
+    // const result = indices.reduce((acc, index) => {
+    //   if (acc && Array.isArray(acc) && acc[index]) {
+    //     return acc[index].children
+    //   } else {
+    //     return null
+    //   }
+    // }, convertCategory)
 
-    console.log(result)
+    // console.log(result)
+    setParentCategory(e.key)
   }
 
   const handleStatusChange = (value) => {
@@ -125,7 +159,9 @@ const CreateCategory = () => {
     setVisibility(value)
   }
 
-  const handleAddCategory = () => {}
+  const handleAddCategory = () => {
+    console.log(categoryName, parentCategory, status, visibility)
+  }
 
   return (
     <div className="w-[100%] bg-gray-100 ">
@@ -134,7 +170,7 @@ const CreateCategory = () => {
         <div className="w-[65%] p-8">
           <div className="flex flex-row items-center mb-8">
             <LeftCircleOutlined className="text-black text-2xl" />
-            <p className="text-xl font-bold mx-3">Tạo category mới</p>
+            <p className="text-xl font-bold mx-3">Chỉnh sửa category</p>
           </div>
           <div className="shadow-md px-8 py-10 mb-6 bg-white rounded-md">
             <p className="font-bold mb-5">Thông tin chung</p>
@@ -151,6 +187,11 @@ const CreateCategory = () => {
               className="w-100%"
               onClick={handleChooseParent}
               mode="inline"
+              defaultSelectedKeys={param.categoryID}
+              openKeys={parentIds}
+              onOpenChange={(keys) => {
+                setParentIds(keys)
+              }}
               items={convertCategoryToItems(convertCategory)}
             />
           </div>
@@ -230,4 +271,4 @@ const CreateCategory = () => {
     </div>
   )
 }
-export default CreateCategory
+export default EditCategory

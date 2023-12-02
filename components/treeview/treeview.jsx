@@ -1,89 +1,75 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+'use client'
 import React, { useEffect, useState } from 'react'
-import { IoTrashBin } from 'react-icons/io5'
 import { IoMdArrowDropright } from 'react-icons/io'
 import TreeView, { flattenTree } from 'react-accessible-treeview'
 import cx from 'classnames'
 import './styles.css'
+import { useRouter } from 'next/navigation'
 
-const countries = {
+const convertCategory = {
   name: '',
   children: [
     {
-      name: 'AFGHANISTAN',
-      currencyCode: '971',
-      currencyName: 'AFGHANI',
+      name: 'Đồ thể thao',
+      id: 1,
       children: [
         {
-          name: 'ALAND ISLasdjajshdANDS',
-          currencyCode: '978',
-          currencyName: 'EURO',
-          children: [
-            {
-              name: 'ALAND ISLasdjajshdANDS',
-              currencyCode: '978',
-              currencyName: 'EURO'
-            },
-            {
-              name: 'ALBAdhsajdhkNIA',
-              currencyCode: '008',
-              currencyName: 'LEK'
-            }
-          ]
+          name: 'Theo nhu cầu',
+          children: null,
+          id: 2
         },
         {
-          name: 'ALBAdhsajdhkNIA',
-          currencyCode: '008',
-          currencyName: 'LEK'
+          name: 'Theo sản phẩm',
+          id: 4,
+          children: [
+            {
+              name: 'Quần short',
+              children: null,
+              id: 3
+            }
+          ]
         }
       ]
     },
     {
-      name: 'AFGHANISTAN',
-      currencyCode: '971',
-      currencyName: 'AFGHANI',
+      name: 'Mặc hàng ngày',
+      id: 5,
       children: [
         {
-          name: 'ALAND ISLasdjajshdANDS',
-          currencyCode: '978',
-          currencyName: 'EURO',
-          children: [
-            {
-              name: 'ALAND ISLasdjajshdANDS',
-              currencyCode: '978',
-              currencyName: 'EURO'
-            },
-            {
-              name: 'ALBAdhsajdhkNIA',
-              currencyCode: '008',
-              currencyName: 'LEK'
-            }
-          ]
+          name: 'Bộ sưu tập',
+          id: 6,
+          children: null
         },
         {
-          name: 'ALBAdhsajdhkNIA',
-          currencyCode: '008',
-          currencyName: 'LEK'
+          name: 'Theo sản phẩm',
+          id: 7,
+          children: [
+            {
+              name: 'Quần short',
+              id: 8,
+              children: null
+            },
+            {
+              name: 'Quần đùi',
+              id: 9,
+              children: null
+            },
+            {
+              name: 'Quần dài',
+              id: 15,
+              children: null
+            }
+          ]
         }
       ]
-    },
-    {
-      name: 'ALAND ISLANDS',
-      currencyCode: '978',
-      currencyName: 'EURO'
-    },
-    {
-      name: 'ALBANIA',
-      currencyCode: '008',
-      currencyName: 'LEK'
     }
   ]
 }
-
 function Filtering({ categories, search = '' }) {
-  const data = flattenTree(countries)
+  const data = flattenTree(convertCategory)
+  const router = useRouter()
   const [treeData, setTreeData] = useState(data)
-
   const filter = (value) => {
     const filtered = []
     const includeChildren = (id) => {
@@ -133,6 +119,13 @@ function Filtering({ categories, search = '' }) {
   useEffect(() => {
     filterNodesByText(search)
   }, [search])
+  const handleEditCategory = (event, element) => {
+    event.stopPropagation()
+    router.push(
+      `/admin/edit-category/${element.id}?name=${element.name}&parent_category=${element.parent}`
+    )
+  }
+
   return (
     <div className="h-fit">
       {treeData.length === 1 ? (
@@ -162,13 +155,13 @@ function Filtering({ categories, search = '' }) {
                   style={{ marginLeft: 40 * (level - 1) }}
                   className="hover:bg-accent w-fit rounded-md cursor-pointer px-2 py-1 hover:text-accent-foreground scale-90 hover:scale-100 group"
                 >
-                  <div
-                    className="flex items-center "
-                    onClick={() => console.log(element)}
-                  >
+                  <div className="flex items-center ">
                     {isBranch && <ArrowIcon isOpen={isExpanded} />}
 
-                    <span className="text-[17px] font-normal group-hover:font-medium">
+                    <span
+                      className="text-[17px] font-normal group-hover:font-medium"
+                      onClick={(e) => handleEditCategory(e, element)}
+                    >
                       {element.name}
                     </span>
                   </div>

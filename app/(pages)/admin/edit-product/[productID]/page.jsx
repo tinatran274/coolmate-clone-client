@@ -1,12 +1,11 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import {
   Select,
@@ -17,16 +16,17 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { DeleteFilled } from '@ant-design/icons'
-import { notification, Space } from 'antd'
+import { notification } from 'antd'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useRouter } from 'next/navigation'
-import { object } from 'zod'
+import { useParams, useRouter } from 'next/navigation'
 import { getAllCategoryNames } from '@/lib/utils'
 
-const CreateProduct = () => {
+const EditProductPage = () => {
   const router = useRouter()
+  const param = useParams()
   const listCategory = [
     {
+      id: 1,
       category_name: 'Chạy bộ',
       parent_category: {
         category_name: 'Theo nhu cầu',
@@ -37,6 +37,7 @@ const CreateProduct = () => {
       }
     },
     {
+      id: 2,
       category_name: 'Quần dài',
       parent_category: {
         category_name: 'Quần',
@@ -44,24 +45,80 @@ const CreateProduct = () => {
       }
     }
   ]
+  const data = {
+    id: param.productID,
+    price: 299000,
+    category: listCategory[0],
+    description: 'new',
+    listColor: [
+      {
+        color: {
+          id: 2,
+          name: 'Trắng',
+          img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
+        },
+        size: ['M', 'L', 'XL', 'XS'],
+        num: 10,
+        image: [
+          {
+            file: '',
+            image:
+              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.14_50.jpg'
+          },
+          {
+            file: '',
+            image:
+              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.11_1.jpg'
+          }
+        ]
+      },
+      {
+        color: {
+          id: 1,
+          name: 'Đen',
+          img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
+        },
+        size: ['M', 'L', 'XL', 'XXL'],
+        num: 10,
+        image: [
+          {
+            file: '',
+            image:
+              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.4_21.jpg'
+          },
+          {
+            file: '',
+            image:
+              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.11_1.jpg'
+          }
+        ]
+      }
+    ]
+  }
+
   const listColor = [
     {
+      id: 1,
       name: 'Đen',
       img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
     },
     {
+      id: 2,
       name: 'Trắng',
       img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
     },
     {
+      id: 3,
       name: 'Xanh Navy',
       img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/mau-xanh-navy_54.jpg'
     },
     {
+      id: 4,
       name: 'Xanh Nhạt',
       img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/June2023/xanh_nhat_200gsm-2.jpg'
     },
     {
+      id: 5,
       name: 'Xám',
       img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/April2023/cotton100_xam-7.jpg'
     }
@@ -72,7 +129,7 @@ const CreateProduct = () => {
   const [numProduct, setNumProduct] = useState(1)
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
-  const [color, setColor] = useState({})
+  const [color, setColor] = useState(listColor[0])
   const [listSizeChose, setListSizeChose] = useState([])
   const [listImage, setListImage] = useState([])
   const [listColorChose, setListColorChose] = useState([])
@@ -80,6 +137,13 @@ const CreateProduct = () => {
   const [visibility, setVisibility] = useState('')
 
   const [api, contextHolder] = notification.useNotification()
+  useEffect(() => {
+    setProductName(data.id)
+    setCostProduct(data.price)
+    setCategory(data.category)
+    setDescription(data.description)
+    setListColorChose(data.listColor)
+  }, [])
   const openNotificationWithIcon = (type, content) => {
     api[type]({
       message: type,
@@ -102,9 +166,8 @@ const CreateProduct = () => {
   const handleSetCategory = (value) => {
     setCategory(listCategory[value])
   }
-  const handleSetColor = (value) => {
-    console.log(listColor[value])
-    setColor(listColor[value])
+  const handleSetColor = (index) => {
+    setColor(listColor[index])
   }
   const handleSizeChange = (event) => {
     const value = event.target.value
@@ -118,6 +181,7 @@ const CreateProduct = () => {
 
   const handleImageUpload1 = (event) => {
     const file = event.target.files[0]
+    console.log(file)
     if (file) {
       setListImage([
         ...listImage,
@@ -143,13 +207,20 @@ const CreateProduct = () => {
     )
       openNotificationWithIcon('error', 'Bạn chưa điền đủ thông tin màu sắc')
     else {
+      if (listColorChose.find((item) => item.color.name === color.name)) {
+        openNotificationWithIcon(
+          'error',
+          `Màu ${color.name} đã tồn tại trong danh sách`
+        )
+        return
+      }
       openNotificationWithIcon('success', `Thêm màu ${color.name} thành công`)
       setListColorChose([
         ...listColorChose,
         { color: color, size: listSizeChose, num: numProduct, image: listImage }
       ])
-      setColor({})
-      setNumProduct(0)
+
+      setNumProduct(1)
       setListSizeChose([])
       setListImage([])
       console.log([
@@ -163,6 +234,14 @@ const CreateProduct = () => {
   }
   const handleVisibilityChange = (value) => {
     setVisibility(value)
+  }
+  const findCategoryIndex = (id) => {
+    const index = listCategory.findIndex((item) => item.id === id)
+    return index
+  }
+  const findColorIndex = (id) => {
+    const index = listColor.findIndex((item) => item.id === id)
+    return index
   }
 
   const handleAddProduct = () => {
@@ -191,7 +270,12 @@ const CreateProduct = () => {
       setVisibility('')
     }
   }
-
+  const handleSetInfor = (item) => {
+    setColor(item.color)
+    setListSizeChose(item.size)
+    setNumProduct(item.num)
+    setListImage(item.image)
+  }
   return (
     <div className="w-[100%]">
       <div className="w-[100%] bg-gray-100 flex flex-row">
@@ -204,7 +288,7 @@ const CreateProduct = () => {
             }}
           >
             <LeftCircleOutlined className="text-black text-2xl" />
-            <p className="text-xl font-bold mx-3">Tạo sản phẩm mới</p>
+            <p className="text-xl font-bold mx-3">Cập nhật sản phẩm</p>
           </div>
           <div className="shadow-md px-8 py-10 mb-6 bg-white rounded-md">
             <p className="font-bold mb-5">Thông tin chung</p>
@@ -230,7 +314,10 @@ const CreateProduct = () => {
             </div>
             <p className="text-sm mx-2 mb-1 mt-6">Category</p>
             <div className="flex flex-row justify-between gap-4">
-              <Select onValueChange={handleSetCategory}>
+              <Select
+                onValueChange={handleSetCategory}
+                value={findCategoryIndex(category.id)}
+              >
                 <SelectTrigger className=" rounded-full px-4">
                   <SelectValue placeholder="Chọn Category" />
                 </SelectTrigger>
@@ -261,7 +348,10 @@ const CreateProduct = () => {
           <div className="shadow-md px-8 py-10 mb-6 bg-white rounded-md">
             <p className="font-bold mb-5">Thêm màu sắc</p>
             <p className="text-sm mx-2 mb-1 mt-6">Màu sắc</p>
-            <Select onValueChange={handleSetColor}>
+            <Select
+              onValueChange={handleSetColor}
+              value={findColorIndex(color.id)}
+            >
               <SelectTrigger className=" rounded-full px-4">
                 <SelectValue placeholder="Chọn màu sắc" />
               </SelectTrigger>
@@ -310,7 +400,7 @@ const CreateProduct = () => {
 
             <input type="file" accept="image/*" onChange={handleImageUpload1} />
             <div className="flex flex-row flex-wrap gap-4 mt-4">
-              {listImage.length > 0 &&
+              {!!listImage.length &&
                 listImage.map((item, index) => (
                   <div key={index} className="relative">
                     <img
@@ -331,22 +421,24 @@ const CreateProduct = () => {
               className="rounded-full p-4 hover:bg-gray-200 hover:text-black mt-8"
               onClick={handleAddColor}
             >
-              Thêm màu {color.name}
+              Thêm màu {color?.name}
             </Button>
             <p className="font-bold mb-4 mt-8">Màu sắc đã chọn</p>
             <div className="mb-6 flex flex-row flex-wrap gap-4">
               {listColorChose.length > 0 ? (
                 listColorChose.map((item, index) => (
-                  <div
-                    key={index}
-                    className="relative flex flex-row items-center"
-                  >
-                    <img
-                      className="w-10 h-6 object-cover rounded-full mr-1 ml-2"
-                      src={item.color.img}
-                      alt="color"
-                    />
-                    <span>{item.color.name}</span>
+                  <div key={index} className="relative flex flex-row ">
+                    <div
+                      className="flex items-center cursor-pointer"
+                      onClick={() => handleSetInfor(item, index)}
+                    >
+                      <img
+                        className="w-10 h-6 object-cover rounded-full mr-1 ml-2"
+                        src={item.color.img}
+                        alt="color"
+                      />
+                      <span>{item.color.name}</span>
+                    </div>
                     <Button
                       className="absolute top-2 left-0 rounded-full w-5 h-5 px-2 bg-red-500 hover:bg-red-700"
                       onClick={() => deleteColorChose(index)}
@@ -436,4 +528,4 @@ const CreateProduct = () => {
     </div>
   )
 }
-export default CreateProduct
+export default EditProductPage

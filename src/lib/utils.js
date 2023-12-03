@@ -35,3 +35,17 @@ export function getkeyByValue(object, value, type) {
     ? Object.keys(object).find((key) => object[key].name === value)
     : Object.keys(object).find((key) => object[key].name_with_type === value)
 }
+
+export const getAllCategoryNames = (category) => {
+  let categoryNames = ''
+  let currentCategory = category
+  while (currentCategory) {
+    if (currentCategory.parent_category) {
+      categoryNames += currentCategory.category_name + ' - '
+    } else {
+      categoryNames += currentCategory.category_name
+    }
+    currentCategory = currentCategory.parent_category
+  }
+  return categoryNames
+}

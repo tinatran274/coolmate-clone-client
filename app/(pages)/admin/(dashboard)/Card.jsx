@@ -10,14 +10,14 @@ function Card({ title, actions = [], subdued = false, children }) {
         <div className="flex justify-between card-header">
           {title && <h2 className="card-title">{title}</h2>}
           {actions.length > 0 && (
-            <div className="flex mt-3">
+            <div className="flex">
               {actions.map((action, index) => {
                 return (
                   // eslint-disable-next-line react/no-array-index-key
-                  <div key={index} className="card-action">
+                  <div key={index} className="card-action ml-4">
                     <a
                       href="#"
-                      className="text-blue-500"
+                      className="text-blue-500 text-xs"
                       onClick={(e) => {
                         e.preventDefault()
                         if (action.onAction) action.onAction.call()

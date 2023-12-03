@@ -8,9 +8,11 @@ const AdminLayout = ({ children }) => {
     <div>
       <Header />
       <NavBar />
-      <div className="flex h-full ">
-        <SideBar />
-        <div className="overflow-auto w-full h-screen">{children}</div>
+      <div className="flex h-full relative">
+        <div className="sticky top-0 left-0 h-screen">
+          <SideBar />
+        </div>
+        <div className=" w-full h-full">{children}</div>
       </div>
       <Footer />
     </div>

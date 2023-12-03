@@ -132,11 +132,11 @@ export default function BestSellers() {
               }).format(p.price)
               return (
                 // eslint-disable-next-line react/no-array-index-key
-                <tr key={p.id}>
+                <tr key={p.id} className="">
                   <td>
                     <div
-                      className="grid-thumbnail text-border border border-divider p-075 rounded flex justify-center"
-                      style={{ width: '6rem', height: '6rem' }}
+                      className="grid-thumbnail text-border border border-divider  rounded flex justify-center"
+                      style={{ width: '4.5rem', height: '4.5rem' }}
                     >
                       {p.imageUrl && (
                         <Image
@@ -169,13 +169,13 @@ export default function BestSellers() {
                   <td>
                     <a
                       href={p.editUrl || ''}
-                      className="font-semibold hover:underline"
+                      className="font-semibold hover:underline text-sm"
                     >
                       {p.name}
                     </a>
                   </td>
-                  <td>{formattedPrice}</td>
-                  <td>{p.qty} sold</td>
+                  <td className="text-sm">{formattedPrice}</td>
+                  <td className="text-sm">{p.qty} sold</td>
                 </tr>
               )
             })}

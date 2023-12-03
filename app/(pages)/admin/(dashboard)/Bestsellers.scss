@@ -10,14 +10,17 @@
     }
   }
   tr {
+    border-bottom: 1px solid gainsboro;
+    height: 100px;
     &:first-child {
       td {
-        border-top: 0;
+        border-top: none;
       }
     }
     &:last-child {
+      border-bottom: none;
       td {
-        border-bottom: 0;
+        border-bottom: none;
       }
     }
   }

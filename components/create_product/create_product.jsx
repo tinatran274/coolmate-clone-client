@@ -20,13 +20,15 @@ import { DeleteFilled } from '@ant-design/icons'
 import { notification, Space } from 'antd'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useRouter } from 'next/navigation'
-import { object } from 'zod'
-import { getAllCategoryNames } from '@/lib/utils'
+import { convertPrice, getAllCategoryNames } from '@/lib/utils'
+import { list } from 'postcss'
+import axios from 'axios'
 
 const CreateProduct = () => {
   const router = useRouter()
   const listCategory = [
     {
+      id: 1,
       category_name: 'Chạy bộ',
       parent_category: {
         category_name: 'Theo nhu cầu',
@@ -37,6 +39,7 @@ const CreateProduct = () => {
       }
     },
     {
+      id: 2,
       category_name: 'Quần dài',
       parent_category: {
         category_name: 'Quần',
@@ -46,24 +49,24 @@ const CreateProduct = () => {
   ]
   const listColor = [
     {
-      name: 'Đen',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
+      color: 'Đen',
+      url: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
     },
     {
-      name: 'Trắng',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
+      color: 'Trắng',
+      url: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
     },
     {
-      name: 'Xanh Navy',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/mau-xanh-navy_54.jpg'
+      color: 'Xanh Navy',
+      url: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/mau-xanh-navy_54.jpg'
     },
     {
-      name: 'Xanh Nhạt',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/June2023/xanh_nhat_200gsm-2.jpg'
+      color: 'Xanh Nhạt',
+      url: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/June2023/xanh_nhat_200gsm-2.jpg'
     },
     {
-      name: 'Xám',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/April2023/cotton100_xam-7.jpg'
+      color: 'Xám',
+      url: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/April2023/cotton100_xam-7.jpg'
     }
   ]
   const listSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
@@ -94,7 +97,7 @@ const CreateProduct = () => {
     setProductName(e.target.value)
   }
   const handleNumProductChange = (e) => {
-    if (e.target.value > 0) setNumProduct(e.target.value)
+    setNumProduct(e.target.value)
   }
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value)
@@ -103,7 +106,6 @@ const CreateProduct = () => {
     setCategory(listCategory[value])
   }
   const handleSetColor = (value) => {
-    console.log(listColor[value])
     setColor(listColor[value])
   }
   const handleSizeChange = (event) => {
@@ -143,19 +145,20 @@ const CreateProduct = () => {
     )
       openNotificationWithIcon('error', 'Bạn chưa điền đủ thông tin màu sắc')
     else {
-      openNotificationWithIcon('success', `Thêm màu ${color.name} thành công`)
+      openNotificationWithIcon('success', `Thêm màu ${color.color} thành công`)
       setListColorChose([
         ...listColorChose,
-        { color: color, size: listSizeChose, num: numProduct, image: listImage }
+        {
+          Color: color,
+          Size: listSizeChose,
+          Qty: numProduct,
+          Images: listImage
+        }
       ])
       setColor({})
       setNumProduct(0)
       setListSizeChose([])
       setListImage([])
-      console.log([
-        ...listColorChose,
-        { color: color, size: listSizeChose, num: numProduct, image: listImage }
-      ])
     }
   }
   const handleStatusChange = (value) => {
@@ -173,22 +176,31 @@ const CreateProduct = () => {
         'success',
         `Thêm sản phẩm ${productName} thành công`
       )
-      const newProduct = {
-        name: productName,
-        price: costProduct,
-        description: description,
-        listColor: listColorChose,
-        status: status,
-        visibility: visibility
-      }
-      console.log(newProduct)
-      setProductName('')
-      setCostProduct(1)
-      setCategory('')
-      setDescription('')
-      setListColorChose([])
-      setStatus('')
-      setVisibility('')
+
+      var newProduct = new FormData()
+      newProduct.append('Name', productName)
+      newProduct.append('PriceInt', costProduct)
+      newProduct.append('PriceStr', convertPrice(costProduct))
+      newProduct.append('Description', description)
+      listColorChose.forEach((item) => {
+        newProduct.append('ProductItems', item)
+      })
+      newProduct.append('CategoryId', category.id)
+      // axios({
+      //   method: 'post',
+      //   url: 'https://localhost:7107/api/product/add',
+      //   data: newProduct
+      // })
+      //   .then((res) => console.log(res))
+      //   .catch((err) => console.log(err))
+
+      // setProductName('')
+      // setCostProduct(1)
+      // setCategory('')
+      // setDescription('')
+      // setListColorChose([])
+      // setStatus('')
+      // setVisibility('')
     }
   }
 
@@ -273,10 +285,10 @@ const CreateProduct = () => {
                         <div className="flex flex-row items-center">
                           <img
                             className="w-10 h-6 object-cover rounded-full mr-4"
-                            src={item.img}
+                            src={item.url}
                             alt="color"
                           />
-                          <span>{item.name}</span>
+                          <span>{item.color}</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -331,7 +343,7 @@ const CreateProduct = () => {
               className="rounded-full p-4 hover:bg-gray-200 hover:text-black mt-8"
               onClick={handleAddColor}
             >
-              Thêm màu {color.name}
+              Thêm màu {color.color}
             </Button>
             <p className="font-bold mb-4 mt-8">Màu sắc đã chọn</p>
             <div className="mb-6 flex flex-row flex-wrap gap-4">
@@ -343,10 +355,10 @@ const CreateProduct = () => {
                   >
                     <img
                       className="w-10 h-6 object-cover rounded-full mr-1 ml-2"
-                      src={item.color.img}
+                      src={item.Color.url}
                       alt="color"
                     />
-                    <span>{item.color.name}</span>
+                    <span>{item.Color.color}</span>
                     <Button
                       className="absolute top-2 left-0 rounded-full w-5 h-5 px-2 bg-red-500 hover:bg-red-700"
                       onClick={() => deleteColorChose(index)}

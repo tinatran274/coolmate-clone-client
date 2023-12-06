@@ -49,3 +49,12 @@ export const getAllCategoryNames = (category) => {
   }
   return categoryNames
 }
+
+export const convertPrice = (price) => {
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(price)
+
+  return formatter
+}

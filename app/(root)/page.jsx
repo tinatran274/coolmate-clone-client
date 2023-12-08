@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Header from '../../components/header/header.jsx'
@@ -45,7 +44,7 @@ const Home = () => {
       <BodyHome />
       <Footer />
       <Button
-        className = {`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${
+        className={`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${
           isVisible ? 'block' : 'hidden'
         }`}
         onClick={scrollToTop}

@@ -1,7 +1,7 @@
 const createProduct = async (product) => {
   axios({
     method: 'post',
-    url: 'https://localhost:7107/api/product/add',
+    url: `${process.env.API_ROOT}/api/product/add`,
     data: product,
     headers: { 'Content-Type': 'multipart/form-data' }
   })

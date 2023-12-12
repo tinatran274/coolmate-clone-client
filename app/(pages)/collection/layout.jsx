@@ -6,6 +6,7 @@ import NavBar from '../../../components/nav-bar/nav_bar'
 
 const AuthLayout = ({ children }) => {
   const [searchComponent, showSearchComponent] = useState(false)
+
   return (
     <div>
       <Header searchComponent={searchComponent} />

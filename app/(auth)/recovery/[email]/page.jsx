@@ -2,9 +2,10 @@
 
 import React, { useMemo, useState } from 'react'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import axios from 'axios'
+import { IoIosArrowRoundBack } from 'react-icons/io'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { notification } from 'antd'
@@ -12,7 +13,9 @@ import { isPasswordValid } from '@/lib/utils'
 
 const RecoveryPass = () => {
   const [api, contextHolder] = notification.useNotification()
-  // const params = useParams()
+  const params = useParams()
+  const data = useSearchParams()
+
   const openNotification = (description) => {
     api.info({
       message: `Notification`,
@@ -42,14 +45,43 @@ const RecoveryPass = () => {
     } else if (password !== confirmPassword) {
       openNotification(`Mật khẩu không trùng khớp`)
     } else if (password === confirmPassword) {
-      router.push('/sign-in')
+      const options = {
+        method: 'POST',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/auth/resetpassword`,
+        data: {
+          newPassword: password,
+          email: params.email.replace(/%40/g, '@'),
+          token: data
+            .get('token')
+            .replace(/%2B/g, '+')
+            .replace(/%2F/g, '/')
+            .replace(/%3D/g, '=')
+            .replace(/%3A/g, ':')
+            .replace(/%24/g, '$')
+            .replace(/%2C/g, ',')
+        }
+      }
+      axios
+        .request(options)
+        .then(function (response) {
+          console.log(response.data)
+          router.push('/sign-in')
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
     }
   }
 
   return (
     <div className="flex items-center justify-center bg-white">
       {contextHolder}
-
+      <div
+        className="absolute top-20 left-[430px]"
+        onClick={() => router.push('/sign-in')}
+      >
+        <IoIosArrowRoundBack className="h-7 w-7 cursor-pointer" />
+      </div>
       <div className="w-1/2 p-20 m-10 rounded-lg shadow-md">
         <div className="flex justify-center items-center">
           <Image

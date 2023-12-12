@@ -10,6 +10,8 @@ import axios from 'axios'
 import Loading from '@/components/ui/loading'
 import { useDispatch } from 'react-redux'
 import { notification } from 'antd'
+import { updateUser } from '../../../redux/user/userSlice'
+
 const SignIn = () => {
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [api, contextHolder] = notification.useNotification()
@@ -36,12 +38,14 @@ const SignIn = () => {
   const handleSignIn = async () => {
     try {
       setLoading(true)
-      const token = await handleFetchApiSignIn({ email, password })
-      handleGetDetailUser(token.data)
-      setLoading(false)
-      localStorage.setItem('token', token.data)
+      const data = await handleFetchApiSignIn({ email, password })
+      const { token, isAdmin } = data?.data
 
-      // router.push('/')
+      await handleGetDetailUser({ token, isAdmin })
+      setLoading(false)
+      localStorage.setItem('token', token)
+
+      router.push('/')
     } catch (error) {
       setLoading(false)
       openNotification('Username or password is incorrect!!!')
@@ -53,7 +57,7 @@ const SignIn = () => {
   const handleOnchangePassword = (e) => {
     setPassword(e.target.value)
   }
-  const handleGetDetailUser = async (token) => {
+  const handleGetDetailUser = async ({ token, isAdmin }) => {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_API_ROOT}/api/user`,
       {
@@ -62,7 +66,7 @@ const SignIn = () => {
         }
       }
     )
-    dispatch(updateUser({ ...res?.data }))
+    dispatch(updateUser({ ...res?.data, isAdmin }))
   }
   const handleSignUp = () => {
     router.push('/sign-up')
@@ -112,7 +116,7 @@ const SignIn = () => {
               className="text-link cursor-pointer"
               onClick={() => router.push('/recovery')}
             >
-              Quên mật khẩu
+              Quên mật khẩu?
             </p>
             <Button
               disabled={!email.length || !password.length}

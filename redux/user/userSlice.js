@@ -9,7 +9,8 @@ export const userSlice = createSlice({
     birthday: '',
     gender: '',
     weight: '',
-    height: ''
+    height: '',
+    isAdmin: false
   },
   reducers: {
     updateUser: (state, action) => {
@@ -21,7 +22,8 @@ export const userSlice = createSlice({
         birthday = '',
         gender = '',
         weight = '',
-        height = ''
+        height = '',
+        isAdmin = false
       } = action.payload
       state.name = name ? name : state.name
       state.email = email ? email : state.email
@@ -31,6 +33,7 @@ export const userSlice = createSlice({
       state.gender = gender ? gender : state.gender
       state.height = height ? height : state.height
       state.weight = weight ? weight : state.weight
+      state.isAdmin = isAdmin ? isAdmin : state.isAdmin
     },
     resetUser: (state) => {
       state.name = ''
@@ -41,6 +44,7 @@ export const userSlice = createSlice({
       state.gender = ''
       state.height = ''
       state.weight = ''
+      state.isAdmin = false
     }
   }
 })

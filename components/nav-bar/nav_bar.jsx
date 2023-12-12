@@ -22,7 +22,7 @@ const iconMap = {
   1: <Archive className="mr-4 w-4 h-4" />,
   2: <Box className="mr-4 w-4 h-4" />
 }
-const NavBar = ({ searchComponent, showSearchComponent }) => {
+const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
   const router = useRouter()
 
   const handleSignIn = () => {
@@ -51,51 +51,51 @@ const NavBar = ({ searchComponent, showSearchComponent }) => {
               <MenuItem />
             </div>
             <div className="flex items-center mr-7 gap-3">
-              {/* clientsearch */}
-              <InputClient
-                placeholder="Search..."
-                prefix={<SearchOutlined />}
-                onClick={showSearchComponent}
-              />
-
-              {/* adminsearch */}
-              {/* <SearchNavBar
-              data={[
-                {
-                  label: 'Customers',
-                  type: 'customers',
-                  data: [
+              {isAdmin ? (
+                <SearchNavBar
+                  data={[
                     {
-                      id: 1,
-                      name: 'Test1',
-                      icon: iconMap[0]
-                    }
-                  ]
-                },
-                {
-                  label: 'Products',
-                  type: 'products',
-                  data: [
+                      label: 'Customers',
+                      type: 'customers',
+                      data: [
+                        {
+                          id: 1,
+                          name: 'Test1',
+                          icon: iconMap[0]
+                        }
+                      ]
+                    },
                     {
-                      id: 2,
-                      name: 'Test',
-                      icon: iconMap[1]
-                    }
-                  ]
-                },
-                {
-                  label: 'Orders',
-                  type: 'orders',
-                  data: [
+                      label: 'Products',
+                      type: 'products',
+                      data: [
+                        {
+                          id: 2,
+                          name: 'Test',
+                          icon: iconMap[1]
+                        }
+                      ]
+                    },
                     {
-                      id: 3,
-                      name: 'Test',
-                      icon: iconMap[2]
+                      label: 'Orders',
+                      type: 'orders',
+                      data: [
+                        {
+                          id: 3,
+                          name: 'Test',
+                          icon: iconMap[2]
+                        }
+                      ]
                     }
-                  ]
-                }
-              ]}
-            /> */}
+                  ]}
+                />
+              ) : (
+                <InputClient
+                  placeholder="Search..."
+                  prefix={<SearchOutlined />}
+                  onClick={showSearchComponent}
+                />
+              )}
               <UserDetailIcon />
               <ShoppingCartOutlined
                 onClick={handleCart}

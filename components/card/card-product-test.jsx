@@ -8,25 +8,8 @@ import { AiFillStar } from 'react-icons/ai'
 
 const CardProductTest = (props) => {
   const [isHover, setIsHover] = useState(false)
-
-  const handleNomalize = (product) => {
-    const imageURLs = product.productItems.map((color) => ({
-      color_name: color.color,
-      color_image: color.colorImage,
-      color_item_image: color.productItemImages.map((image) => image.url)
-    }))
-
-    return {
-      name: product?.name || '',
-      price: product?.priceStr || 0,
-      size: ['M', 'L', 'XL', '2XL', '3XL', '4XL'],
-      images: imageURLs
-    }
-  }
-
-  const product = handleNomalize(props.product)
-  const [isColorCurrent, setIsColorCurrent] = useState(product?.images[0])
-
+  const { product } = props
+  const [productItem, setProductItem] = useState(product.productItems[0])
   return (
     <AspectRatio ratio={9 / 16}>
       <div className=" flex flex-col h-[485px] w-full">
@@ -40,8 +23,8 @@ const CardProductTest = (props) => {
                 height={990}
                 src={
                   !isHover
-                    ? isColorCurrent?.color_item_image[0]
-                    : isColorCurrent?.color_item_image[1]
+                    ? productItem?.productItemImages[0].url
+                    : productItem?.productItemImages[1].url
                 }
                 className="cursor-pointer"
                 onMouseEnter={() => setIsHover(true)}
@@ -65,7 +48,7 @@ const CardProductTest = (props) => {
             >
               Mới
             </span>
-            {product.size ? (
+            {/* {productItem.size ? (
               <div
                 className="absolute bottom-[1.5rem] left-[9%] max-w-[calc(100%-3rem)] w-full
             lg:visible opacity-0 backdrop-blur-[20px] group-hover:opacity-100
@@ -80,7 +63,7 @@ const CardProductTest = (props) => {
                   Thêm nhanh vào giỏ hàng +
                 </p>
                 <div className="flex flex-wrap gap-[6px] justify-start items-center mt-2">
-                  {product.size.map((item, index) => (
+                  {productItem.size.map((item, index) => (
                     <div key={index}>
                       <button
                         className="bg-white text-black rounded-[0.5rem] text-[13px] w-[40px] h-[35px] font-[590] hover:text-white hover:bg-gray-300/70"
@@ -104,24 +87,24 @@ const CardProductTest = (props) => {
                   Thêm nhanh vào giỏ hàng +
                 </p>
               </div>
-            )}
+            )} */}
           </div>
           <div className="flex flex-[25%] flex-col rounded-xl">
             <div className="flex flex-wrap mx-[-2px] mb-[10px]">
-              {product.images.map((item, index) => (
+              {product.productItems.map((item, index) => (
                 <div
                   key={index}
                   className={cn(
                     'relative flex items-center justify-center cursor-pointer h-[26px] w-[41px]',
-                    isColorCurrent.color_image === item.color_image &&
+                    productItem.id === item.id &&
                       'border border-solid border-[#000] rounded-xl'
                   )}
-                  onClick={() => setIsColorCurrent(item)}
+                  onClick={() => setProductItem(item)}
                 >
                   <Image
                     alt="Product Image Color"
                     className=" rounded-2xl p-[3px] bg-no-repeat bg-[50%] bg-[length:250%]"
-                    src={item.color_image}
+                    src={item.colorImage}
                     fill
                   />
                 </div>
@@ -131,13 +114,13 @@ const CardProductTest = (props) => {
               {product.name}
             </h3>
             <p className="text-sm mx-0 mt-[-10px] mb-[5px] text-[#0009]">
-              {isColorCurrent.color_name}
+              {productItem.color}
             </p>
             <div className="flex flex-row-reverse justify-end text-sm font-[400]">
               <span className="text-red-500 ml-[10px]">-8%</span>
-              <del className="text-[#c4c4c4]">{product.price}</del>
+              <del className="text-[#c4c4c4]">{product.priceStr}</del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
-                {product.price}
+                {product.priceStr}
               </ins>
             </div>
             <span className="text-[#2f5acf] text-xs italic mt-2 font-[600]">

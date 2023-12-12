@@ -8,57 +8,35 @@ import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import Filtering from '../../../../components/treeview/treeview'
 import { useDebounce } from '../../../hooks/useDebounce'
-const data = [
-  {
-    id: 1,
-    category_name: 'Category 1'
-  },
-  {
-    id: 2,
-    category_name: 'Category 2'
-  },
-  {
-    id: 3,
-    category_name: 'Category 3'
-  },
-  {
-    id: 4,
-    category_name: 'Category 4'
-  },
-  {
-    id: 5,
-    category_name: 'Category 5',
-    parent_id: 1
-  },
-  {
-    id: 6,
-    category_name: 'Category 6',
-    parent_id: 1
-  },
-  {
-    id: 7,
-    category_name: 'Category 7',
-    parent_id: 2
-  },
-  {
-    id: 8,
-    category_name: 'Category 8',
-    parent_id: 3
-  },
-  {
-    id: 9,
-    category_name: 'Category 9',
-    parent_id: 4
-  }
-]
+import axios from 'axios'
+
 const CategoriesPage = () => {
   const [search, setSearch] = React.useState('')
   const searchDebounced = useDebounce(search, 300)
-  const categories = data.filter((item) => item.parent_id === undefined)
-
-  const [hidden, setHidden] = React.useState(
-    data.filter((item) => item.parent_id === undefined)
-  )
+  const [categories, setCategories] = React.useState([])
+  const getAllCategories = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/category`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
+      }
+      axios
+        .request(options)
+        .then(function (response) {
+          setCategories({ name: '', children: response.data })
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
+    }
+  }
+  React.useEffect(() => {
+    getAllCategories()
+  }, [])
   const router = useRouter()
   return (
     <div className="w-full p-4 pt-6 h-fit">
@@ -90,7 +68,7 @@ const CategoriesPage = () => {
         </div>
       </div>
       <div className="rounded-md border w-full h-full">
-        <Filtering search={searchDebounced} />
+        <Filtering search={searchDebounced} categories={categories} />
       </div>
     </div>
   )

@@ -8,8 +8,8 @@ import Banner from './banner'
 
 const SideBar = () => {
   return (
-    <ScrollArea className="h-[666px] w-[200px] p-[4px] border-r-3 border-black pl-2">
-      <div className="py-4 pb-10">
+    <ScrollArea className="h-full w-[200px] p-[4px] border-r-3 border-black pl-2">
+      <div className="py-4 pb-10 ">
         <QuickLink />
         <Catalog />
         <Sale />

@@ -17,9 +17,9 @@ const NewProduct = () => {
   const handleChangeToSale = () => {
     setNewProduct(true)
   }
-
+  console.log(process.env.NEXT_PUBLIC_API_ROOT)
   const handleGetAoCacLoai = (
-    url = 'https://localhost:7107/api/product/ao-cac-loai'
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/ao-cac-loai`
   ) => {
     try {
       const options = {

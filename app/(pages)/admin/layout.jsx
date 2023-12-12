@@ -7,7 +7,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div>
       <Header />
-      <NavBar />
+      <NavBar isAdmin={true} />
       <div className="flex h-full relative">
         <div className="sticky top-0 left-0 h-screen">
           <SideBar />

@@ -6,21 +6,20 @@ import NavBar from '../../components/nav-bar/nav_bar.jsx'
 import ImgSlider from '../../components/slider/slider.jsx'
 import BodyHome from '../../components/home/body_home.jsx'
 import Footer from '../../components/footer/footer.jsx'
-import store from '../../redux/store.js'
-import { Provider } from 'react-redux'
+
 import { Button } from '@/components/ui/button'
 import { UpOutlined } from '@ant-design/icons'
 
 const Home = () => {
   const router = useRouter()
   const [isVisible, setIsVisible] = useState(false)
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     })
   }
+
   const toggleVisibility = () => {
     if (window.pageYOffset > 500) {
       setIsVisible(true)
@@ -34,7 +33,7 @@ const Home = () => {
   }, [])
   const [searchComponent, showSearchComponent] = useState(false)
   return (
-    <Provider store={store} className="relative">
+    <div className="relative">
       <Header searchComponent={searchComponent} />
       <NavBar
         searchComponent={searchComponent}
@@ -51,7 +50,7 @@ const Home = () => {
       >
         <UpOutlined />
       </Button>
-    </Provider>
+    </div>
   )
 }
 export default Home

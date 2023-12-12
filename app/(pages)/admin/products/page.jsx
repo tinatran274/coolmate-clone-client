@@ -46,140 +46,35 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { useRouter } from 'next/navigation'
-const data = [
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    quantity: 835,
-    product_name:
-      'ken99@yahoo.codasssssssssssssssssssssssssssssssssssssssssssssssssssfdsfdsfdsfdfsdfsdfdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkm',
-    deleted: 'true'
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    quantity: 835,
-    product_name: 'Abe45@gmail.com',
-    deleted: 'false'
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    quantity: 835,
-    product_name: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    quantity: 835,
-    product_name: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    quantity: 835,
-    product_name: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    quantity: 835,
-    product_name: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    quantity: 835,
-    product_name: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    quantity: 835,
-    product_name: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    quantity: 835,
-    product_name: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    quantity: 835,
-    product_name: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    quantity: 835,
-    product_name: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    quantity: 835,
-    product_name: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    quantity: 835,
-    product_name: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    quantity: 835,
-    product_name: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    quantity: 835,
-    product_name: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    quantity: 835,
-    product_name: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    quantity: 835,
-    product_name: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    quantity: 835,
-    product_name: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    quantity: 837,
-    product_name: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    quantity: 835,
-    product_name: 'Silas22@gmail.com'
-  },
-  {
-    id: 'bhqecj4p',
-    price: 721,
-    quantity: 835,
-    product_name: 'carmella@hotmail.com'
-  }
-]
+import axios from 'axios'
 
 const ProductsPage = () => {
+  const [data, setData] = React.useState([])
   const router = useRouter()
+  const handleGetAoCacLoai = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/ao-cac-loai`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
+      }
+      axios
+        .request(options)
+        .then(function (response) {
+          setData(response.data.data)
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
+    }
+  }
+  React.useEffect(() => {
+    handleGetAoCacLoai()
+  }, [])
+
   const handleOnClick = (id) => {
     router.push(`/admin/edit-product/${id}`)
   }
@@ -216,22 +111,31 @@ const ProductsPage = () => {
       )
     },
     {
-      accessorKey: 'product_name',
+      accessorKey: 'name',
       header: 'Product Name',
       cell: ({ row }) => (
         <div
-          className="capitalize truncate w-[400px] hover:underline cursor-pointer"
+          className="capitalize truncate w-[230px] hover:underline cursor-pointer"
           onClick={() => handleOnClick(row.getValue('id'))}
         >
-          {row.getValue('product_name')}
+          {row.getValue('name')}
         </div>
       )
     },
     {
-      accessorKey: 'price',
+      accessorKey: 'description',
+      header: 'Descriptions',
+      cell: ({ row }) => (
+        <div className="capitalize truncate w-[450px]">
+          {row.getValue('description')}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'priceStr',
       header: ({ column }) => (
         <div
-          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
+          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Price
@@ -239,36 +143,18 @@ const ProductsPage = () => {
         </div>
       ),
       cell: ({ row }) => {
-        const price = parseFloat(row.getValue('price'))
-
-        const formatted = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        }).format(price)
-
-        return <div className="font-medium">{formatted}</div>
+        return (
+          <div className="font-medium flex">{row.getValue('priceStr')}</div>
+        )
       }
-    },
-    {
-      accessorKey: 'quantity',
-      header: ({ column }) => (
-        <div
-          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Quantity
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue('quantity')}</div>
-      )
     },
     {
       accessorKey: 'deleted',
       header: 'Deleted',
       cell: ({ row }) => (
-        <div className="uppercase">{row.getValue('deleted')}</div>
+        <div className="uppercase">
+          {row.getValue('deleted') ? row.getValue('deleted') : 'false'}
+        </div>
       )
     },
     {
@@ -276,7 +162,6 @@ const ProductsPage = () => {
       enableHiding: false,
       cell: ({ row }) => {
         const product = row.original
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -289,13 +174,24 @@ const ProductsPage = () => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(product.id)}
+                className="cursor-pointer"
               >
                 Copy product ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Edit product</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleOnClick(product.id)}
+                className="cursor-pointer"
+              >
+                Edit product
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View product details</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleOnClick(product.id)}
+                className="cursor-pointer"
+              >
+                View product details
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -303,7 +199,7 @@ const ProductsPage = () => {
     }
   ]
   const [sorting, setSorting] = React.useState()
-  const [filters, setFilters] = React.useState('product_name')
+  const [filters, setFilters] = React.useState('name')
   const [columnFilters, setColumnFilters] = React.useState()
   const [columnVisibility, setColumnVisibility] = React.useState()
   const [rowSelection, setRowSelection] = React.useState({})
@@ -375,7 +271,7 @@ const ProductsPage = () => {
                     onValueChange={setFilters}
                   >
                     <DropdownMenuRadioItem value="id">ID</DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="product_name">
+                    <DropdownMenuRadioItem value="name">
                       Product name
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
@@ -402,9 +298,7 @@ const ProductsPage = () => {
                           column.toggleVisibility(!!value)
                         }
                       >
-                        {column.id === 'product_name'
-                          ? 'Product name'
-                          : column.id}
+                        {column.id === 'name' ? 'Product name' : column.id}
                       </DropdownMenuCheckboxItem>
                     )
                   })}

@@ -3,71 +3,11 @@
 import React, { useEffect, useState } from 'react'
 import { IoMdArrowDropright } from 'react-icons/io'
 import TreeView, { flattenTree } from 'react-accessible-treeview'
-import cx from 'classnames'
 import './styles.css'
 import { useRouter } from 'next/navigation'
 
-const convertCategory = {
-  name: '',
-  children: [
-    {
-      name: 'Đồ thể thao',
-      id: 1,
-      children: [
-        {
-          name: 'Theo nhu cầu',
-          children: null,
-          id: 2
-        },
-        {
-          name: 'Theo sản phẩm',
-          id: 4,
-          children: [
-            {
-              name: 'Quần short',
-              children: null,
-              id: 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'Mặc hàng ngày',
-      id: 5,
-      children: [
-        {
-          name: 'Bộ sưu tập',
-          id: 6,
-          children: null
-        },
-        {
-          name: 'Theo sản phẩm',
-          id: 7,
-          children: [
-            {
-              name: 'Quần short',
-              id: 8,
-              children: null
-            },
-            {
-              name: 'Quần đùi',
-              id: 9,
-              children: null
-            },
-            {
-              name: 'Quần dài',
-              id: 15,
-              children: null
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
 function Filtering({ categories, search = '' }) {
-  const data = flattenTree(convertCategory)
+  const data = flattenTree(categories)
   const router = useRouter()
   const [treeData, setTreeData] = useState(data)
   const filter = (value) => {

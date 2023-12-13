@@ -125,6 +125,7 @@ const CreateProduct = () => {
         if (file) {
             setListImage([...listImage, {file: file, image: URL.createObjectURL(file)}]);
         } 
+        console.log(file)
     }
     const deleteImage = (index) => {
         const newImageUrls = [...listImage]
@@ -148,6 +149,7 @@ const CreateProduct = () => {
             setListImage([])
             console.log([...listColorChose, {color: color, size: listSizeChose, num: numProduct, image: listImage}])
         }
+        
     }
     const handleStatusChange = (value) => {
         setStatus(value)

@@ -19,7 +19,7 @@ const SignIn = () => {
         try {
             const options = {
                 method: 'POST',
-                url: 'https://localhost:7107/api/auth/register',
+                url: 'https://localhost:7107/api/auth/login',
                 data: 
                     {
                         "email": email,

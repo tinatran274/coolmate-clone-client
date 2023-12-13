@@ -176,10 +176,22 @@ const ListItemCart = () => {
 
     const [api, contextHolder] = notification.useNotification();
     const openNotificationWithIcon = (type, content) => {
-    api[type]({
-      message: 'Lỗi',
-      description: content,
-    });
+        api[type]({
+        message: 'Lỗi',
+        description: content,
+        });
+    }
+
+    const handleNomalize = (cart) => {
+        const imageURLs = responseGetCart.map(product => ({
+            name: product.name,
+            price: product.price,
+            num: product.qty,
+            sizeChose: product.size,
+            colorChose: product.color,
+            img: product.img,
+            color_item_image: color.productItemImages.map(image => image.url)
+        }))
     }
 
     const handleGetCart = () => {

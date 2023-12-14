@@ -24,12 +24,12 @@ function CardItemDetailOrder (props) {
       
         <div className='w-[100%] flex my-6 items-center justify-between'>
             <div className='flex items-center'>
-                <img className='w-20 h-28 object-cover rounded-xl border border-blue-500' src={props.colorChose.imgs} alt="icon"/>
+                <img className='w-20 h-28 object-cover rounded-xl border border-blue-500' src={props.img} alt="icon"/>
                 <p className='text-sm ml-2 w-20'>{props.name}</p>
             </div>
             <p className='text-sm'>{props.num}</p>
             <p className='text-sm'>{addDotsToNumber(props.price)}đ</p>
-            <p className='text-sm'>{props.colorChose.color_name} / {props.sizeChose}</p>
+            <p className='text-sm'>{props.colorChose}/{props.sizeChose}</p>
             <p className='text-sm'>{addDotsToNumber(props.price * props.num)}đ</p>
            
         </div>

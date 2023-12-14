@@ -25,53 +25,6 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
 const ListItemCart = () => {
-  const templistItemCart = [
-    {
-      name: 'Shorts 84RISING Jurassic Warriors',
-      price: '850000',
-      num: 5,
-      colorChose: 'Đen',
-      listColor: [
-        {
-          color_name: 'Xám nhạt',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/October2023/ji3Untitled-1_45.jpg'
-        },
-        {
-          color_name: 'Đen',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/jr2Untitled-1_62.jpg'
-        }
-      ],
-      sizeChose: 'M',
-      listSize: ['M', 'L', 'XL', '2XL', '3XL']
-    },
-    {
-      name: 'T-Shirt Cotton 220GSM',
-      price: '269000',
-      num: 1,
-      colorChose: 'Trắng',
-      listColor: [
-        {
-          color_name: 'Xanh rêu',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/August2023/APL100-258-6.jpg'
-        },
-        {
-          color_name: 'Trắng',
-          imgs: [
-            'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/August2023/APL100-EDIT-28.jpg'
-          ]
-        },
-        {
-          color_name: 'Đen',
-          imgs: [
-            'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/August2023/APL100-258-8.jpg'
-          ]
-        }
-      ],
-      sizeChose: 'XL',
-      listSize: ['M', 'L', 'XL', '2XL', '3XL']
-    }
-  ]
-
 
   const [data, setData] = useState(null)
   const router = useRouter()
@@ -94,7 +47,6 @@ const ListItemCart = () => {
     const [adress, setAdress] = useState('')
     const [note, setNote] = useState('')
     const [optionPay, setOptionPay] = useState('Momo')
-    const [listProduct, setListProduct] = useState(templistItemCart)
     const [responseData, setResponseData] = useState([])
   
     const [api, contextHolder] = notification.useNotification();
@@ -260,7 +212,7 @@ const ListItemCart = () => {
     }
   }
 
-  console.log(responseData)
+  // console.log(responseData)
 
   const priceMemo = useMemo(() => {
     const total = responseData.reduce((total, cur) => {
@@ -582,7 +534,7 @@ const ListItemCart = () => {
             className="rounded-lg p-6 w-[100%] hover:bg-gray-200 hover:text-black"
             onClick={handlePayment}
           >
-            Thanh toán {addDotsToNumber(priceMemo)}đ ({optionPay})
+            Đặt hàng {addDotsToNumber(priceMemo)}đ ({optionPay})
           </Button>
         </div>
       </div>

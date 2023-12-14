@@ -9,55 +9,68 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import axios from 'axios'
+
 
 const ListComment = ({ productId  }) => {
 
-    const cmtData = {
-        "id": productId,
-        "list_cmt": [{
-                "user_name": "Huy Cường",
-                "bought": "Đen / L",
-                "rating": 4,
-                "content": "sản phẩm oke, mặc khá là thoải mái và nhẹ, đồ tặng kèm là áo cotton nên mặc mát",
-                "reply": "Coolmate cảm ơn anh đã đánh giá khách quan trải nghiệm. Mong mình có trải nghiệm thật tuyệt vời với sản phẩm. Nếu trong quá trình trải nghiệm có phát sinh vấn đề không mong muốn. Anh có thể liên hệ hotline 1900272737 để được hỗ trợ đổi trả trong vòng 60 ngày nhé. Có rất nhiều sự lựa chọn, cảm ơn anh đã tin tưởng và lựa chọn Coolmate. Chúc anh một ngày tốt lành.",
-                "date": "25.09.2023"},
-            {
-                "user_name": "Nguyễn Lê Khang",
-                "bought": "Xanh Navy / L",
-                "rating": 5,
-                "content": "quần mặc rất thoải mái, nhưng mình có 1 góp ý là nên thêm dây thắt bên trong vì độ dài thì ok nhưng lưng quần lại hơi rộng.",
-                "reply": "Coolmate xin cảm ơn chân thành nhất tới chị đã quan tâm, gắn bó và tin tưởng sử dụng dịch vụ của Coolmate trong suốt thời gian vừa qua. ",
-                "date": "22.04.2023"},
-            {
-                "user_name": "jametran3392",
-                "bought": "Đen / XL",
-                "rating": 1,
-                "content": "Mặc vải thoáng mát, thoải mái, rất tiện dụng",
-                "date": "15.09.2023s"},            
-        ]
+  
+    const [responseReviewData, setResponseReviewData] = useState({})
+    const [currentStar, setCurrentStar] = useState(0)
 
-    }
+
+    const handleGetReview = (
+        url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/review/getOfProduct?productId=${productId.productId}`
+      ) => {
+        try {
+          const options = {
+            method: 'GET',
+            url: url
+          }
+          axios
+            .request(options)
+            .then(function (response) {
+              setResponseReviewData(response.data)
+            })
+            .catch(function (error) {
+              console.error(error)
+            })
+        } catch (error) {
+          console.log('Error fetching data:', error)
+        }
+      }
+    
+      useEffect(() => {
+        handleGetReview()
+      }, [])
+
+      const handleChangeStar = (value) => {
+        setCurrentStar(value)
+      }
+
+      console.log(responseReviewData)
+
     return(
         <div className='p-4 flex flex-row mt-4'>
-            <div className=' px-12 py-8 flex flex-col items-center rounded-[12px] w-[900px]'>
+            <div className=' px-12 py-8 flex flex-col items-center rounded-[12px] w-[28%]'>
                 <p className='text-lg font-bold mb-4 uppercase'>Đánh giá</p>
-                <p className='text-6xl font-bold mb-3'>4.5</p>
-                <Rate className='text-3xl mb-3' disabled defaultValue={4} />
-                <p className='text-sm italic'>7 đánh giá</p>
+                <p className='text-6xl font-bold mb-3'>{responseReviewData.total}</p>
+                <Rate className='text-3xl mb-3' disabled defaultValue={0} value={Math.round(responseReviewData?.rating)} />
+                <p className='text-sm italic'>{responseReviewData.total} đánh giá</p>
             </div>
-            <div className=''>
+            <div className='w-[70%]'>
                 <div className='flex flex-row mb-8'>
-                    <Select 
-                    // onValueChange={field.onChange} 
-                    // defaultValue={field.value}
-                    >
+                    <Select onValueChange={handleChangeStar}>
                         <SelectTrigger className="p-6 rounded-full mr-8">
-                            <SelectValue placeholder="5 sao" />
+                            <SelectValue placeholder="Tất cả" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="5 sao">5 sao</SelectItem>
-                            <SelectItem value="4 sao">4 sao</SelectItem>
-                            <SelectItem value="3 sao">5 sao</SelectItem>
+                            <SelectItem value="0">Tất cả</SelectItem>
+                            <SelectItem value="5">5 sao</SelectItem>
+                            <SelectItem value="4">4 sao</SelectItem>
+                            <SelectItem value="3">3 sao</SelectItem>
+                            <SelectItem value="2">2 sao</SelectItem>
+                            <SelectItem value="1">1 sao</SelectItem>
                         </SelectContent>
                     </Select>
                     <Select 
@@ -88,18 +101,24 @@ const ListComment = ({ productId  }) => {
 
                 </div>
                 <div className={'flex flex-row flex-wrap'}>
-                    {cmtData.list_cmt.map((cmt, index) => (
-                        
+                    {responseReviewData?.reviews?.filter((cmt) => {
+                        if(currentStar == 0){
+                            return cmt;
+                        } else if (cmt.ratingValue === parseInt(currentStar)){
+                            return cmt;
+                        }
+                    })
+                    .map((cmt, index) => (
                         <div key={index} className={`my-2 text-sm w-1/2 pr-8 pb-8`}>
-                            <Rate className='text-blue-800  mb-3' disabled defaultValue={4} />
-                            <p className={`font-bold`}>{cmt.user_name}</p>
-                            <p className={`italic text-gray-500 mb-7`}>{cmt.bought}</p>
-                            <p>{cmt.content}</p>
-                            { cmt.reply ? 
+                            <Rate className='text-blue-800  mb-3' disabled defaultValue={0} value={cmt.ratingValue}/>
+                            <p className={`font-bold`}>{cmt.name}</p>
+                            <p className={`italic text-gray-500 mb-7`}>{cmt.color}/{cmt.size}</p>
+                            <p>{cmt.comment}</p>
+                            {cmt.reply ? 
                                 <p className={`bg-gray-300 p-4 rounded-2xl mt-2`}>{cmt.reply}</p> : ""    
                             }
                             
-                            <p className={`text-gray-500 rounded-2xl mt-4`}>{cmt.date}</p>
+                            <p className={`text-gray-500 rounded-2xl mt-4`}>{cmt.createdDate}</p>
                         </div>
                     ))}
                 </div>

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { AiFillStar } from 'react-icons/ai'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { notification, Space } from 'antd'
 
 const CardProductTest = (props) => {
 
@@ -14,6 +15,14 @@ const CardProductTest = (props) => {
   const [isHover, setIsHover] = useState(false)
   const { product } = props
   const [productItem, setProductItem] = useState(product.productItems[0])
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type, content) => {
+      api[type]({
+      message: type,
+      description: content,
+      });
+  }
 
   // console.log(product)
   const handleAddCart = (productItemId) => {
@@ -31,10 +40,10 @@ const CardProductTest = (props) => {
       }
       axios
         .request(options, {
-          
         })
         .then(function (response) {
           console.log(response.data)
+          openNotificationWithIcon('success', `Đã thêm 1 ${product.name} vào giỏ hàng`)
         })
         .catch(function (error) {
       })
@@ -54,8 +63,25 @@ const CardProductTest = (props) => {
     )
   }
 
+  const addDotsToNumber = (number) => {
+    if(number) {
+        const numberString = number.toString();
+        const length = numberString.length;
+        let result = "";
+        for (let i = 0; i < length; i++) {
+        result += numberString[i];
+        if ((length - i - 1) % 3 === 0 && i !== length - 1) 
+            result += ".";
+        }
+        return result;
+    }
+}
+
+  // console.log(addDotsToNumber(product.priceInt*0.92))
+
   return (
     <AspectRatio ratio={9 / 16}>
+      {contextHolder}
       <div className=" flex flex-col h-[485px] w-full">
         <AspectRatio ratio={9 / 16} className="flex flex-col h-full">
           <div className="relative group flex flex-[75%] overflow-hidden rounded-xl mb-[15px]">
@@ -166,7 +192,7 @@ const CardProductTest = (props) => {
               <span className="text-red-500 ml-[10px]">-8%</span>
               <del className="text-[#c4c4c4]">{product.priceStr}</del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
-                {product.priceStr}
+                {addDotsToNumber(product.priceInt*0.92)}đ
               </ins>
             </div>
             <span className="text-[#2f5acf] text-xs italic mt-2 font-[600]">

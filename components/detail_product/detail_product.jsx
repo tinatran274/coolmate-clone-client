@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Rate } from 'antd'
 import axios from 'axios'
+import { notification, Space } from 'antd'
 
 const DetailProduct = ({ productId }) => {
 
@@ -22,7 +23,13 @@ const DetailProduct = ({ productId }) => {
   const [currentSize, setCurrentSize] = useState(0)
   const [responseData, setResponseData] = useState({})
   const [responseReviewData, setResponseReviewData] = useState({})
-
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type, content) => {
+      api[type]({
+      message: type,
+      description: content,
+      });
+  }
 
   const handleGetDetailProduct = (
     url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/get/${productId.productId}`
@@ -58,20 +65,15 @@ const DetailProduct = ({ productId }) => {
         method: 'GET',
         url: url
       }
-      console.log(options)
-      // axios
-      //   .request(options)
-      //   .then(function (response) {
-      //     setResponseReviewData({
-      //       ...response.data,
-      //       data: responseReviewData.data
-      //         ? [...responseReviewData.data, ...response.data.data]
-      //         : response.data.data
-      //     })
-      //   })
-      //   .catch(function (error) {
-      //     console.error(error)
-      //   })
+      // console.log(options)
+      axios
+        .request(options)
+        .then(function (response) {
+          setResponseReviewData(response.data)
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
     } catch (error) {
       console.log('Error fetching data:', error)
     }
@@ -112,7 +114,7 @@ const DetailProduct = ({ productId }) => {
   responseData.productItemsColor = colorArray
   const resultArray = responseData.description ? responseData.description.split('|').map(item => item.trim()) : []
   responseData.descriptionArray = resultArray
-  // console.log(responseData)
+
 
 
   const increaseProduct = () => {
@@ -162,6 +164,7 @@ const DetailProduct = ({ productId }) => {
         })
         .then(function (response) {
           console.log(response.data)
+          openNotificationWithIcon('success', `Đã thêm ${countProduct} ${responseData.name} vào giỏ hàng`)
         })
         .catch(function (error) {
       })
@@ -173,6 +176,7 @@ const DetailProduct = ({ productId }) => {
 
   return (
     <div className="p-4">
+      {contextHolder}
       <span className="text-[12px] text-gray-500 hover:text-blue-500">
         Trang chủ
       </span>
@@ -230,8 +234,8 @@ const DetailProduct = ({ productId }) => {
         </div>
         <div className="mx-20 my-12">
           <p className="text-4xl font-bold mb-6">{responseData.name}</p>
-          {/* <Rate disabled defaultValue={productData.rating.average} />
-          <span className="ml-2 text-sm">({productData.rating.time})</span> */}
+          <Rate disabled defaultValue={0} value={Math.round(responseReviewData?.rating)} />
+          <span className="ml-2 text-sm">({responseReviewData.total})</span>
           <p className="text-2xl font-bold mb-8 mt-4">{responseData.priceStr}</p>
           <p className="mb-2 text-sm">
             Màu sắc:{' '}

@@ -19,12 +19,12 @@ const CardItemPay = (props) => {
     }
     return(
         <div className='w-[100%] flex my-6 items-center'>
-            <img className='w-24 h-28 object-cover rounded-xl mx-4' src={props.colorChose.imgs} alt="icon"/>
+            <img className='w-24 h-28 object-cover rounded-xl mx-4' src={props.productData.img} alt="icon"/>
             <div>
-                <p className='text-sm font-bold'>{props.name}</p>
-                <p className='text-sm'>{props.colorChose.color_name} / {props.sizeChose}</p>
-                <p className='text-sm'>x{props.num}</p>
-                <p className='text-sm font-bold'>{addDotsToNumber(props.price)}đ</p>
+                <p className='text-sm font-bold'>{props.productData.productName}</p>
+                <p className='text-sm'>{props.productData.color} / {props.productData.size}</p>
+                <p className='text-sm'>x{props.productData.qty}</p>
+                <p className='text-sm font-bold'>{addDotsToNumber(props.productData.price)}đ</p>
             </div>
            
         </div>

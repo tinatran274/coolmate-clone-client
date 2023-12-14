@@ -29,7 +29,6 @@ const CardProductTest = (props) => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       }
-      console.log(options)
       axios
         .request(options, {
           

@@ -82,8 +82,6 @@ const DetailProduct = ({ productId }) => {
     handleGetReview()
   }, [])
 
-  // console.log(responseReviewData)
-
   const groupedByColor = responseData?.productItems?.reduce((acc, item) => {
     const { id, color, colorImage, size, productItemImages, qtyInStock } = item;
     if (!acc[color]) {
@@ -158,16 +156,15 @@ const DetailProduct = ({ productId }) => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       }
-      console.log(options)
-      // axios
-      //   .request(options, {
+      axios
+        .request(options, {
           
-      //   })
-      //   .then(function (response) {
-      //     console.log(response.data)
-      //   })
-      //   .catch(function (error) {
-      // })
+        })
+        .then(function (response) {
+          console.log(response.data)
+        })
+        .catch(function (error) {
+      })
   } catch (error) {
     console.log('Error:', error)
   } 

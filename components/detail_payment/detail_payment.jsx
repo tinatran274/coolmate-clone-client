@@ -21,10 +21,12 @@ const DetailPayment = (props) => {
   }
   const priceMemo = useMemo(() => {
     const total = props.data.listProduct.reduce((total, cur) => {
-      return total + parseInt(cur.price) * parseInt(cur.num)
+      return total + parseInt(cur.price) * parseInt(cur.qty)
     }, 0)
     return total
   }, [])
+
+  // console.log(props.data.listProduct)
 
   return (
     <div className="p-8 w-[100%]">
@@ -69,10 +71,10 @@ const DetailPayment = (props) => {
                 key={index}
                 name={product.name}
                 price={product.price}
-                num={product.num}
-                sizeChose={product.sizeChose}
-                colorChose={product.colorChose}
-                listColor={product.listColor}
+                num={product.qty}
+                img={product.img}
+                sizeChose={product.size}
+                colorChose={product.color}
               />
             )
           })}

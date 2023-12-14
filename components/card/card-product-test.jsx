@@ -5,29 +5,55 @@ import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { AiFillStar } from 'react-icons/ai'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
-const CardProduct = (props) => {
+const CardProductTest = (props) => {
 
+  const router = useRouter()
   const [isHover, setIsHover] = useState(false)
+  const { product } = props
+  const [productItem, setProductItem] = useState(product.productItems[0])
 
-  const handleNomalize = (product) => {
-    const imageURLs = product.productItems.map(color => ({
-      color_name: color.color,
-      color_image: color.colorImage,
-      color_item_image: color.productItemImages.map(image => image.url)
-    }))
+  // console.log(product)
+  const handleAddCart = (productItemId) => {
+    try {
+      const options = {
+        method: 'POST',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/add`,
+        data: {
+          productItemId: productItemId,
+          quantity: 1,
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+      console.log(options)
+      axios
+        .request(options, {
+          
+        })
+        .then(function (response) {
+          console.log(response.data)
+        })
+        .catch(function (error) {
+      })
+  } catch (error) {
+    console.log('Error:', error)
+  } 
 
-    return {
-      name: product?.name || '',
-      price: product?.priceStr || 0,
-      size: ['M', 'L', 'XL', '2XL', '3XL', '4XL'],
-      images: imageURLs,
-     }
   }
-
-  const product = handleNomalize(props.product)
-  const [isColorCurrent, setIsColorCurrent] = useState(product?.images[0])
   
+  const handleDetailProduct = () => {
+    router.push(
+      `/product/${encodeURIComponent(
+        JSON.stringify({
+          productId: product.id,
+        })
+      )}`
+    )
+  }
 
   return (
     <AspectRatio ratio={9 / 16}>
@@ -41,7 +67,9 @@ const CardProduct = (props) => {
                 width={672}
                 height={990}
                 src={
-                  !isHover ? isColorCurrent?.color_item_image[0] : isColorCurrent?.color_item_image[1]
+                  !isHover
+                    ? productItem?.productItemImages[0]
+                    : productItem?.productItemImages[1]
                 }
                 className="cursor-pointer"
                 onMouseEnter={() => setIsHover(true)}
@@ -65,7 +93,7 @@ const CardProduct = (props) => {
             >
               Mới
             </span>
-            {product.size ? (
+            {productItem.sizes ? (
               <div
                 className="absolute bottom-[1.5rem] left-[9%] max-w-[calc(100%-3rem)] w-full
             lg:visible opacity-0 backdrop-blur-[20px] group-hover:opacity-100
@@ -80,11 +108,12 @@ const CardProduct = (props) => {
                   Thêm nhanh vào giỏ hàng +
                 </p>
                 <div className="flex flex-wrap gap-[6px] justify-start items-center mt-2">
-                  {product.size.map((item, index) => (
+                  {productItem.sizes.map((item, index) => (
                     <div key={index}>
                       <button
                         className="bg-white text-black rounded-[0.5rem] text-[13px] w-[40px] h-[35px] font-[590] hover:text-white hover:bg-gray-300/70"
-                        onClick={() => console.log('click')}
+                        // onClick={() => console.log('click')}
+                        onClick={() => handleAddCart(productItem.itemIds[index])}
                       >
                         {item}
                       </button>
@@ -100,7 +129,7 @@ const CardProduct = (props) => {
             rounded-[16px] pt-[0.7rem] pb-[0.5rem] px-[0.75rem] transition-all invisible z-[2] bg-white
             "
               >
-                <p className="font-bold text-center mb-2 px-[3px] text-[13px] text-black ">
+                <p className="font-bold text-center mb-2 px-[3px] text-[13px] text-black cursor-pointer">
                   Thêm nhanh vào giỏ hàng +
                 </p>
               </div>
@@ -108,36 +137,37 @@ const CardProduct = (props) => {
           </div>
           <div className="flex flex-[25%] flex-col rounded-xl">
             <div className="flex flex-wrap mx-[-2px] mb-[10px]">
-              {product.images.map((item, index) => (
+              {product.productItems.map((item, index) => (
                 <div
                   key={index}
                   className={cn(
                     'relative flex items-center justify-center cursor-pointer h-[26px] w-[41px]',
-                    isColorCurrent.color_image === item.color_image &&
+                    productItem.id === item.id &&
                       'border border-solid border-[#000] rounded-xl'
                   )}
-                  onClick={() => setIsColorCurrent(item)}
+                  onClick={() => setProductItem(item)}
                 >
                   <Image
                     alt="Product Image Color"
                     className=" rounded-2xl p-[3px] bg-no-repeat bg-[50%] bg-[length:250%]"
-                    src={item.color_image}
+                    src={item.colorImage}
                     fill
                   />
                 </div>
               ))}
             </div>
-            <h3 className="font-[400] text-[14px] mb-[0.75rem] leading-5">
+            <h3 className="font-[400] text-[14px] mb-[0.75rem] leading-5 cursor-pointer" 
+              onClick={() => handleDetailProduct()}>
               {product.name}
             </h3>
             <p className="text-sm mx-0 mt-[-10px] mb-[5px] text-[#0009]">
-              {isColorCurrent.color_name}
+              {productItem.color}
             </p>
             <div className="flex flex-row-reverse justify-end text-sm font-[400]">
               <span className="text-red-500 ml-[10px]">-8%</span>
-              <del className="text-[#c4c4c4]">{product.price}</del>
+              <del className="text-[#c4c4c4]">{product.priceStr}</del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
-                {product.price}
+                {product.priceStr}
               </ins>
             </div>
             <span className="text-[#2f5acf] text-xs italic mt-2 font-[600]">
@@ -150,4 +180,4 @@ const CardProduct = (props) => {
   )
 }
 
-export default CardProduct
+export default CardProductTest

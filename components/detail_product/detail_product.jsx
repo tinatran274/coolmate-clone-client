@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
   LeftOutlined,
@@ -12,61 +12,110 @@ import {
 } from '@ant-design/icons'
 import { Button } from '@/components/ui/button'
 import { Rate } from 'antd'
+import axios from 'axios'
 
 const DetailProduct = ({ productId }) => {
-  //lấy data từ product id
-  const productData = {
-    id: productId,
-    type: 'Quần Short Nam',
-    name: 'Shorts thể thao 9',
-    cost: '229.000',
-    rating: {
-      time: 7,
-      average: 4
-    },
-    color: [
-      {
-        color_name: 'Xanh Navy',
-        imgs: [
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0061_29.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0060_73.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0087.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0080.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0068.jpg'
-        ]
-      },
-      {
-        color_name: 'Đen',
-        imgs: [
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0015_33.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0018_10.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0035.jpg',
-          'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/_CMM0051.jpg'
-        ]
-      }
-    ],
-    size: ['M', 'L', 'XL', '2XL', '3XL'],
-    feature: [
-      'Chất liệu: 88% Polyester + 12% Spande',
-      'Vải có khả năng thấm hút tốt và nhanh khô',
-      'Co giãn 4 chiều, thoải mái vận động',
-      'Túi to và sâu tiện lợi, thoải mái đựng đồ cá nhân',
-      'Có 1 túi khoá kéo ẩn, đựng vừa chìa khoá hay Airpods',
-      'Độ dài đo từ đũng đến viền ống quần: 9',
-      'Tự hào sản xuất tại Việt Nam'
-    ],
-    detail: [
-      'https://mcdn.coolmate.me/image/October2023/mceclip0_34.jpg',
-      'https://mcdn.coolmate.me/image/October2023/mceclip1_13.jpg',
-      'https://mcdn.coolmate.me/image/October2023/mceclip2_95.jpg',
-      'https://mcdn.coolmate.me/image/October2023/mceclip3_47.jpg'
-    ]
-    //vân vân mây mây
-  }
+
   const [currentImage, setCurrentImage] = useState(0)
   const [countProduct, setCountProduct] = useState(1)
   const [currentColor, setCurrentColor] = useState(0)
   const [currentSize, setCurrentSize] = useState(0)
+  const [responseData, setResponseData] = useState({})
+  const [responseReviewData, setResponseReviewData] = useState({})
+
+
+  const handleGetDetailProduct = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/get/${productId.productId}`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
+      }
+      axios
+        .request(options)
+        .then(function (response) {
+          setResponseData({
+            ...response.data,
+            data: responseData.data
+              ? [...responseData.data, ...response.data.data]
+              : response.data.data
+          })
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
+    }
+  }
+
+  const handleGetReview = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/review/getOfProduct?productId=${productId.productId}`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
+      }
+      console.log(options)
+      // axios
+      //   .request(options)
+      //   .then(function (response) {
+      //     setResponseReviewData({
+      //       ...response.data,
+      //       data: responseReviewData.data
+      //         ? [...responseReviewData.data, ...response.data.data]
+      //         : response.data.data
+      //     })
+      //   })
+      //   .catch(function (error) {
+      //     console.error(error)
+      //   })
+    } catch (error) {
+      console.log('Error fetching data:', error)
+    }
+  }
+
+  useEffect(() => {
+    handleGetDetailProduct()
+    handleGetReview()
+  }, [])
+
+  // console.log(responseReviewData)
+
+  const groupedByColor = responseData?.productItems?.reduce((acc, item) => {
+    const { id, color, colorImage, size, productItemImages, qtyInStock } = item;
+    if (!acc[color]) {
+      acc[color] = {
+        color,
+        colorImage,
+        productItemImages,
+        size: [],
+        id: [],
+        qtyInStock: []
+      };
+    }
+    acc[color].size = [...new Set([...acc[color].size, size])];
+    acc[color].id = [...new Set([...acc[color].id, id])];
+    acc[color].qtyInStock = [...new Set([...acc[color].qtyInStock, qtyInStock])];
+    
+    return acc;
+  }, {});
+
+  const colorArray = groupedByColor ? Object.entries(groupedByColor).map(([colorName, colorInfo]) => ({
+    color: colorInfo.color,
+    colorImage: colorInfo.colorImage,
+    id: colorInfo.id,
+    productItemImages: colorInfo.productItemImages,
+    qtyInStock: colorInfo.qtyInStock,
+    size: colorInfo.size
+  })) : []
+  responseData.productItemsColor = colorArray
+  const resultArray = responseData.description ? responseData.description.split('|').map(item => item.trim()) : []
+  responseData.descriptionArray = resultArray
+  // console.log(responseData)
+
 
   const increaseProduct = () => {
     setCountProduct(countProduct + 1)
@@ -78,7 +127,7 @@ const DetailProduct = ({ productId }) => {
 
   const handleNext = () => {
     setCurrentImage(
-      currentImage === productData.color[currentColor].imgs.length - 1
+      currentImage === responseData?.productItemsColor[currentColor]?.productItemImages.length - 1
         ? 0
         : currentImage + 1
     )
@@ -87,7 +136,7 @@ const DetailProduct = ({ productId }) => {
   const handlePrev = () => {
     setCurrentImage(
       currentImage === 0
-        ? productData.color[currentColor].imgs.length - 1
+        ? responseData?.productItemsColor[currentColor]?.productItemImages.length - 1
         : currentImage - 1
     )
   }
@@ -96,20 +145,49 @@ const DetailProduct = ({ productId }) => {
     setCurrentImage(0)
   }
 
+  const handleAddCart = () => {
+    try {
+      const options = {
+        method: 'POST',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/add`,
+        data: {
+          productItemId: responseData.productItemsColor[currentColor].id[currentSize],
+          quantity: countProduct,
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+      console.log(options)
+      // axios
+      //   .request(options, {
+          
+      //   })
+      //   .then(function (response) {
+      //     console.log(response.data)
+      //   })
+      //   .catch(function (error) {
+      // })
+  } catch (error) {
+    console.log('Error:', error)
+  } 
+
+  }
+
   return (
     <div className="p-4">
       <span className="text-[12px] text-gray-500 hover:text-blue-500">
         Trang chủ
       </span>
       <span className="text-[12px] mx-2">/</span>
-      <span className="text-[12px] hover:text-blue-500">
-        {productData.type}
+      <span className="text-[12px] hover:text-blue-500 cursor-pointer">
+        {responseData?.categoryId}
       </span>
 
       <div className="flex flex-row">
         <div className="relative w-1/2">
-          <div className="text-center mt-4 mb-4">
-            {productData.color[currentColor].imgs.map((image, index) => (
+          <div className="flex flex-row justify-center mt-4 mb-4">
+            {responseData?.productItemsColor[currentColor]?.productItemImages?.map((image, index) => (
               <span
                 key={index}
                 className={`h-1 w-10 inline-block rounded-full mx-2 ${
@@ -127,7 +205,7 @@ const DetailProduct = ({ productId }) => {
             <img
               loading="lazy"
               className="rounded-[20px]"
-              src={productData.color[currentColor].imgs[currentImage]}
+              src={responseData?.productItemsColor[currentColor]?.productItemImages[currentImage]?.url}
               alt={`Slide ${currentImage + 1}`}
             />
             <RightOutlined
@@ -136,7 +214,7 @@ const DetailProduct = ({ productId }) => {
             />
           </div>
           <div className="absolute top-16">
-            {productData.color[currentColor].imgs.map((image, index) => (
+            {responseData?.productItemsColor[currentColor]?.productItemImages.map((image, index) => (
               <img
                 key={index}
                 loading="lazy"
@@ -146,7 +224,7 @@ const DetailProduct = ({ productId }) => {
                                 ? ''
                                 : 'opacity-50 border border-gray-400'
                             }`}
-                src={productData.color[currentColor].imgs[index]}
+                src={image.url}
                 alt={`Slide ${currentImage + 1}`}
                 onClick={() => setCurrentImage(index)}
               />
@@ -154,30 +232,37 @@ const DetailProduct = ({ productId }) => {
           </div>
         </div>
         <div className="mx-20 my-12">
-          <p className="text-xl font-bold mb-6">{productData.name}</p>
-          <Rate disabled defaultValue={productData.rating.average} />
-          <span className="ml-2 text-sm">({productData.rating.time})</span>
-          <p className="text-2xl font-bold mb-8 mt-4">{productData.cost}đ</p>
+          <p className="text-4xl font-bold mb-6">{responseData.name}</p>
+          {/* <Rate disabled defaultValue={productData.rating.average} />
+          <span className="ml-2 text-sm">({productData.rating.time})</span> */}
+          <p className="text-2xl font-bold mb-8 mt-4">{responseData.priceStr}</p>
           <p className="mb-2 text-sm">
             Màu sắc:{' '}
             <span className="font-bold">
-              {productData.color[currentColor].color_name}
+              {responseData?.productItemsColor[currentColor]?.color}
             </span>
           </p>
-          {productData.color.map((color, index) => (
-            <Button
-              key={index}
-              className={`rounded-full mb-8 mr-4`}
-              onClick={() => handleChangeCurrentColor(index)}
-            >
-              {color.color_name}
-            </Button>
-          ))}
+          <div className={`flex flex-row`}>
+            {responseData?.productItemsColor?.map((color, index) => (
+              <img
+                key={index}
+                className={`w-12 h-8 p-[1px] object-cover rounded-full mb-8 mr-4 
+                ${
+                  currentColor === index
+                    ? 'border border-solid border-2 border-blue-500 '
+                    : ''
+                }`}
+                src={color.colorImage}
+                alt={`Màu ${color.color}`}
+                onClick={() => handleChangeCurrentColor(index)}
+              />
+            ))}
+          </div>
           <p className="mb-2 text-sm">
             Kích thước Quần:{' '}
-            <span className="font-bold">{productData.size[currentSize]}</span>
+            <span className="font-bold">{responseData?.productItemsColor[currentColor]?.size[currentSize]}</span>
           </p>
-          {productData.size.map((size, index) => (
+          {responseData?.productItemsColor[currentColor]?.size.map((size, index) => (
             <Button
               key={index}
               className={`rounded-[15px] p-6 mr-4 bg-gray-300 text-black mb-8 hover:text-white`}
@@ -188,41 +273,31 @@ const DetailProduct = ({ productId }) => {
           ))}
           <div className="flex flex-row items-center gap-4 mt-4">
             <div className="p-2 rounded-full border border-black">
-              <PlusOutlined className="mx-2" onClick={increaseProduct} />
-              <span className="font-bold mx-4">{countProduct}</span>
               <MinusOutlined className="mx-2" onClick={decreaseProduct} />
+              <span className="font-bold mx-4">{countProduct}</span>
+              <PlusOutlined className="mx-2" onClick={increaseProduct} />
             </div>
             <div>
-              <Button className="px-12 py-[21px] rounded-full">
+              <Button className="px-12 py-[21px] rounded-full"
+                onClick={() => handleAddCart()}>
                 <ShoppingOutlined className="mx-2" />
                 Thêm vào giỏ hàng
+                
               </Button>
             </div>
           </div>
           <hr className="my-12"></hr>
           <div>
             <p className="mb-6 text-sm font-bold">Đặc điểm nổi bật:</p>
-            {productData.feature.map((feature, index) => (
-              <p key={index} className={`my-2 text-sm`}>
-                <span className="font-bold mr-2">-</span>
-                {feature}
+            {responseData?.descriptionArray.map((feature, index) => (
+              <p key={index} className={`my-4 text-sm`}>{feature}
               </p>
             ))}
           </div>
         </div>
       </div>
       <hr className="my-12"></hr>
-      <div className="mx-28">
-        <p className="mb-6 text-2xl font-bold">Chi tiết sản phẩm</p>
-        {productData.detail.map((detail, index) => (
-          <img
-            key={index}
-            className="mb-4"
-            src={detail}
-            alt={`detail ${index}`}
-          />
-        ))}
-      </div>
+      
     </div>
   )
 }

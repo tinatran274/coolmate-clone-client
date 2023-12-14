@@ -1,89 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+'use client'
 import React, { useEffect, useState } from 'react'
-import { IoTrashBin } from 'react-icons/io5'
 import { IoMdArrowDropright } from 'react-icons/io'
 import TreeView, { flattenTree } from 'react-accessible-treeview'
-import cx from 'classnames'
 import './styles.css'
-
-const countries = {
-  name: '',
-  children: [
-    {
-      name: 'AFGHANISTAN',
-      currencyCode: '971',
-      currencyName: 'AFGHANI',
-      children: [
-        {
-          name: 'ALAND ISLasdjajshdANDS',
-          currencyCode: '978',
-          currencyName: 'EURO',
-          children: [
-            {
-              name: 'ALAND ISLasdjajshdANDS',
-              currencyCode: '978',
-              currencyName: 'EURO'
-            },
-            {
-              name: 'ALBAdhsajdhkNIA',
-              currencyCode: '008',
-              currencyName: 'LEK'
-            }
-          ]
-        },
-        {
-          name: 'ALBAdhsajdhkNIA',
-          currencyCode: '008',
-          currencyName: 'LEK'
-        }
-      ]
-    },
-    {
-      name: 'AFGHANISTAN',
-      currencyCode: '971',
-      currencyName: 'AFGHANI',
-      children: [
-        {
-          name: 'ALAND ISLasdjajshdANDS',
-          currencyCode: '978',
-          currencyName: 'EURO',
-          children: [
-            {
-              name: 'ALAND ISLasdjajshdANDS',
-              currencyCode: '978',
-              currencyName: 'EURO'
-            },
-            {
-              name: 'ALBAdhsajdhkNIA',
-              currencyCode: '008',
-              currencyName: 'LEK'
-            }
-          ]
-        },
-        {
-          name: 'ALBAdhsajdhkNIA',
-          currencyCode: '008',
-          currencyName: 'LEK'
-        }
-      ]
-    },
-    {
-      name: 'ALAND ISLANDS',
-      currencyCode: '978',
-      currencyName: 'EURO'
-    },
-    {
-      name: 'ALBANIA',
-      currencyCode: '008',
-      currencyName: 'LEK'
-    }
-  ]
-}
+import { useRouter } from 'next/navigation'
 
 function Filtering({ categories, search = '' }) {
-  const data = flattenTree(countries)
+  const data = flattenTree(categories)
+  const router = useRouter()
   const [treeData, setTreeData] = useState(data)
-
   const filter = (value) => {
     const filtered = []
     const includeChildren = (id) => {
@@ -133,6 +59,13 @@ function Filtering({ categories, search = '' }) {
   useEffect(() => {
     filterNodesByText(search)
   }, [search])
+  const handleEditCategory = (event, element) => {
+    event.stopPropagation()
+    router.push(
+      `/admin/edit-category/${element.id}?name=${element.name}&parent_category=${element.parent}`
+    )
+  }
+
   return (
     <div className="h-fit">
       {treeData.length === 1 ? (
@@ -162,13 +95,13 @@ function Filtering({ categories, search = '' }) {
                   style={{ marginLeft: 40 * (level - 1) }}
                   className="hover:bg-accent w-fit rounded-md cursor-pointer px-2 py-1 hover:text-accent-foreground scale-90 hover:scale-100 group"
                 >
-                  <div
-                    className="flex items-center "
-                    onClick={() => console.log(element)}
-                  >
+                  <div className="flex items-center ">
                     {isBranch && <ArrowIcon isOpen={isExpanded} />}
 
-                    <span className="text-[17px] font-normal group-hover:font-medium">
+                    <span
+                      className="text-[17px] font-normal group-hover:font-medium"
+                      onClick={(e) => handleEditCategory(e, element)}
+                    >
                       {element.name}
                     </span>
                   </div>

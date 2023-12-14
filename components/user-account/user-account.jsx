@@ -4,23 +4,28 @@ import React, { useState } from 'react'
 import { ArrowRightOutlined, UserOutlined } from '@ant-design/icons'
 import Info from './UI_component/info'
 import Orders from './UI_component/orders'
-import UserAdress from './UI_component/user_adress'
+import UserAdress from './UI_component/user_address'
 import Review from './UI_component/review'
 import { useRouter } from 'next/navigation'
+import { useDispatch, useSelector } from 'react-redux'
+import { resetUser } from '../../redux/user/userSlice'
 
 const UserAccount = () => {
-
-  const router = useRouter();
+  const router = useRouter()
   const [option, setOption] = useState('Info')
-
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
   const handleSetOption = (param) => {
+    if (param === 'Logout') {
+      localStorage.removeItem('token')
+      dispatch(resetUser())
+      router.push('/')
+    }
     setOption(param)
   }
   const handleGoToAdmin = () => {
-    console.log('ad')
     router.push('/admin')
-}
-
+  }
 
   return (
     <div className="flex flex-row mt-8 items-start">
@@ -53,30 +58,34 @@ const UserAccount = () => {
             }
           />
         </div>
-        <div
-          className={
-            option === 'Admin'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
-          }
-          onClick={handleGoToAdmin}
-        >
-          <UserOutlined className="text-white bg-black rounded-[10px] p-[5px] text-xl" />
-          <p
+        {user.isAdmin && (
+          <div
             className={
               option === 'Admin'
-                ? 'text-white w-[84%] ml-3'
-                : 'text-black w-[84%] ml-3'
+                ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
+                : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
             }
+            onClick={handleGoToAdmin}
           >
-            Admin
-          </p>
-          <ArrowRightOutlined
-            className={
-              option === 'Admin' ? 'text-white text-2xl' : 'text-black text-2xl'
-            }
-          />
-        </div>
+            <UserOutlined className="text-white bg-black rounded-[10px] p-[5px] text-xl" />
+            <p
+              className={
+                option === 'Admin'
+                  ? 'text-white w-[84%] ml-3'
+                  : 'text-black w-[84%] ml-3'
+              }
+            >
+              Admin
+            </p>
+            <ArrowRightOutlined
+              className={
+                option === 'Admin'
+                  ? 'text-white text-2xl'
+                  : 'text-black text-2xl'
+              }
+            />
+          </div>
+        )}
         <div
           className={
             option === 'Orders'
@@ -198,7 +207,7 @@ const UserAccount = () => {
           />
         </div>
       </div>
-      <div className="bg-white py-12 px-12 w-[59%] rounded-md">
+      <div className="bg-white py-12 px-12 w-[59%] h-auto rounded-md">
         {option === 'Info' ? (
           <Info />
         ) : option === 'Orders' ? (
@@ -208,7 +217,7 @@ const UserAccount = () => {
         ) : option === 'Review' ? (
           <Review />
         ) : (
-          <p>Xử lý đăng xuất</p>
+          <p></p>
         )}
       </div>
     </div>

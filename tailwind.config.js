@@ -7,7 +7,7 @@ module.exports = {
     './components/**/*.{js,jsx}',
     './app/**/*.{js,jsx}',
     './src/**/*.{js,jsx}',
-    './node_modules/@nextui-org/theme/dist/components/(accordion|chip|select).js'
+    './node_modules/@nextui-org/theme/dist/components/(accordion|chip|select|scroll-shadow|input|navbar|modal).js'
   ],
   theme: {
     container: {

@@ -35,19 +35,12 @@ const CardItemPay = (props) => {
     }
 
 
-    const getImg = () => {
-        for (const i in props.listColor) {
-            if (props.listColor[i].color_name === props.colorChose) {
-                return props.listColor[i].imgs;
-            }
-        }
-        return ""
-    }
-    console.log(props)
+    // console.log(props)
+
     return(
         <div className='w-[100%] flex my-6 items-center justify-between'>
             <div className='flex items-center'>
-                <img className='w-20 h-28 object-cover rounded-xl border border-blue-500' src={getImg()} alt="icon"/>
+                <img className='w-20 h-28 object-cover rounded-xl border border-blue-500' src={props.img} alt="icon"/>
                 <p className='text-sm ml-2 w-20'>{props.name}</p>
             </div>
             <p className='text-sm'>{props.num}</p>

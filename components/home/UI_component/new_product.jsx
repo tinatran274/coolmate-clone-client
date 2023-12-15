@@ -47,6 +47,7 @@ const NewProduct = () => {
     handleGetAoCacLoai()
   }, [])
 
+
   return (
     <div>
       <div className="flex items-center mx-8 mt-8">

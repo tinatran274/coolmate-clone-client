@@ -16,6 +16,7 @@ import { MenuItem } from './UI_component/nav_bar_test'
 import { UserDetailIcon } from './UI_component/user_detail_icon'
 import SearchNavBar from './UI_component/search_navbar'
 import SearchComponent from './UI_component/search_component'
+import ShoppingCart from './UI_component/shopping_cart'
 
 const iconMap = {
   0: <User className="mr-4 w-4 h-4" />,
@@ -96,11 +97,13 @@ const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
                   onClick={showSearchComponent}
                 />
               )}
+              {/* <ShoppingCart/> */}
               <UserDetailIcon />
               <ShoppingCartOutlined
                 onClick={handleCart}
                 className="text-white text-3xl"
               />
+              
             </div>
           </div>
         </nav>

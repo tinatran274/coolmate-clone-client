@@ -5,9 +5,6 @@ import React, { useState} from 'react'
 import { useRouter } from 'next/navigation'
 import NomalTextNav from './nomal_txt_nav'
 import HeaderTextNav from './header_txt_nav'
-import ImgTxtNav from './img_txt_nav'
-import ImgNav from './img_nav'
-import { cn } from "@/lib/utils"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,11 +14,16 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import {  ShoppingCartOutlined } from '@ant-design/icons';
 
-import { UserOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
-
-export function ShoppingCart() {
+export default function ShoppingCart() {
   return (
     <NavigationMenu >
       <NavigationMenuList>
@@ -30,8 +32,8 @@ export function ShoppingCart() {
             <ShoppingCartOutlined className="text-white text-3xl"/>
             </NavigationMenuTrigger>
             <NavigationMenuContent >
-                <div className="bg-white p-2 w-[500px]">
-                    <div className="flex justify-between">
+                <div className="bg-white p-2 w-[300px]">
+                    <div className="">
                         <div className="ml-1">
                             <HeaderTextNav content="Theo sản phẩm"/>
                             <NomalTextNav content="Tất cả"/>

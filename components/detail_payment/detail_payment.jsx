@@ -5,8 +5,56 @@ import React, { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import CardItemPay from './UI_component/card_item'
 import { Rate } from 'antd'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { notification, Space } from 'antd'
 
 const DetailPayment = (props) => {
+
+
+  const router = useRouter()
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type, content) => {
+      api[type]({
+      message: 'type',
+      description: content,
+      });
+  }
+
+  const handleCreateOrder = () => {
+    try {
+      const address = `${props.data.adress}, ${props.data.district}, ${props.data.city}, ${props.data.province}`
+      const options = {
+        method: 'POST',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/order/create`,
+        data: {
+          shippingAddress: address,
+          paymentMethod: 0,
+          shippingMethod: 0
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+      console.log(options)
+      axios
+        .request(options, { 
+        })
+        .then(function (response) {
+          console.log(response.data)
+          router.push('/account')
+          openNotificationWithIcon('success', 'Đặt hàng thành công')
+
+        })
+        .catch(function (error) {
+      })
+    } catch (error) {
+      console.log('Error:', error)
+    }
+
+  }
+
   const addDotsToNumber = (number) => {
     if (number) {
       const numberString = number.toString()
@@ -21,13 +69,15 @@ const DetailPayment = (props) => {
   }
   const priceMemo = useMemo(() => {
     const total = props.data.listProduct.reduce((total, cur) => {
-      return total + parseInt(cur.price) * parseInt(cur.num)
+      return total + parseInt(cur.price) * parseInt(cur.qty)
     }, 0)
     return total
   }, [])
 
+
   return (
     <div className="p-8 w-[100%]">
+      {contextHolder}
       <p className="text-center text-4xl font-bold my-16">
         ĐẶT HÀNG THÀNH CÔNG!
       </p>
@@ -69,10 +119,10 @@ const DetailPayment = (props) => {
                 key={index}
                 name={product.name}
                 price={product.price}
-                num={product.num}
-                sizeChose={product.sizeChose}
-                colorChose={product.colorChose}
-                listColor={product.listColor}
+                num={product.qty}
+                img={product.img}
+                sizeChose={product.size}
+                colorChose={product.color}
               />
             )
           })}
@@ -124,6 +174,12 @@ const DetailPayment = (props) => {
           </p>
         </div>
       </div>
+      <Button
+            className="rounded-full p-8 w-[100%] font-bold text-lg hover:bg-gray-200 hover:text-black"
+            onClick={handleCreateOrder}
+          >
+            Xác nhận đơn hàng
+      </Button>
     </div>
   )
 }

@@ -11,6 +11,9 @@ import { UpOutlined } from '@ant-design/icons'
 
 const DetailProductPage = ({ params }) => {
   const [isVisible, setIsVisible] = useState(false)
+  const productId = params
+  ? JSON.parse(decodeURIComponent(params.productId))
+  : null
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -30,7 +33,6 @@ const DetailProductPage = ({ params }) => {
     return () => window.removeEventListener('scroll', toggleVisibility)
   }, [])
 
-  console.log(params.productId)
   const [searchComponent, showSearchComponent] = useState(false)
   return (
     <div>
@@ -39,8 +41,8 @@ const DetailProductPage = ({ params }) => {
         searchComponent={searchComponent}
         showSearchComponent={() => showSearchComponent(!searchComponent)}
       />
-      <DetailProduct productId={params.productId} />
-      <ListComment productId={params.productId} />
+      <DetailProduct productId={productId} />
+      <ListComment productId={productId} />
       <Footer />
       <Button
         className={`fixed font-bold left-8 bottom-4 bg-blue-500 rounded-full ${

@@ -25,139 +25,6 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
 const ListItemCart = () => {
-  const templistItemCart = [
-    {
-      name: 'Shorts 84RISING Jurassic Warriors',
-      price: '850000',
-      num: 5,
-      colorChose: 'Đen',
-      listColor: [
-        {
-          color_name: 'Xám nhạt',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/October2023/ji3Untitled-1_45.jpg'
-        },
-        {
-          color_name: 'Đen',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/October2023/jr2Untitled-1_62.jpg'
-        }
-      ],
-      sizeChose: 'M',
-      listSize: ['M', 'L', 'XL', '2XL', '3XL']
-    },
-    {
-      name: 'T-Shirt Cotton 220GSM',
-      price: '269000',
-      num: 1,
-      colorChose: 'Trắng',
-      listColor: [
-        {
-          color_name: 'Xanh rêu',
-          imgs: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/August2023/APL100-258-6.jpg'
-        },
-        {
-          color_name: 'Trắng',
-          imgs: [
-            'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/August2023/APL100-EDIT-28.jpg'
-          ]
-        },
-        {
-          color_name: 'Đen',
-          imgs: [
-            'https://media.coolmate.me/cdn-cgi/image/quality=100/uploads/August2023/APL100-258-8.jpg'
-          ]
-        }
-      ],
-      sizeChose: 'XL',
-      listSize: ['M', 'L', 'XL', '2XL', '3XL']
-    }
-  ]
-
-  const responseGetCart = [
-    {
-      productItemId: 4,
-      productId: 1,
-      name: 'Polo Ice Cooling',
-      price: 349000,
-      color: 'Xanh Navy',
-      size: 'M',
-      img: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/image/November2023/23CMCW.PL001.2_68_70.jpg',
-      qty: 10,
-      allItemsOfProduct: [
-        {
-          productItemId: 4,
-          size: 'M',
-          color: 'Xanh Navy'
-        },
-        {
-          productItemId: 1,
-          size: 'M',
-          color: 'Đen'
-        },
-        {
-          productItemId: 2,
-          size: 'L',
-          color: 'Đen'
-        },
-        {
-          productItemId: 3,
-          size: 'XL',
-          color: 'Đen'
-        },
-        {
-          productItemId: 5,
-          size: 'L',
-          color: 'Xanh Navy'
-        },
-        {
-          productItemId: 6,
-          size: 'XL',
-          color: 'Xanh Navy'
-        }
-      ]
-    },
-    {
-      productItemId: 3,
-      productId: 1,
-      name: 'Polo Ice Cooling',
-      price: 349000,
-      color: 'Đen',
-      size: 'XL',
-      img: 'https://media.coolmate.me/cdn-cgi/image/quality=80,format=auto/image/November2023/23CMCW.PL001.2_68_70.jpg',
-      qty: 2,
-      allItemsOfProduct: [
-        {
-          productItemId: 4,
-          size: 'M',
-          color: 'Xanh Navy'
-        },
-        {
-          productItemId: 1,
-          size: 'M',
-          color: 'Đen'
-        },
-        {
-          productItemId: 2,
-          size: 'L',
-          color: 'Đen'
-        },
-        {
-          productItemId: 3,
-          size: 'XL',
-          color: 'Đen'
-        },
-        {
-          productItemId: 5,
-          size: 'L',
-          color: 'Xanh Navy'
-        },
-        {
-          productItemId: 6,
-          size: 'XL',
-          color: 'Xanh Navy'
-        }
-      ]
-    }
-  ]
 
   const [data, setData] = useState(null)
   const router = useRouter()
@@ -169,43 +36,49 @@ const ListItemCart = () => {
       }))
       .sort((a, b) => a.code - b.code)
   )
-
-  const [listCity, setListCity] = useState([])
-  const [listDistrict, setListDistrict] = useState([])
-  const [province, setProvince] = useState({})
-  const [city, setCity] = useState(null)
-  const [district, setDistrict] = useState(null)
-  const [username, setUsername] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [adress, setAdress] = useState('')
-  const [note, setNote] = useState('')
-  const [optionPay, setOptionPay] = useState('Momo')
-  const [listProduct, setListProduct] = useState(templistItemCart)
-
-  const [api, contextHolder] = notification.useNotification()
-  const openNotificationWithIcon = (type, content) => {
-    api[type]({
-      message: 'Lỗi',
-      description: content
-    })
-  }
+    const [listCity, setListCity] = useState([])
+    const [listDistrict, setListDistrict] = useState([])
+    const [province, setProvince] = useState({})
+    const [city, setCity] = useState(null)
+    const [district, setDistrict] = useState(null)
+    const [username, setUsername] = useState('')
+    const [phone, setPhone] = useState('')
+    const [email, setEmail] = useState('')
+    const [adress, setAdress] = useState('')
+    const [note, setNote] = useState('')
+    const [optionPay, setOptionPay] = useState('Momo')
+    const [responseData, setResponseData] = useState([])
+  
+    const [api, contextHolder] = notification.useNotification();
+    const openNotificationWithIcon = (type, content) => {
+        api[type]({
+        message: 'Lỗi',
+        description: content,
+        });
+    }
 
   const handleGetCart = () => {
     try {
       const options = {
         method: 'GET',
-        url: 'https://localhost:7107/api/cart'
+        url: 'https://localhost:7107/api/cart',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
       }
       axios
         .request(options)
         .then(function (response) {
-          console.log(response.data)
+          setResponseData(response.data)
+          // console.log(response.data)
         })
         .catch(function (error) {
           console.error(error)
+          if (error.response.status === 401)
+              openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+          else 
+              openNotificationWithIcon('error', error.response.data)
         })
-      // responseData(response.data);
     } catch (error) {
       console.log('Error fetching data:', error)
     }
@@ -214,6 +87,8 @@ const ListItemCart = () => {
   useEffect(() => {
     handleGetCart()
   }, [])
+
+  // console.log(responseData)
 
   const handleSetProvince = (value) => {
     for (const code in TinhTP) {
@@ -255,44 +130,104 @@ const ListItemCart = () => {
     setOptionPay(value)
   }
 
-  const handleNumChange = (name, num) => {
-    if (num > 0) {
-      const newArray1 = listProduct.map((item) => {
-        if (item.name === name) {
-          return { ...item, num: num }
-        }
-        return item
+  const handleNumChange = (itemId, num) => {
+
+    try {
+      const options = {
+        method: 'PUT',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/updateQty`,
+        data: {
+          productItemId: itemId,
+          quantity: num
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+      axios
+        .request(options, {
+          
+        })
+        .then(function (response) {
+          console.log(response.data)
+          handleGetCart()
+        })
+        .catch(function (error) {
       })
-      setListProduct(newArray1)
-    } else {
-      const array1 = listProduct.filter((item) => item.name !== name)
-      setListProduct(array1)
+    } catch (error) {
+      console.log('Error:', error)
+    }
+
+  }
+  const handleSizeChange = (oldItem, newItem) => {
+    try {
+      const options = {
+        method: 'PUT',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/replaceCartItem`,
+        data: {
+          oldProductItemId: oldItem,
+          newProductItemId: newItem
+        },
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+      // console.log(options)
+      axios
+        .request(options, {
+          
+        })
+        .then(function (response) {
+          console.log(response.data)
+          handleGetCart()
+        })
+        .catch(function (error) {
+      })
+    } catch (error) {
+      console.log('Error:', error)
     }
   }
-  const handleSizeChange = (name, size) => {
-    const newArray1 = listProduct.map((item) => {
-      if (item.name === name) {
-        return { ...item, sizeChose: size }
+
+  const handleDeleteItem = (itemId) => {
+    try {
+      const options = {
+        method: 'DELETE',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/removeCartItem?productItemId=${itemId}`,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
       }
-      return item
-    })
-    setListProduct(newArray1)
+      console.log(options)
+      axios
+        .request(options, {
+          
+        })
+        .then(function (response) {
+          console.log(response.data)
+          handleGetCart()
+        })
+        .catch(function (error) {
+      })
+    } catch (error) {
+      console.log('Error:', error)
+    }
   }
-  const handleColorChange = (name, color, img) => {
-    const newArray1 = listProduct.map((item) => {
-      if (item.name === name) {
-        return { ...item, colorChose: color, img: img }
-      }
-      return item
-    })
-    setListProduct(newArray1)
-  }
+
+  // console.log(responseData)
+
   const priceMemo = useMemo(() => {
-    const total = listProduct.reduce((total, cur) => {
-      return total + parseInt(cur.price) * parseInt(cur.num)
+    const total = responseData.reduce((total, cur) => {
+      return total + parseInt(cur.price) * parseInt(cur.qty)
     }, 0)
     return total
-  }, [listProduct])
+  }, [responseData])
+
+  const numProductMemo = useMemo(() => {
+    const total = responseData.reduce((total, cur) => {
+      return total + parseInt(cur.qty)
+    }, 0)
+    return total
+  }, [responseData])
 
   const addDotsToNumber = (number) => {
     if (number) {
@@ -342,7 +277,7 @@ const ListItemCart = () => {
             district: district.name,
             note: note,
             optionPay: optionPay,
-            listProduct: listProduct
+            listProduct: responseData,
           })
         )}`
       )
@@ -371,7 +306,7 @@ const ListItemCart = () => {
         <div className="bg-gray-100 px-4 py-6 rounded-md mt-4">
           <p className="uppercase font-bold text-4xl">Hi, Trần Nhung</p>
           <p>
-            Tổng đơn (3 sản phẩm){' '}
+            Tổng đơn ({numProductMemo} sản phẩm){' '}
             <span className="text-blue-600 font-bold">
               {addDotsToNumber(priceMemo)}đ
             </span>
@@ -600,7 +535,7 @@ const ListItemCart = () => {
             className="rounded-lg p-6 w-[100%] hover:bg-gray-200 hover:text-black"
             onClick={handlePayment}
           >
-            Thanh toán {addDotsToNumber(priceMemo)}đ ({optionPay})
+            Đặt hàng {addDotsToNumber(priceMemo)}đ ({optionPay})
           </Button>
         </div>
       </div>
@@ -608,22 +543,15 @@ const ListItemCart = () => {
       <div className="w-[38%]">
         <p className="font-bold text-3xl px-3 mt-8 mb-8">Giỏ hàng</p>
         <div className="px-3">
-          {listProduct &&
-            listProduct.map((product, index) => {
+          {responseData &&
+            responseData.map((product, index) => {
               return (
                 <CardItemCart
-                  listItems={listProduct}
                   onNumChange={handleNumChange}
                   onSizeChange={handleSizeChange}
-                  onColorChange={handleColorChange}
+                  onDelete={handleDeleteItem}
                   key={index}
-                  name={product.name}
-                  price={addDotsToNumber(product.price)}
-                  num={product.num}
-                  sizeChose={product.sizeChose}
-                  colorChose={product.colorChose}
-                  listColor={product.listColor}
-                  listSize={product.listSize}
+                  productData={product}
                 />
               )
             })}

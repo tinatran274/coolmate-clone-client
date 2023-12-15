@@ -4,35 +4,41 @@ export const userSlice = createSlice({
   initialState: {
     name: '',
     email: '',
-    phonenumber: '',
+    phoneNumber: '',
     username: '',
     birthday: '',
     gender: '',
     weight: '',
     height: '',
-    isAdmin: false
+    password: '',
+    isAdmin: false,
+    token: ''
   },
   reducers: {
     updateUser: (state, action) => {
       const {
         name = '',
         email = '',
-        phonenumber = '',
+        phoneNumber = '',
         username = '',
         birthday = '',
         gender = '',
         weight = '',
         height = '',
+        password = '',
+        token = '',
         isAdmin = false
       } = action.payload
       state.name = name ? name : state.name
       state.email = email ? email : state.email
       state.username = username ? username : state.username
       state.birthday = birthday ? birthday : state.birthday
-      state.phonenumber = phonenumber ? phonenumber : state.phonenumber
+      state.phoneNumber = phoneNumber ? phoneNumber : state.phoneNumber
       state.gender = gender ? gender : state.gender
       state.height = height ? height : state.height
       state.weight = weight ? weight : state.weight
+      state.password = password ? password : state.password
+      state.token = token ? token : state.token
       state.isAdmin = isAdmin ? isAdmin : state.isAdmin
     },
     resetUser: (state) => {
@@ -40,10 +46,12 @@ export const userSlice = createSlice({
       state.email = ''
       state.username = ''
       state.birthday = ''
-      state.phonenumber = ''
+      state.phoneNumber = ''
       state.gender = ''
       state.height = ''
       state.weight = ''
+      state.password = ''
+      state.token = ''
       state.isAdmin = false
     }
   }

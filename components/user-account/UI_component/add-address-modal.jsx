@@ -15,8 +15,8 @@ import TinhTP from '../../../hanhchinhvn/tinh_tp.json'
 import QuanHuyen from '../../../hanhchinhvn/quan_huyen.json'
 import XaPhuong from '../../../hanhchinhvn/xa_phuong.json'
 import { Input } from '@/components/ui/input'
-import { filter } from 'lodash'
-export default function AddAddress() {
+import { postApi } from '@/lib/fetch'
+export default function AddAddress({ getData }) {
   const { isOpen, onOpenChange, onOpen } = useDisclosure()
   const [listProvince, setListProvince] = useState(
     Object.entries(TinhTP)
@@ -86,6 +86,26 @@ export default function AddAddress() {
   }
   const handleAddressChange = (e) => {
     setAddress(e.target.value)
+  }
+  const handleOnClick = async () => {
+    await postApi({
+      endPoint: '/api/user/addAddress',
+      data: {
+        name: username,
+        phoneNumber: phone,
+        streetLine: `${address}, ${city.name}, ${province.name}`,
+        isDefault: defaultAddress ? 1 : 0
+      }
+    })
+    setUsername('')
+    setPhone('')
+    setAddress('')
+    setDefaultAddress(false)
+    setProvince({})
+    setCity(null)
+    setDistrict(null)
+    getData()
+    onOpenChange()
   }
   return (
     <>
@@ -205,7 +225,7 @@ export default function AddAddress() {
                 >
                   Hủy
                 </Button>
-                <Button onClick={onClose}>Thêm mới</Button>
+                <Button onClick={handleOnClick}>Thêm mới</Button>
               </ModalFooter>
             </>
           )}

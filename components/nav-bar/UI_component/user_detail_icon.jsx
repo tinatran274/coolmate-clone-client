@@ -42,7 +42,11 @@ export function UserDetailIcon() {
         onClick={() => (!user?.username ? handleSignIn() : showDrawer())}
       />
       <Drawer
-        title={<h2 style={{ fontSize: 40 }}>HI, TRẦN THỊ HỒNG NHUNG</h2>}
+        title={
+          <h2 style={{ fontSize: 40 }} className="uppercase">
+            HI, {user.name ? user.name : user.username}
+          </h2>
+        }
         placement="right"
         onClose={onClose}
         open={open}

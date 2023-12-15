@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react'
 import { ArrowRightOutlined, UserOutlined } from '@ant-design/icons'
 import Info from './UI_component/info'

@@ -15,11 +15,10 @@ import { Button } from '@/components/ui/button'
 import TinhTP from '../../../hanhchinhvn/tinh_tp.json'
 import QuanHuyen from '../../../hanhchinhvn/quan_huyen.json'
 import XaPhuong from '../../../hanhchinhvn/xa_phuong.json'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import { getkeyByValue } from '@/lib/utils'
-import { get } from 'lodash'
-export default function UpdateAddress({ data }) {
+import { postApi, putApi } from '@/lib/fetch'
+export default function UpdateAddress({ data, getData }) {
   const { isOpen, onOpenChange, onOpen } = useDisclosure()
   const [listProvince, setListProvince] = useState(
     Object.entries(TinhTP)
@@ -36,9 +35,12 @@ export default function UpdateAddress({ data }) {
   const [phone, setPhone] = useState(data.phone)
   const [address, setAddress] = useState(data.address)
   const [defaultAddress, setDefaultAddress] = useState(data.isDefault === 1)
-  const [province, setProvince] = useState(null)
+  const [province, setProvince] = useState({ name: data.province })
   const [city, setCity] = useState(null)
   const [district, setDistrict] = useState(null)
+  const [provinceDefault, setProvinceDefault] = useState(null)
+  const [cityDefault, setCityDefault] = useState(null)
+  const [flag, setFlag] = useState(1)
   const handleSetProvince = (value) => {
     for (const code in TinhTP) {
       if (code === value) {
@@ -50,17 +52,19 @@ export default function UpdateAddress({ data }) {
         setListCity(filterCity)
         setListDistrict([])
         setCity(null)
+        if (flag) {
+          setCity({ name: data.city })
+          setFlag(0)
+        }
         setDistrict(null)
         return
       }
     }
   }
-  const [provinceDefault, setProvinceDefault] = useState(
-    getkeyByValue(TinhTP, data.province, 'tinhtp')
-  )
-  const [cityeDefault, setCityeDefault] = useState(
-    getkeyByValue(QuanHuyen, data.city, 'qh')
-  )
+  useEffect(() => {
+    setProvinceDefault(getkeyByValue(TinhTP, data.province, 'tinhtp'))
+    setCityDefault(getkeyByValue(QuanHuyen, data.city, 'qh'))
+  }, [data])
   useEffect(() => {
     handleSetProvince(provinceDefault)
   }, [provinceDefault])
@@ -99,6 +103,27 @@ export default function UpdateAddress({ data }) {
   }
   const handleAddressChange = (e) => {
     setAddress(e.target.value)
+  }
+  const handleOnClick = async () => {
+    await putApi({
+      endPoint: '/api/user/updateAddress',
+      data: {
+        addressId: data.addressId,
+        name: username,
+        phoneNumber: phone,
+        streetLine: `${address}, ${city.name}, ${province.name}`
+      }
+    })
+    if (defaultAddress) {
+      await postApi({
+        endPoint: `/api/user/MakeAddressDefault`,
+        data: { addressId: data.addressId }
+      })
+    }
+    setFlag(1)
+    getData()
+
+    onOpenChange()
   }
   return (
     <>
@@ -173,7 +198,7 @@ export default function UpdateAddress({ data }) {
                       aria-label="Select a city"
                       size="sm"
                       variant="bordered"
-                      defaultSelectedKeys={[cityeDefault]}
+                      defaultSelectedKeys={[cityDefault]}
                       radius="full"
                       className="w-[540px]"
                     >
@@ -223,7 +248,7 @@ export default function UpdateAddress({ data }) {
                 >
                   Hủy
                 </Button>
-                <Button onClick={onClose}>Thêm mới</Button>
+                <Button onClick={handleOnClick}>Thêm mới</Button>
               </ModalFooter>
             </>
           )}

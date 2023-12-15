@@ -49,27 +49,27 @@ const SearchComponent = ({ showSearchComponent }) => {
             <div className="flex flex-wrap items-center justify-start gap-3 py-4">
               <span
                 className="border py-2 px-3 rounded-2xl font-medium text-xs capitalize cursor-pointer border-teal-400"
-                onClick={() => setValue('Áo Basic')}
+                onClick={() => setValue('Polo')}
               >
-                Áo basic
+                Polo
               </span>
               <span
                 className="border py-2 px-3 rounded-2xl font-medium text-xs capitalize cursor-pointer border-teal-400"
-                onClick={() => setValue('Áo Basic')}
+                onClick={() => setValue('T-shirt')}
               >
-                Áo basic
+                T-shirt
               </span>
               <span
                 className="border py-2 px-3 rounded-2xl font-medium text-xs capitalize cursor-pointer border-teal-400"
-                onClick={() => setValue('Áo Basic')}
+                onClick={() => setValue('Jeans')}
               >
-                Áo basic
+                Jeans
               </span>
               <span
                 className="border py-2 px-3 rounded-2xl font-medium text-xs capitalize cursor-pointer border-teal-400"
-                onClick={() => setValue('Áo Basic')}
+                onClick={() => setValue('Gym')}
               >
-                Áo basic
+                Gym
               </span>
             </div>
           </div>
@@ -78,7 +78,7 @@ const SearchComponent = ({ showSearchComponent }) => {
           <div className="text-xl font-bold">Sản phẩm tìm kiếm</div>
           <div className="w-full h-full pt-[10px]">
             {!!responseData.length ? (
-              <ScrollShadow className="w-full h-[380px] flex flex-wrap gap-4 justify-start pt-4 pb-2">
+              <ScrollShadow className="w-full h-[500px] flex flex-wrap gap-4 justify-start pt-4 pb-2">
                 {responseData.map((product, index) => {
                   return (
                     <div key={index} className="w-[190px] h-[340px] mb-5">

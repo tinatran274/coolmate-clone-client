@@ -1,4 +1,5 @@
 import NextProvider from '../provider/nextui-provider'
+import { PersistGateProvider } from '../provider/persistgate-provider'
 import ReduxProvider from '../provider/redux-provider'
 
 import './globals.css'
@@ -15,7 +16,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          <NextProvider>{children}</NextProvider>
+          <NextProvider>
+            <PersistGateProvider>{children}</PersistGateProvider>
+          </NextProvider>
         </ReduxProvider>
       </body>
     </html>

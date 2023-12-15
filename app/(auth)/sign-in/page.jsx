@@ -41,10 +41,9 @@ const SignIn = () => {
       setLoading(true)
       const data = await handleFetchApiSignIn({ email, password })
       const { token, isAdmin } = data?.data
-
+      localStorage.setItem('token', token)
       await handleGetDetailUser({ token, isAdmin })
       setLoading(false)
-      localStorage.setItem('token', token)
 
       router.push('/')
     } catch (error) {
@@ -67,7 +66,7 @@ const SignIn = () => {
         }
       }
     )
-    dispatch(updateUser({ ...res?.data, isAdmin }))
+    dispatch(updateUser({ ...res?.data, isAdmin, password, token }))
   }
   const handleSignUp = () => {
     router.push('/sign-up')

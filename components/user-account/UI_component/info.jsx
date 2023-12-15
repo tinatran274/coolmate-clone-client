@@ -1,68 +1,50 @@
+'use client'
 import React, { useState } from 'react'
-import { ArrowRightOutlined } from '@ant-design/icons'
+import { Calendar as CalendarIcon } from 'lucide-react'
+
+import { cn, handleDate } from '@/lib/utils'
+import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Button } from '@/components/ui/button'
 import {
   UserOutlined,
-  CalendarFilled,
   PhoneFilled,
   LockFilled,
   EyeInvisibleFilled,
-  EyeFilled,
-  CloseCircleFilled
+  EyeFilled
 } from '@ant-design/icons'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Slider } from '@/components/ui/slider'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
-import { useRouter } from 'next/navigation'
-import { resetUser } from '../../../redux/user/userSlice'
-import { notification } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
 
-function Info(props) {
-  const userData = {
-    name: 'TRẦN NHUNG',
-    email: '21522438@gm.uit.edu.vn',
-    password: '123456'
-  }
-  const listDay = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25, 26, 27, 28, 29, 30, 31
-  ]
-  const listMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  const listYear = [
-    1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
-    2002, 2003, 2004, 2005, 2006
-  ]
-  const [name, setName] = useState(userData.name)
-  const [day, setDay] = useState(1)
-  const [month, setMonth] = useState(1)
-  const [year, setYear] = useState(2023)
-  const [gender, setGender] = useState('male')
-  const [phone, setPhone] = useState(userData.phone)
-  const [height, setHeight] = useState(userData.height ? userData.height : 150)
-  const [weight, setWeight] = useState(userData.weight ? userData.weight : 50)
+import { notification } from 'antd'
+import { updateUser } from '../../../redux/user/userSlice'
+
+function Info() {
+  const user = useSelector((state) => state.user)
+  const [name, setName] = useState(user.name)
+  const [birthday, setBirthDay] = useState(user.birthday)
+  const dispatch = useDispatch()
+  const [gender, setGender] = useState(user.gender ? user.gender : 'male')
+  const [phone, setPhone] = useState(user.phoneNumber)
+  const [height, setHeight] = useState(user.height ? user.height : 150)
+  const [weight, setWeight] = useState(user.weight ? user.weight : 50)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [newPassword, setNewPassword] = useState('')
@@ -70,21 +52,55 @@ function Info(props) {
   const [txtError, setTxtError] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const handleSetDay = (value) => {
-    setDay(value)
-  }
-  const handleSetMonth = (value) => {
-    setMonth(value)
-  }
-  const handleSetYear = (value) => {
-    setYear(value)
-  }
   const handleGenderChange = (value) => {
     setGender(value)
   }
-
-  const handleUpdateInfo = () => {
-    console.log(name, day, month, year, gender, height, weight)
+  const handleDobChange = (value) => {
+    const date = handleDate(value)
+    setBirthDay(date)
+  }
+  const reset = () => {
+    setName('')
+    setBirthDay('')
+    setGender('')
+    setHeight('')
+    setWeight('')
+    setPhone('')
+  }
+  const handleUpdateInfo = async () => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_ROOT}/api/user/updateInfo`,
+        {
+          name,
+          email: user.email,
+          birthday,
+          gender,
+          height,
+          weight,
+          phoneNumber: phone
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        }
+      )
+      dispatch(
+        updateUser({
+          name,
+          birthday,
+          gender,
+          height,
+          weight,
+          phoneNumber: phone
+        })
+      )
+      reset()
+      openNotification('Cập nhật thông tin thành công')
+    } catch (error) {
+      openNotification('Có lỗi xảy ra')
+    }
   }
   const handleEncodePassword = (password) => {
     const maskedPassword = '*'.repeat(password.length)
@@ -136,7 +152,7 @@ function Info(props) {
   const handleUpdateAccount = async () => {
     if (!password || !newPassword || !confirmNewPassword) {
       setTxtError('Bạn chưa điền đủ thông tin')
-    } else if (password !== userData.password) {
+    } else if (password !== user.password) {
       setTxtError('Bạn nhập sai mật khẩu')
     } else if (newPassword !== confirmNewPassword) {
       setTxtError('Xác nhận lại mật khẩu')
@@ -152,14 +168,15 @@ function Info(props) {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}}`
+              Authorization: `Bearer ${user.token}`
             }
           }
         )
+        dispatch(updateUser({ ...user, password: newPassword }))
         openNotification('Cập nhật mật khẩu thành công')
         closeDialog()
       } catch (error) {
-        openNotification
+        openNotification('Có lỗi xảy ra')
         closeDialog()
       }
     }
@@ -171,24 +188,24 @@ function Info(props) {
       <p className="text-3xl mb-5">Thông tin tài khoản</p>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Họ và tên</p>
-        {userData.name ? (
-          <p className="">{userData.name}</p>
+        {user.name ? (
+          <p className="">{user.name}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
       </div>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Số điện thoại</p>
-        {userData.age ? (
-          <p className="">{userData.age}</p>
+        {user.phoneNumber ? (
+          <p className="">{user.phoneNumber}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
       </div>
       <div className="flex flex-row mb-4 items-center">
-        <p className="w-[40%] text-gray-500 text-lg">Giới tính</p>
-        {userData.age ? (
-          <p className="">{userData.gender}</p>
+        <p className="w-[40%] text-gray-500 text-lg ">Giới tính</p>
+        {user.gender ? (
+          <p className="capitalize">{user.gender}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
@@ -198,24 +215,24 @@ function Info(props) {
           Ngày sinh
           <span className="italic text-sm"> (ngày/tháng/năm)</span>
         </p>
-        {userData.age ? (
-          <p className="">{userData.dob}</p>
+        {user.birthday ? (
+          <p className="">{user.birthday}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
       </div>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Chiều cao</p>
-        {userData.age ? (
-          <p className="">{userData.height}</p>
+        {user.height ? (
+          <p className="">{user.height} cm</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
       </div>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Cân nặng</p>
-        {userData.age ? (
-          <p className="">{userData.weight}</p>
+        {user.weight ? (
+          <p className="">{user.weight} kg</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
@@ -245,59 +262,28 @@ function Info(props) {
                 </div>
               </div>
               <div className="flex flex-row mt-4 justify-between">
-                <Select onValueChange={handleSetDay}>
-                  <SelectTrigger className="w-[140px] rounded-full px-4">
-                    <CalendarFilled className="text-gray-300 text-xl mr-3" />
-                    <SelectValue placeholder="Ngày" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <ScrollArea className="h-40 w-30">
-                      <SelectGroup>
-                        {listDay.map((item, index) => (
-                          <SelectItem key={item} value={item}>
-                            {item}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
-
-                <Select onValueChange={handleSetMonth}>
-                  <SelectTrigger className="w-[140px] rounded-full px-4">
-                    <CalendarFilled className="text-gray-300 text-xl mr-3" />
-                    <SelectValue placeholder="Tháng" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <ScrollArea className="h-40 w-30">
-                      <SelectGroup>
-                        {listMonth.map((item, index) => (
-                          <SelectItem key={item} value={item}>
-                            {item}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
-
-                <Select onValueChange={handleSetYear}>
-                  <SelectTrigger className="w-[140px] rounded-full px-4">
-                    <CalendarFilled className="text-gray-300 text-xl mr-3" />
-                    <SelectValue placeholder="Năm" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <ScrollArea className="h-40 w-30">
-                      <SelectGroup>
-                        {listYear.map((item, index) => (
-                          <SelectItem key={item} value={item}>
-                            {item}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={cn(
+                        'w-full rounded-full justify-start text-left font-normal h-[50px] border-zinc-300',
+                        !birthday && 'text-muted-foreground'
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {birthday ? birthday : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={birthday}
+                      onSelect={handleDobChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <RadioGroup
                 className="flex flex-row my-4 gap-6"
@@ -357,7 +343,7 @@ function Info(props) {
                   min={140}
                   max={190}
                   step={1}
-                  onValueChange={(e) => setHeight(e)}
+                  onValueChange={(e) => setHeight(e[0])}
                 />
                 <p className="font-bold text-nm text-blue-600">{height}cm</p>
               </div>
@@ -369,7 +355,7 @@ function Info(props) {
                   min={40}
                   max={90}
                   step={1}
-                  onValueChange={(e) => setWeight(e)}
+                  onValueChange={(e) => setWeight(e[0])}
                 />
                 <p className="font-bold text-nm text-blue-600">{weight}kg</p>
               </div>
@@ -387,16 +373,16 @@ function Info(props) {
       <p className="text-3xl mb-5 mt-16">Thông tin đăng nhập</p>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Email</p>
-        {userData.email ? (
-          <p className="">{userData.email}</p>
+        {user.email ? (
+          <p className="">{user.email}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}
       </div>
       <div className="flex flex-row mb-4 items-center">
         <p className="w-[40%] text-gray-500 text-lg">Mật khẩu</p>
-        {userData.password ? (
-          <p className="">{handleEncodePassword(userData.password)}</p>
+        {user.password ? (
+          <p className="">{handleEncodePassword(user.password)}</p>
         ) : (
           <p className="italic text-gray-500 text-sm">Chưa cập nhật </p>
         )}

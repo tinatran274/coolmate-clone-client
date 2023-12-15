@@ -1,5 +1,6 @@
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { date } from 'zod'
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -57,4 +58,16 @@ export const convertPrice = (price) => {
   }).format(price)
 
   return formatter
+}
+
+export const handleDate = (date) => {
+  const newDate = new Date(date)
+  const day = newDate.getDate()
+  const month = newDate.getMonth() + 1
+  const year = newDate.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+export function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }

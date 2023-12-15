@@ -4,23 +4,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import Image from 'next/image'
 
 const SearchProduct = (props) => {
-  const handleNomalize = (product) => {
-    const imageURLs = product.productItems.map((color) => ({
-      color_name: color.color,
-      color_image: color.colorImage,
-      color_item_image: color.productItemImages.map((image) => image.url)
-    }))
-
-    return {
-      name: product?.name || '',
-      price: product?.priceStr || 0,
-      size: ['M', 'L', 'XL', '2XL', '3XL', '4XL'],
-      images: imageURLs
-    }
-  }
-
-  const product = handleNomalize(props.product)
-
+  const product = props.product
   return (
     <AspectRatio ratio={9 / 16}>
       <div className=" flex flex-col h-full w-full">
@@ -32,7 +16,7 @@ const SearchProduct = (props) => {
                 objectFit="cover"
                 width={672}
                 height={990}
-                src={product?.images[0].color_item_image[0]}
+                src={product?.img}
                 className="cursor-pointer"
               />
             </AspectRatio>
@@ -51,9 +35,9 @@ const SearchProduct = (props) => {
 
             <div className="flex flex-row-reverse justify-end text-sm font-[400]">
               <span className="text-red-500 ml-[10px]">-8%</span>
-              <del className="text-[#c4c4c4]">{product.price}</del>
+              <del className="text-[#c4c4c4]">{product.priceStr}</del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
-                {product.price}
+                {product.priceStr}
               </ins>
             </div>
             <span className="text-[#2f5acf] text-xs italic mt-2 font-[600]">

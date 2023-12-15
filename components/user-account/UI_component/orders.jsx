@@ -5,6 +5,7 @@ import CardItemDetailOrder from './card_item_detail_order';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button"
 import axios from 'axios'
+import { notification, Space } from 'antd'
 
 function Orders (props) {
 
@@ -13,6 +14,15 @@ function Orders (props) {
     const [isVisibleDetailOrder, setVisibleDetailOrder] = useState(false);
     const [currentOrder, setCurrentOrder] = useState({});
     const [responseData, setResponseData] = useState([])
+    const [api, contextHolder] = notification.useNotification();
+
+    const openNotificationWithIcon = (type, content) => {
+        api[type]({
+        message: 'Lỗi',
+        description: content,
+        });
+    }
+
 
     const handleGetAllOrder = () => {
         try {
@@ -109,7 +119,7 @@ function Orders (props) {
         setVisibleDetailOrder(!isVisibleDetailOrder);
         setCurrentOrder(responseData[index])
     }
-    
+
     const addDotsToNumber = (number) => {
         if(number) {
             const numberString = number.toString();
@@ -132,28 +142,32 @@ function Orders (props) {
         } else return 0;
     },[currentOrder])
 
-    const handleUpdateStatus = () => {
+    const handleCancelOrder = () => {
         try {
           const options = {
-            method: 'PUT',
-            url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/order/updateStatus`,
-            data: {
-                orderId: currentOrder.id,
-                status: 1
-            },
+            method: 'DELETE',
+            url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/order/cancelOrder?orderId=${currentOrder.id}`,
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
           }
-          // console.log(options)
           axios
             .request(options, {
-              
             })
             .then(function (response) {
               console.log(response.data)
+              handleGetAllOrder()
+              setVisibleDetailOrder(false)
             })
             .catch(function (error) {
+                if (error.response.status === 401)
+                      openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+                else if (error.response.status === 400)
+                      openNotificationWithIcon('error', error.response.data)
+                else if (error.response.status === 403)
+                    openNotificationWithIcon('error', `Không có quyền update status ó đơ`)
+                else
+                      openNotificationWithIcon('error', "Lỗi")
           })
         } catch (error) {
           console.log('Error:', error)
@@ -162,10 +176,10 @@ function Orders (props) {
 
 
     return (
-        <div>
+        <div> {contextHolder}
             <div className = {isVisibleDetailOrder? "hidden" : "visible"} >
                 <p className='text-3xl mb-5'>Lịch sử đơn hàng</p>
-                <p className='w-[40%] text-gray-500 text-lg'>Đơn hàng của bạn: {responseData.length} đơn hàng</p>
+                <p className=' text-gray-500 text-lg'>Đơn hàng của bạn: {responseData.length} đơn hàng</p>
                 <div className=''>
                     {responseData && responseData.map((order, index) => {
                     return ( <div key={index} onClick={e => handleDetailOrder(index)}> 
@@ -227,7 +241,7 @@ function Orders (props) {
                     <p className='w-[30%] text-sm'>Ghi chú:</p>
                     {currentOrder.note ? <p className='text-sm'>{currentOrder.note}</p> :""}
                 </div>
-                {currentOrder.orderStatus === 0 ? <Button className="rounded-full my-6">Hủy đơn hàng</Button> : ""}
+                {currentOrder.orderStatus === 0 ? <Button className="rounded-full my-6" onClick={handleCancelOrder}>Hủy đơn hàng</Button> : ""}
 
                 <div className='bg-gray-200 rounded-b-md rounded-t-xl mt-6'>
                     <div className='flex justify-between bg-blue-700 px-4 py-3 rounded-md mt-6'>
@@ -277,15 +291,6 @@ function Orders (props) {
                         <p className='font-bold text-md'>Tổng thanh toán:</p>
                         <p className='font-bold text-md'>{addDotsToNumber(currentOrder.orderTotal)}đ</p>
                     </div>
-                    {
-
-                    }
-                    <Button
-                            className="rounded-full mt-6 p-8 w-[100%] font-bold text-md hover:bg-gray-200 hover:text-black"
-                            onClick={handleUpdateStatus}
-                        >
-                            Đã nhận hàng
-                    </Button>
                 </div>
             </div>
         </div>

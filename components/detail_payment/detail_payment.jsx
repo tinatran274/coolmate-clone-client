@@ -43,8 +43,8 @@ const DetailPayment = (props) => {
         })
         .then(function (response) {
           console.log(response.data)
-          openNotificationWithIcon('success', 'Đặt hàng thành công')
           router.push('/account')
+          openNotificationWithIcon('success', 'Đặt hàng thành công')
 
         })
         .catch(function (error) {

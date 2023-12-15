@@ -74,6 +74,10 @@ const ListItemCart = () => {
         })
         .catch(function (error) {
           console.error(error)
+          if (error.response.status === 401)
+              openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+          else 
+              openNotificationWithIcon('error', error.response.data)
         })
     } catch (error) {
       console.log('Error fetching data:', error)
@@ -188,25 +192,22 @@ const ListItemCart = () => {
     try {
       const options = {
         method: 'DELETE',
-        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/removeCartItem`,
-        data: {
-          productItemId: itemId,
-        },
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/removeCartItem?productItemId=${itemId}`,
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       }
       console.log(options)
-      // axios
-      //   .request(options, {
+      axios
+        .request(options, {
           
-      //   })
-      //   .then(function (response) {
-      //     console.log(response.data)
-      //     handleGetCart()
-      //   })
-      //   .catch(function (error) {
-      // })
+        })
+        .then(function (response) {
+          console.log(response.data)
+          handleGetCart()
+        })
+        .catch(function (error) {
+      })
     } catch (error) {
       console.log('Error:', error)
     }

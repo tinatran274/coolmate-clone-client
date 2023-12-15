@@ -48,7 +48,6 @@ const CardItemCart = (props) => {
     props.productData.productItemsColor = colorArray
 
     const increaseProduct = () => {
-        console.log(+1)
         props.onNumChange(props.productData.productItemId, props.productData.qty + 1 )
     }
     
@@ -136,9 +135,9 @@ const CardItemCart = (props) => {
                     </Select>
                 </div>
                 <div className="px-2 rounded-lg border border-black inline-block mt-1">
-                    <PlusOutlined className="w-3 h-3" onClick={increaseProduct} />
-                    <span className="mx-4 text-sm">{props.productData.qty}</span>
                     <MinusOutlined className="w-3 h-3" onClick={decreaseProduct} />
+                    <span className="mx-4 text-sm">{props.productData.qty}</span>
+                    <PlusOutlined className="w-3 h-3" onClick={increaseProduct} />
                 </div>
                 <p className='font-bold mt-3'>{addDotsToNumber(props.productData.price)}đ</p>
             </div>

@@ -6,7 +6,6 @@ import NavBar from '../../components/nav-bar/nav_bar.jsx'
 import ImgSlider from '../../components/slider/slider.jsx'
 import BodyHome from '../../components/home/body_home.jsx'
 import Footer from '../../components/footer/footer.jsx'
-
 import { Button } from '@/components/ui/button'
 import { UpOutlined } from '@ant-design/icons'
 

@@ -25,7 +25,7 @@ const CardProductTest = (props) => {
   }
 
   // console.log(product)
-  const handleAddCart = (productItemId) => {
+  const handleAddCart = (item, productItemId) => {
     try {
       const options = {
         method: 'POST',
@@ -43,12 +43,33 @@ const CardProductTest = (props) => {
         })
         .then(function (response) {
           console.log(response.data)
-          openNotificationWithIcon('success', `Đã thêm 1 ${product.name} vào giỏ hàng`)
+          openNotificationWithIcon('success', 
+            <div className= "">
+            <b >Đã thêm vào giỏ hàng</b>
+            <div className="flex flex-row mt-2">
+              <img
+                className="rounded-[10px] w-20"
+                src={productItem?.productItemImages[0]}
+                alt={`img ${product.name}`}
+              />
+              <div>
+                <b className="ml-4">{product.name}</b>
+                <p className='text-blue-500 ml-4'>{productItem.color}/{item}</p>
+                <p className="ml-4">{productItem.priceStr}</p>
+                <p className="ml-4">Số lượng: 1</p>
+              </div>
+            </div>
+          </div>)
         })
         .catch(function (error) {
+          console.log(error)
+          if (error.response.status === 401)
+            openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+          else 
+            openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
       })
   } catch (error) {
-    console.log('Error:', error)
+    console.log('Error')
   } 
 
   }
@@ -77,7 +98,7 @@ const CardProductTest = (props) => {
     }
 }
 
-  // console.log(addDotsToNumber(product.priceInt*0.92))
+  // console.log(productItem)
 
   return (
     <AspectRatio ratio={9 / 16}>
@@ -138,7 +159,7 @@ const CardProductTest = (props) => {
                       <button
                         className="bg-white text-black rounded-[0.5rem] text-[13px] w-[40px] h-[35px] font-[590] hover:text-white hover:bg-gray-300/70"
                         // onClick={() => console.log('click')}
-                        onClick={() => handleAddCart(productItem.itemIds[index])}
+                        onClick={() => handleAddCart(item, productItem.itemIds[index])}
                       >
                         {item}
                       </button>
@@ -192,7 +213,7 @@ const CardProductTest = (props) => {
               <span className="text-red-500 ml-[10px]">-8%</span>
               <del className="text-[#c4c4c4]">{product.priceStr}</del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
-                {addDotsToNumber(product.priceInt*0.92)}đ
+                {addDotsToNumber(product.priceInt)}đ
               </ins>
             </div>
             <span className="text-[#2f5acf] text-xs italic mt-2 font-[600]">

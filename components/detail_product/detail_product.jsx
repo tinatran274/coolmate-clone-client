@@ -164,15 +164,37 @@ const DetailProduct = ({ productId }) => {
         })
         .then(function (response) {
           console.log(response.data)
-          openNotificationWithIcon('success', `Đã thêm ${countProduct} ${responseData.name} vào giỏ hàng`)
+          openNotificationWithIcon('success', 
+          <div className="">
+            <b >Đã thêm vào giỏ hàng</b>
+            <div className="flex flex-row mt-2">
+              <img
+                className="rounded-[10px] w-20"
+                src={responseData?.productItemsColor[currentColor]?.productItemImages[0]?.url}
+                alt={`img ${responseData.name}`}
+              />
+              <div>
+                <b className="ml-4">{responseData.name}</b>
+                <p className='text-blue-500 ml-4'>{responseData?.productItemsColor[currentColor]?.color}/{responseData?.productItemsColor[currentColor]?.size[currentSize]}</p>
+                <p className="ml-4">{responseData.priceStr}</p>
+                <p className="ml-4">Số lượng: {countProduct}</p>
+              </div>
+            </div>
+          </div>)
         })
         .catch(function (error) {
+          if (error.response.status === 401)
+            openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+          else 
+            openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
       })
   } catch (error) {
     console.log('Error:', error)
   } 
 
   }
+
+  // console.log(responseData)
 
   return (
     <div className="p-4">
@@ -297,7 +319,7 @@ const DetailProduct = ({ productId }) => {
           </div>
         </div>
       </div>
-      <hr className="my-12"></hr>
+      <hr className="mt-12"></hr>
       
     </div>
   )

@@ -1,22 +1,19 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import { Search } from 'lucide-react'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Input as InputClient } from 'antd'
 import { User, Archive, Box } from 'lucide-react'
 // import { Input } from '@/components/ui/input'
-import {
-  UserOutlined,
-  SearchOutlined,
-  ShoppingCartOutlined
-} from '@ant-design/icons'
+import { ShoppingCartOutlined } from '@ant-design/icons'
 import { MenuItem } from './UI_component/nav_bar_test'
 import { UserDetailIcon } from './UI_component/user_detail_icon'
 import SearchNavBar from './UI_component/search_navbar'
 import SearchComponent from './UI_component/search_component'
 import ShoppingCart from './UI_component/shopping_cart'
+import { useEffect } from 'react'
 
 const iconMap = {
   0: <User className="mr-4 w-4 h-4" />,
@@ -61,7 +58,7 @@ const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
               <MenuItem />
             </div>
             <div className="flex items-center mr-7 gap-3">
-              {isAdmin ? (
+              {/* {isAdmin ? (
                 <SearchNavBar
                   data={[
                     {
@@ -99,13 +96,24 @@ const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
                     }
                   ]}
                 />
-              ) : (
-                <InputClient
-                  placeholder="Search..."
-                  prefix={<SearchOutlined />}
-                  onClick={showSearchComponent}
-                />
-              )}
+              ) : ( */}
+              <button
+                onClick={showSearchComponent}
+                className="group px-2 py-2 items-center flex rounded-md gap-x-2 w-[250px] bg-white transition"
+              >
+                <Search className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                <p
+                  className="font-semibold text-sm text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-600
+        dark:group-hover:text-zinc-300 transition"
+                >
+                  Search
+                </p>
+                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-mute px-1.5 font-mono text-[10px] font-medium text-muted-foreground ml-auto">
+                  <span className="text-xs">Ctrl</span> + K
+                </kbd>
+              </button>
+
+              {/* )} */}
               {/* <ShoppingCart/> */}
               <UserDetailIcon />
               <ShoppingCartOutlined

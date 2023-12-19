@@ -404,16 +404,18 @@ function Info() {
             <div className="h-[100%] w-[100%] p-4">
               <div className="flex flex-row items-center border-[1px] border-gray-300 rounded-full px-4 py-1 mb-4">
                 <LockFilled className="text-gray-300 text-xl mr-3" />
-                <div className="w-[100%]">
-                  <p className=" text-gray-500 text-xs mb-1">Mật khẩu cũ</p>
+                <div className="w-[100%] flex relative">
+                  <p className=" text-gray-500 text-xs mb-1 px-1 absolute -top-3 bg-white">
+                    Mật khẩu cũ
+                  </p>
                   <input
-                    className=" text-black w-[100%] border-none outline-none"
+                    className=" text-black w-[100%] border-none outline-none py-2"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                {showPassword ? (
+                {/* {showPassword ? (
                   <EyeInvisibleFilled
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
@@ -423,20 +425,22 @@ function Info() {
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
                   />
-                )}
+                )} */}
               </div>
               <div className="flex flex-row items-center border-[1px] border-gray-300 rounded-full px-4 py-1 mb-4">
                 <LockFilled className="text-gray-300 text-xl mr-3" />
-                <div className="w-[100%]">
-                  <p className=" text-gray-500 text-xs mb-1">Mật khẩu mới</p>
+                <div className="w-[100%] flex relative">
+                  <p className=" text-gray-500 text-xs mb-1 px-1 absolute -top-3 bg-white">
+                    Mật khẩu mới
+                  </p>
                   <input
-                    className=" text-black w-[100%] border-none outline-none"
+                    className=" text-black w-[100%] border-none outline-none py-1"
                     type={showPassword ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
                 </div>
-                {showPassword ? (
+                {/* {showPassword ? (
                   <EyeInvisibleFilled
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
@@ -446,22 +450,22 @@ function Info() {
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
                   />
-                )}
+                )} */}
               </div>
               <div className="flex flex-row items-center border-[1px] border-gray-300 rounded-full px-4 py-1 mb-2">
                 <LockFilled className="text-gray-300 text-xl mr-3" />
-                <div className="w-[100%]">
-                  <p className=" text-gray-500 text-xs mb-1">
+                <div className="w-[100%] flex relative">
+                  <p className=" text-gray-500 text-xs mb-1 px-1 absolute -top-3 bg-white">
                     Nhập lại mật khẩu mới
                   </p>
                   <input
-                    className=" text-black w-[100%] border-none outline-none"
+                    className=" text-black w-[100%] border-none outline-none py-1"
                     type={showPassword ? 'text' : 'password'}
                     value={confirmNewPassword}
                     onChange={(e) => setConfirmNewPassword(e.target.value)}
                   />
                 </div>
-                {showPassword ? (
+                {/* {showPassword ? (
                   <EyeInvisibleFilled
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
@@ -471,7 +475,7 @@ function Info() {
                     className="text-gray-300 text-xl mr-3"
                     onClick={togglePasswordVisibility}
                   />
-                )}
+                )} */}
               </div>
 
               <span className="text-sm text-red-500">{txtError}</span>

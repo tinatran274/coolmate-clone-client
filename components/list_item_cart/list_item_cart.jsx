@@ -20,12 +20,24 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { notification, Space } from 'antd'
+import { notification } from 'antd'
 import { useRouter } from 'next/navigation'
+import { TbAddressBook } from 'react-icons/tb'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure
+} from '@nextui-org/modal'
+import { AddressItem } from '../user-account/UI_component/address'
+import { getApi } from '@/lib/fetch'
 
 const ListItemCart = () => {
-
+  const user = useSelector((state) => state.user)
   const [data, setData] = useState(null)
   const router = useRouter()
   const [listProvince, setListProvince] = useState(
@@ -36,26 +48,27 @@ const ListItemCart = () => {
       }))
       .sort((a, b) => a.code - b.code)
   )
-    const [listCity, setListCity] = useState([])
-    const [listDistrict, setListDistrict] = useState([])
-    const [province, setProvince] = useState({})
-    const [city, setCity] = useState(null)
-    const [district, setDistrict] = useState(null)
-    const [username, setUsername] = useState('')
-    const [phone, setPhone] = useState('')
-    const [email, setEmail] = useState('')
-    const [adress, setAdress] = useState('')
-    const [note, setNote] = useState('')
-    const [optionPay, setOptionPay] = useState('Momo')
-    const [responseData, setResponseData] = useState([])
-  
-    const [api, contextHolder] = notification.useNotification();
-    const openNotificationWithIcon = (type, content) => {
-        api[type]({
-        message: 'Lỗi',
-        description: content,
-        });
-    }
+  const [listCity, setListCity] = useState([])
+  const [listDistrict, setListDistrict] = useState([])
+  const [province, setProvince] = useState({})
+  const [city, setCity] = useState(null)
+  const [district, setDistrict] = useState(null)
+  const [username, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+  const [adress, setAdress] = useState('')
+  const [note, setNote] = useState('')
+  const [optionPay, setOptionPay] = useState('Momo')
+  const [responseData, setResponseData] = useState([])
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  const [api, contextHolder] = notification.useNotification()
+  const openNotificationWithIcon = (type, content) => {
+    api[type]({
+      message: 'Lỗi',
+      description: content
+    })
+  }
 
   const handleGetCart = () => {
     try {
@@ -63,8 +76,8 @@ const ListItemCart = () => {
         method: 'GET',
         url: 'https://localhost:7107/api/cart',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
       axios
         .request(options)
@@ -75,17 +88,20 @@ const ListItemCart = () => {
         .catch(function (error) {
           console.error(error)
           if (error.response.status === 401)
-              openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
-          else 
-              openNotificationWithIcon('error', error.response.data)
+            openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+          else openNotificationWithIcon('error', error.response.data)
         })
     } catch (error) {
       console.log('Error fetching data:', error)
     }
   }
-
+  const handleGetAddress = async () => {
+    const res = await getApi({ endPoint: '/api/user/getAddresses' })
+    setData(res.data.sort((a, b) => (b.isDefault === 1) - (a.isDefault === 1)))
+  }
   useEffect(() => {
     handleGetCart()
+    handleGetAddress()
   }, [])
 
   // console.log(responseData)
@@ -131,7 +147,6 @@ const ListItemCart = () => {
   }
 
   const handleNumChange = (itemId, num) => {
-
     try {
       const options = {
         method: 'PUT',
@@ -141,23 +156,19 @@ const ListItemCart = () => {
           quantity: num
         },
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
       axios
-        .request(options, {
-          
-        })
+        .request(options, {})
         .then(function (response) {
           console.log(response.data)
           handleGetCart()
         })
-        .catch(function (error) {
-      })
+        .catch(function (error) {})
     } catch (error) {
       console.log('Error:', error)
     }
-
   }
   const handleSizeChange = (oldItem, newItem) => {
     try {
@@ -169,20 +180,17 @@ const ListItemCart = () => {
           newProductItemId: newItem
         },
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
       // console.log(options)
       axios
-        .request(options, {
-          
-        })
+        .request(options, {})
         .then(function (response) {
           console.log(response.data)
           handleGetCart()
         })
-        .catch(function (error) {
-      })
+        .catch(function (error) {})
     } catch (error) {
       console.log('Error:', error)
     }
@@ -194,25 +202,21 @@ const ListItemCart = () => {
         method: 'DELETE',
         url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/removeCartItem?productItemId=${itemId}`,
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
       console.log(options)
       axios
-        .request(options, {
-          
-        })
+        .request(options, {})
         .then(function (response) {
           console.log(response.data)
           handleGetCart()
         })
-        .catch(function (error) {
-      })
+        .catch(function (error) {})
     } catch (error) {
       console.log('Error:', error)
     }
   }
-
   // console.log(responseData)
 
   const priceMemo = useMemo(() => {
@@ -277,7 +281,7 @@ const ListItemCart = () => {
             district: district.name,
             note: note,
             optionPay: optionPay,
-            listProduct: responseData,
+            listProduct: responseData
           })
         )}`
       )
@@ -298,13 +302,24 @@ const ListItemCart = () => {
   const handleNoteChange = (e) => {
     setNote(e.target.value)
   }
-
+  const handleOnClick = () => {
+    router.push('/account')
+  }
+  const updateAdressData = (item) => {
+    setUsername(item.name)
+    setPhone(item.phoneNumber ? item.phoneNumber : user.phoneNumber)
+    setProvince(item.streetLine.split(', ')[2])
+    setCity(item.streetLine.split(', ')[1])
+    setAdress(item.streetLine.split(', ')[0])
+  }
   return (
     <div className="p-4 flex flex-row mb-12">
       {contextHolder}
       <div className="w-[60%]">
         <div className="bg-gray-100 px-4 py-6 rounded-md mt-4">
-          <p className="uppercase font-bold text-4xl">Hi, Trần Nhung</p>
+          <p className="uppercase font-bold text-4xl">
+            Hi, {user.name ? user.name : user.username}
+          </p>
           <p>
             Tổng đơn ({numProductMemo} sản phẩm){' '}
             <span className="text-blue-600 font-bold">
@@ -312,9 +327,51 @@ const ListItemCart = () => {
             </span>
           </p>
         </div>
-        <p className="font-bold text-3xl px-4 mt-12 mb-8">
-          Thông tin vận chuyển
-        </p>
+        <div className="flex px-4 mt-12 mb-8 items-center">
+          <p className="font-bold text-3xl ">Thông tin vận chuyển</p>
+          <div
+            className="flex cursor-pointer ml-auto items-center"
+            onClick={onOpen}
+          >
+            <TbAddressBook className="inline-block mr-1 h-4 w-4" />
+            <p className="text-sm font-medium text-link"> Chọn từ sổ địa chỉ</p>
+            <Modal
+              scrollBehavior="inside"
+              backdrop="opaque"
+              title="Sổ địa chỉ"
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              classNames={{
+                backdrop:
+                  'bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20'
+              }}
+            >
+              <ModalContent>
+                {() => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Modal Title
+                    </ModalHeader>
+                    <ModalBody>
+                      {data?.map((item) => (
+                        <AddressItem
+                          key={item.addressId}
+                          item={item}
+                          getData={handleGetAddress}
+                          isShowDefault={false}
+                          updateAdressData={updateAdressData}
+                        />
+                      ))}
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button onClick={handleOnClick}>Thêm địa chỉ mới</Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
+          </div>
+        </div>
         <div className="px-4 flex flex-row gap-4 mb-5">
           <Input
             className="rounded-full px-4"

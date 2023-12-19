@@ -10,8 +10,11 @@ import { useEffect, useState } from 'react'
 import { useDebounce } from '../../../app/hooks/useDebounce'
 import SearchProduct from './search_product'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 const SearchComponent = ({ showSearchComponent }) => {
+  const router = useRouter()
+
   const [responseData, setResponseData] = useState([])
   const [value, setValue] = useState('')
   const searchDebounce = useDebounce(value, 500)
@@ -24,6 +27,15 @@ const SearchComponent = ({ showSearchComponent }) => {
     }
     fetchData()
   }, [searchDebounce])
+  const handleDetailProduct = (product) => {
+    router.push(
+      `/product/${encodeURIComponent(
+        JSON.stringify({
+          productId: product.id
+        })
+      )}`
+    )
+  }
   return (
     <div className="w-full h-full flex flex-col backdrop-brightness-50">
       <Separator />
@@ -81,7 +93,11 @@ const SearchComponent = ({ showSearchComponent }) => {
               <ScrollShadow className="w-full h-[500px] flex flex-wrap gap-4 justify-start pt-4 pb-2">
                 {responseData.map((product, index) => {
                   return (
-                    <div key={index} className="w-[190px] h-[340px] mb-5">
+                    <div
+                      key={index}
+                      className="w-[190px] h-[340px] mb-5 cursor-pointer"
+                      onClick={() => handleDetailProduct(product)}
+                    >
                       <SearchProduct product={product} />
                     </div>
                   )

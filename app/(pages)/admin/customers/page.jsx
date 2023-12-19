@@ -45,235 +45,147 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-const data = [
-  {
-    id: 'm5gr84i9',
-    deleted: 'true',
-    customer_name: 'success',
-    email: 'ken99@yahoo.com',
-    created_at: '2021-09-01 12:00:00'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'bhqecj4p',
-    amount: 721,
-    customer_name: 'failed',
-    email: 'carmella@hotmail.com'
-  }
-]
-
-export const columns = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
-  },
-  {
-    accessorKey: 'customer_name',
-    header: 'Customer Name',
-    cell: ({ row }) => (
-      <div className="capitalize truncate w-[200px]">
-        {row.getValue('customer_name')}
-      </div>
-    )
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-    cell: ({ row }) => (
-      <div className="capitalize truncate w-[200px]">
-        {row.getValue('email')}
-      </div>
-    )
-  },
-  {
-    accessorKey: 'created_at',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Created At
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('created_at')}</div>
-  },
-  {
-    accessorKey: 'deleted',
-    header: 'Deleted',
-    cell: ({ row }) => (
-      <div className="uppercase">{row.getValue('deleted')}</div>
-    )
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const product = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
-            >
-              Copy customer ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }
-  }
-]
+import { useEffect } from 'react'
+import { getApi } from '@/lib/fetch'
+import { cn } from '@/lib/utils'
 
 const CustomersPage = () => {
   const [sorting, setSorting] = React.useState()
-  const [filters, setFilters] = React.useState('id')
+  const [filters, setFilters] = React.useState('phoneNumber')
   const [columnFilters, setColumnFilters] = React.useState()
   const [columnVisibility, setColumnVisibility] = React.useState()
   const [rowSelection, setRowSelection] = React.useState({})
+  const [data, setData] = React.useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getApi({ endPoint: '/api/user/getAllUser' })
+      setData(res.data)
+    }
+    fetchData()
+  }, [])
+  console.log(data)
+  const columns = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
+      accessorKey: 'name',
+      header: 'Customer Name',
+      cell: ({ row }) => (
+        <div
+          className={cn(
+            row.getValue('name') && 'capitalize',
+            !row.getValue('name') && 'text-muted-foreground'
+          )}
+        >
+          {row.getValue('name') ? row.getValue('name') : 'Chưa cập nhật'}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'username',
+      header: 'Username',
+      cell: ({ row }) => (
+        <div className="capitalize truncate w-[200px]">
+          {row.getValue('username')
+            ? row.getValue('username')
+            : row.getValue('email')}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row }) => (
+        <div className="capitalize truncate w-[200px]">
+          {row.getValue('email')}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'Phone Number',
+      cell: ({ row }) => (
+        <div
+          className={cn(
+            row.getValue('phoneNumber') && 'capitalize',
+            !row.getValue('phoneNumber') && 'text-muted-foreground'
+          )}
+        >
+          {row.getValue('phoneNumber')
+            ? row.getValue('phoneNumber')
+            : 'Chưa cập nhật'}
+        </div>
+      )
+    },
+    {
+      accessorKey: 'gender',
+      header: ({ column }) => (
+        <div
+          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Gender
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div
+          className={cn(
+            row.getValue('gender') && 'capitalize',
+            !row.getValue('gender') && 'text-muted-foreground'
+          )}
+        >
+          {row.getValue('gender') ? row.getValue('gender') : 'Chưa cập nhật'}
+        </div>
+      )
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const product = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(product.id)}
+              >
+                Copy customer ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View customer details</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    }
+  ]
+
   const table = useReactTable({
     data,
     columns,
@@ -308,9 +220,9 @@ const CustomersPage = () => {
             <div className="flex relative">
               <Input
                 placeholder={
-                  filters === 'id'
-                    ? 'Search by #id...'
-                    : filters === 'customer_name'
+                  filters === 'hehe'
+                    ? 'Search by phone number...'
+                    : filters === 'name'
                     ? 'Search by customer name...'
                     : 'Search by email...'
                 }

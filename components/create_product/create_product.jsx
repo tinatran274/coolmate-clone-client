@@ -13,6 +13,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
@@ -21,32 +22,36 @@ import { notification, Space } from 'antd'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useRouter } from 'next/navigation'
 import { convertPrice, getAllCategoryNames } from '@/lib/utils'
-import { list } from 'postcss'
+import { list, stringify } from 'postcss'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 const CreateProduct = () => {
   const router = useRouter()
-  const listCategory = [
-    {
-      id: 1,
-      category_name: 'Chạy bộ',
-      parent_category: {
-        category_name: 'Theo nhu cầu',
-        parent_category: {
-          category_name: 'Đồ thể thao',
-          parent_category: null
-        }
+  const [categories, setCategories] = useState()
+  const getAllCategories = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/category`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
       }
-    },
-    {
-      id: 2,
-      category_name: 'Quần dài',
-      parent_category: {
-        category_name: 'Quần',
-        parent_category: null
-      }
+      axios
+        .request(options)
+        .then(function (response) {
+          setCategories(response.data)
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
     }
-  ]
+  }
+  useEffect(() => {
+    getAllCategories()
+  }, [])
   const listColor = [
     {
       color: 'Đen',
@@ -97,13 +102,13 @@ const CreateProduct = () => {
     setProductName(e.target.value)
   }
   const handleNumProductChange = (e) => {
-    setNumProduct(e.target.value)
+    setNumProduct(Number(e.target.value))
   }
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value)
   }
   const handleSetCategory = (value) => {
-    setCategory(listCategory[value])
+    setCategory(value)
   }
   const handleSetColor = (value) => {
     setColor(listColor[value])
@@ -133,9 +138,8 @@ const CreateProduct = () => {
     setListImage(newImageUrls)
   }
   const deleteColorChose = (index) => {
-    const newImageUrls = [...listColorChose]
     listColorChose.splice(index, 1)
-    setListImage(listColorChose)
+    setListColorChose([...listColorChose])
   }
   const handleAddColor = () => {
     if (
@@ -172,35 +176,55 @@ const CreateProduct = () => {
     if (!productName || !costProduct || !category || listColorChose.length < 1)
       openNotificationWithIcon('error', 'Bạn chưa điền đủ thông tin sản phẩm')
     else {
-      openNotificationWithIcon(
-        'success',
-        `Thêm sản phẩm ${productName} thành công`
-      )
-
       var newProduct = new FormData()
       newProduct.append('Name', productName)
       newProduct.append('PriceInt', costProduct)
       newProduct.append('PriceStr', convertPrice(costProduct))
       newProduct.append('Description', description)
-      listColorChose.forEach((item) => {
-        newProduct.append('ProductItems', item)
-      })
-      newProduct.append('CategoryId', category.id)
-      // axios({
-      //   method: 'post',
-      //   url: 'https://localhost:7107/api/product/add',
-      //   data: newProduct
-      // })
-      //   .then((res) => console.log(res))
-      //   .catch((err) => console.log(err))
 
-      // setProductName('')
-      // setCostProduct(1)
-      // setCategory('')
-      // setDescription('')
-      // setListColorChose([])
-      // setStatus('')
-      // setVisibility('')
+      listColorChose.forEach((item, index) => {
+        newProduct.append(`ProductItems[${index}].Qty`, item.Qty)
+        newProduct.append(
+          `ProductItems[${index}].Color.color`,
+          item.Color.color
+        )
+        newProduct.append(`ProductItems[${index}].Color.url`, item.Color.url)
+        item.Images.forEach((image) => {
+          newProduct.append(`ProductItems[${index}].Images`, image.file)
+        })
+        item.Size.forEach((size, index1) => {
+          newProduct.append(`ProductItems[${index}].Size[${index1}]`, size)
+        })
+      })
+      newProduct.append('CategoryId', category)
+
+      axios({
+        method: 'post',
+        url: 'https://localhost:7107/api/product/add',
+        data: newProduct
+        // data: {
+        //   Name: productName,
+        //   PriceInt: costProduct,
+        //   PriceStr: convertPrice(costProduct),
+        //   Description: description,
+        //   CategoryId: category,
+        //   ProductItems: listColorChose
+        // }
+      })
+        .then((res) => {
+          openNotificationWithIcon(
+            'success',
+            `Thêm sản phẩm ${productName} thành công`
+          )
+          setProductName('')
+          setCostProduct(1)
+          setCategory('')
+          setDescription('')
+          setListColorChose([])
+          setStatus('')
+          setVisibility('')
+        })
+        .catch((err) => console.log(err))
     }
   }
 
@@ -242,19 +266,28 @@ const CreateProduct = () => {
             </div>
             <p className="text-sm mx-2 mb-1 mt-6">Category</p>
             <div className="flex flex-row justify-between gap-4">
-              <Select onValueChange={handleSetCategory}>
+              <Select onValueChange={handleSetCategory} value={category}>
                 <SelectTrigger className=" rounded-full px-4">
                   <SelectValue placeholder="Chọn Category" />
                 </SelectTrigger>
                 <SelectContent>
                   <ScrollArea className="h-30 w-[100%]">
-                    <SelectGroup>
-                      {listCategory.map((item, index) => (
-                        <SelectItem key={index} value={index}>
-                          {getAllCategoryNames(item)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    {categories?.map((item) => {
+                      return (
+                        <SelectGroup key={item.id}>
+                          <SelectLabel>{item.categoryName}</SelectLabel>
+                          {item.children.map((child) => (
+                            <SelectItem
+                              key={child.id}
+                              value={child.id}
+                              className="cursor-pointer"
+                            >
+                              {child.categoryName}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      )
+                    })}
                   </ScrollArea>
                 </SelectContent>
               </Select>

@@ -5,11 +5,18 @@ import { IoMdArrowDropright } from 'react-icons/io'
 import TreeView, { flattenTree } from 'react-accessible-treeview'
 import './styles.css'
 import { useRouter } from 'next/navigation'
+import cx from 'classnames'
 
 function Filtering({ categories, search = '' }) {
-  const data = flattenTree(categories)
   const router = useRouter()
-  const [treeData, setTreeData] = useState(data)
+  const [data, setData] = useState()
+  const [treeData, setTreeData] = useState()
+  useEffect(() => {
+    if (categories) setData(flattenTree(categories))
+  }, [categories])
+  useEffect(() => {
+    if (data) setTreeData(data)
+  }, [data])
   const filter = (value) => {
     const filtered = []
     const includeChildren = (id) => {
@@ -68,11 +75,7 @@ function Filtering({ categories, search = '' }) {
 
   return (
     <div className="h-fit">
-      {treeData.length === 1 ? (
-        <div className="text-zinc-500/90 uppercase flex items-center justify-center h-screen">
-          Not Found This!
-        </div>
-      ) : (
+      {treeData?.length > 1 ? (
         <div className="filtered">
           <TreeView
             data={treeData}
@@ -93,13 +96,13 @@ function Filtering({ categories, search = '' }) {
                 <div
                   {...getNodeProps({ onClick: handleExpand })}
                   style={{ marginLeft: 40 * (level - 1) }}
-                  className="hover:bg-accent w-fit rounded-md cursor-pointer px-2 py-1 hover:text-accent-foreground scale-90 hover:scale-100 group"
+                  className="w-fit rounded-md cursor-pointer group"
                 >
                   <div className="flex items-center ">
                     {isBranch && <ArrowIcon isOpen={isExpanded} />}
 
                     <span
-                      className="text-[17px] font-normal group-hover:font-medium"
+                      className="px-2 py-1 text-[17px] font-normal group-hover:font-medium hover:bg-accent hover:text-accent-foreground scale-90 hover:scale-100"
                       onClick={(e) => handleEditCategory(e, element)}
                     >
                       {element.name}
@@ -109,6 +112,10 @@ function Filtering({ categories, search = '' }) {
               )
             }}
           />
+        </div>
+      ) : (
+        <div className="text-zinc-500/90 uppercase flex items-center justify-center h-screen">
+          Not Found This!
         </div>
       )}
     </div>

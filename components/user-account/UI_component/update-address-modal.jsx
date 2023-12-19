@@ -116,8 +116,7 @@ export default function UpdateAddress({ data, getData }) {
     })
     if (defaultAddress) {
       await postApi({
-        endPoint: `/api/user/MakeAddressDefault`,
-        data: { addressId: data.addressId }
+        endPoint: `/api/user/makeAddressDefault?addressId=${data.addressId}`
       })
     }
     setFlag(1)

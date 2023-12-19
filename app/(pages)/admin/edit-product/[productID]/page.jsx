@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,6 +12,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
@@ -19,131 +20,74 @@ import { DeleteFilled } from '@ant-design/icons'
 import { notification } from 'antd'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useParams, useRouter } from 'next/navigation'
-import { getAllCategoryNames } from '@/lib/utils'
+import { convertPrice } from '@/lib/utils'
+import axios from 'axios'
+import { useEffect } from 'react'
+import { getApi, putApi } from '@/lib/fetch'
 
 const EditProductPage = () => {
   const router = useRouter()
+  const [categories, setCategories] = useState()
   const param = useParams()
-  const listCategory = [
-    {
-      id: 1,
-      category_name: 'Chạy bộ',
-      parent_category: {
-        category_name: 'Theo nhu cầu',
-        parent_category: {
-          category_name: 'Đồ thể thao',
-          parent_category: null
-        }
+  const getAllCategories = (
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/category`
+  ) => {
+    try {
+      const options = {
+        method: 'GET',
+        url: url
       }
-    },
-    {
-      id: 2,
-      category_name: 'Quần dài',
-      parent_category: {
-        category_name: 'Quần',
-        parent_category: null
-      }
+      axios
+        .request(options)
+        .then(function (response) {
+          setCategories(response.data)
+        })
+        .catch(function (error) {
+          console.error(error)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
     }
-  ]
-  const data = {
-    id: param.productID,
-    price: 299000,
-    category: listCategory[0],
-    description: 'new',
-    listColor: [
-      {
-        color: {
-          id: 2,
-          name: 'Trắng',
-          img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
-        },
-        size: ['M', 'L', 'XL', 'XS'],
-        num: 10,
-        image: [
-          {
-            file: '',
-            image:
-              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.14_50.jpg'
-          },
-          {
-            file: '',
-            image:
-              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.11_1.jpg'
-          }
-        ]
-      },
-      {
-        color: {
-          id: 1,
-          name: 'Đen',
-          img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
-        },
-        size: ['M', 'L', 'XL', 'XXL'],
-        num: 10,
-        image: [
-          {
-            file: '',
-            image:
-              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.4_21.jpg'
-          },
-          {
-            file: '',
-            image:
-              'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80/image/September2023/graphic.spec.11_1.jpg'
-          }
-        ]
-      }
-    ]
   }
+  useEffect(() => {
+    getAllCategories()
+  }, [])
+  const [data, setData] = useState()
+  const getProduct = async () => {
+    const res = await getApi({
+      endPoint: `/api/product/get/${param.productID}`
+    })
+    setData({
+      ...res.data,
+      productItems: res.data.productItems.map((item) => {
+        return {
+          ...item,
+          Color: {
+            color: item.color,
+            url: item.colorImage
+          }
+        }
+      })
+    })
+  }
+  useEffect(() => {
+    getProduct()
+  }, [])
 
-  const listColor = [
-    {
-      id: 1,
-      name: 'Đen',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorDen_2A8.jpg'
-    },
-    {
-      id: 2,
-      name: 'Trắng',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/colorTrang_1A2.jpg'
-    },
-    {
-      id: 3,
-      name: 'Xanh Navy',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/October2023/mau-xanh-navy_54.jpg'
-    },
-    {
-      id: 4,
-      name: 'Xanh Nhạt',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/June2023/xanh_nhat_200gsm-2.jpg'
-    },
-    {
-      id: 5,
-      name: 'Xám',
-      img: 'https://media.coolmate.me/cdn-cgi/image/width=160,height=160,quality=80,format=auto/uploads/April2023/cotton100_xam-7.jpg'
-    }
-  ]
   const listSize = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   const [productName, setProductName] = useState('')
   const [costProduct, setCostProduct] = useState(0)
   const [numProduct, setNumProduct] = useState(1)
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
-  const [color, setColor] = useState(listColor[0])
+  const [color, setColor] = useState({})
   const [listSizeChose, setListSizeChose] = useState([])
   const [listImage, setListImage] = useState([])
   const [listColorChose, setListColorChose] = useState([])
   const [status, setStatus] = useState('')
   const [visibility, setVisibility] = useState('')
-
+  const [id, setId] = useState('')
   const [api, contextHolder] = notification.useNotification()
-  useEffect(() => {
-    setProductName(data.id)
-    setCostProduct(data.price)
-    setCategory(data.category)
-    setDescription(data.description)
-    setListColorChose(data.listColor)
-  }, [])
   const openNotificationWithIcon = (type, content) => {
     api[type]({
       message: type,
@@ -158,75 +102,39 @@ const EditProductPage = () => {
     setProductName(e.target.value)
   }
   const handleNumProductChange = (e) => {
-    if (e.target.value > 0) setNumProduct(e.target.value)
+    setNumProduct(e.target.value)
   }
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value)
   }
   const handleSetCategory = (value) => {
-    setCategory(listCategory[value])
-  }
-  const handleSetColor = (index) => {
-    setColor(listColor[index])
-  }
-  const handleSizeChange = (event) => {
-    const value = event.target.value
-    const isChecked = event.target.checked
-    if (isChecked) {
-      setListSizeChose([...listSizeChose, value])
-    } else {
-      setListSizeChose(listSizeChose.filter((option) => option !== value))
-    }
+    setCategory(value)
   }
 
-  const handleImageUpload1 = (event) => {
-    const file = event.target.files[0]
-    console.log(file)
-    if (file) {
-      setListImage([
-        ...listImage,
-        { file: file, image: URL.createObjectURL(file) }
-      ])
-    }
-  }
-  const deleteImage = (index) => {
-    const newImageUrls = [...listImage]
-    newImageUrls.splice(index, 1)
-    setListImage(newImageUrls)
-  }
-  const deleteColorChose = (index) => {
-    const newImageUrls = [...listColorChose]
-    listColorChose.splice(index, 1)
-    setListImage(listColorChose)
-  }
-  const handleAddColor = () => {
+  const handleUpdateColor = async () => {
     if (
       Object.keys(color).length < 1 ||
       listSizeChose.length < 1 ||
-      listImage.length < 1
+      listImage.length < 1 ||
+      !id
     )
       openNotificationWithIcon('error', 'Bạn chưa điền đủ thông tin màu sắc')
     else {
-      if (listColorChose.find((item) => item.color.name === color.name)) {
-        openNotificationWithIcon(
-          'error',
-          `Màu ${color.name} đã tồn tại trong danh sách`
-        )
-        return
+      const res = await putApi({
+        endPoint: `/api/productItem/updateQtyInStock`,
+        data: {
+          productItemId: id,
+          newQty: numProduct
+        }
+      })
+      if (res.status === 200) {
+        setColor({})
+        setNumProduct(0)
+        setListSizeChose([])
+        setListImage([])
+        openNotificationWithIcon('success', `Cập nhật thành công`)
+        getProduct()
       }
-      openNotificationWithIcon('success', `Thêm màu ${color.name} thành công`)
-      setListColorChose([
-        ...listColorChose,
-        { color: color, size: listSizeChose, num: numProduct, image: listImage }
-      ])
-
-      setNumProduct(1)
-      setListSizeChose([])
-      setListImage([])
-      console.log([
-        ...listColorChose,
-        { color: color, size: listSizeChose, num: numProduct, image: listImage }
-      ])
     }
   }
   const handleStatusChange = (value) => {
@@ -235,46 +143,50 @@ const EditProductPage = () => {
   const handleVisibilityChange = (value) => {
     setVisibility(value)
   }
-  const findCategoryIndex = (id) => {
-    const index = listCategory.findIndex((item) => item.id === id)
-    return index
-  }
-  const findColorIndex = (id) => {
-    const index = listColor.findIndex((item) => item.id === id)
-    return index
-  }
 
-  const handleAddProduct = () => {
+  const handleUpdateProduct = async () => {
     if (!productName || !costProduct || !category || listColorChose.length < 1)
       openNotificationWithIcon('error', 'Bạn chưa điền đủ thông tin sản phẩm')
     else {
-      openNotificationWithIcon(
-        'success',
-        `Thêm sản phẩm ${productName} thành công`
-      )
-      const newProduct = {
-        name: productName,
-        price: costProduct,
-        description: description,
-        listColor: listColorChose,
-        status: status,
-        visibility: visibility
+      const res = await putApi({
+        endPoint: `/api/product/update`,
+        data: {
+          id: param.productID,
+          name: productName,
+          priceInt: costProduct,
+          categoryId: category,
+          description: description,
+          priceStr: convertPrice(costProduct)
+        }
+      })
+      if (res.status === 200) {
+        openNotificationWithIcon(
+          'success',
+          `Thêm sản phẩm ${productName} thành công`
+        )
+
+        getProduct()
       }
-      console.log(newProduct)
-      setProductName('')
-      setCostProduct(1)
-      setCategory('')
-      setDescription('')
-      setListColorChose([])
-      setStatus('')
-      setVisibility('')
     }
   }
+
+  useEffect(() => {
+    if (data) {
+      setProductName(data.name)
+      setCostProduct(data.priceInt)
+      setCategory(data.categoryId)
+      setDescription(data.description)
+      setStatus(data.status ? 'Enabled' : 'Disabled')
+      setVisibility(data.visibility ? 'Visible' : 'Not visible')
+      setListColorChose(data.productItems)
+    }
+  }, [data])
   const handleSetInfor = (item) => {
-    setColor(item.color)
+    setNumProduct(item.qtyInStock)
+    setColor(item.Color)
     setListSizeChose(item.size)
-    setNumProduct(item.num)
-    setListImage(item.image)
+    setListImage(item.productItemImages)
+    setId(item.id)
   }
   return (
     <div className="w-[100%]">
@@ -314,22 +226,28 @@ const EditProductPage = () => {
             </div>
             <p className="text-sm mx-2 mb-1 mt-6">Category</p>
             <div className="flex flex-row justify-between gap-4">
-              <Select
-                onValueChange={handleSetCategory}
-                value={findCategoryIndex(category.id)}
-              >
+              <Select onValueChange={handleSetCategory} value={category}>
                 <SelectTrigger className=" rounded-full px-4">
                   <SelectValue placeholder="Chọn Category" />
                 </SelectTrigger>
                 <SelectContent>
                   <ScrollArea className="h-30 w-[100%]">
-                    <SelectGroup>
-                      {listCategory.map((item, index) => (
-                        <SelectItem key={index} value={index}>
-                          {getAllCategoryNames(item)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    {categories?.map((item) => {
+                      return (
+                        <SelectGroup key={item.id}>
+                          <SelectLabel>{item.categoryName}</SelectLabel>
+                          {item.children.map((child) => (
+                            <SelectItem
+                              key={child.id}
+                              value={child.id}
+                              className="cursor-pointer"
+                            >
+                              {child.categoryName}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      )
+                    })}
                   </ScrollArea>
                 </SelectContent>
               </Select>
@@ -348,32 +266,17 @@ const EditProductPage = () => {
           <div className="shadow-md px-8 py-10 mb-6 bg-white rounded-md">
             <p className="font-bold mb-5">Thêm màu sắc</p>
             <p className="text-sm mx-2 mb-1 mt-6">Màu sắc</p>
-            <Select
-              onValueChange={handleSetColor}
-              value={findColorIndex(color.id)}
-            >
-              <SelectTrigger className=" rounded-full px-4">
-                <SelectValue placeholder="Chọn màu sắc" />
-              </SelectTrigger>
-              <SelectContent>
-                <ScrollArea className="h-30 w-[100%]">
-                  <SelectGroup>
-                    {listColor.map((item, index) => (
-                      <SelectItem key={index} value={index}>
-                        <div className="flex flex-row items-center">
-                          <img
-                            className="w-10 h-6 object-cover rounded-full mr-4"
-                            src={item.img}
-                            alt="color"
-                          />
-                          <span>{item.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </ScrollArea>
-              </SelectContent>
-            </Select>
+            {Object.keys(color).length > 0 && (
+              <div className="flex flex-row items-center mt-2">
+                <img
+                  className="w-10 h-6 object-cover rounded-full mr-4"
+                  src={color?.url}
+                  alt="color"
+                />
+                <span>{color?.color}</span>
+              </div>
+            )}
+
             <p className="text-sm mx-2 mb-1 mt-6">Số lượng</p>
             <Input
               className="rounded-full px-4"
@@ -382,69 +285,57 @@ const EditProductPage = () => {
               value={numProduct}
               onChange={handleNumProductChange}
             />
-            <p className="text-sm mb-3 mt-6">Kích cỡ</p>
-            <div className="flex flex-row items-center justify-between mb-8">
+            <p className="text-sm mb-3 mt-6 mx-2 ">Kích cỡ</p>
+            <div className="flex flex-row items-center justify-between mb-8 mx-2">
               {listSize.map((item, index) => (
                 <div key={index} className="flex items-center space-x-1">
                   <input
                     type="checkbox"
                     value={item}
                     id={item}
-                    checked={listSizeChose.includes(item)}
-                    onChange={handleSizeChange}
+                    checked={listSizeChose === item}
                   />
                   <Label htmlFor={item}>{item}</Label>
                 </div>
               ))}
             </div>
-
-            <input type="file" accept="image/*" onChange={handleImageUpload1} />
-            <div className="flex flex-row flex-wrap gap-4 mt-4">
-              {!!listImage.length &&
+            <p className="text-sm mx-2 mb-1 mt-6">Hình ảnh</p>
+            <div className="flex flex-row flex-wrap gap-4 mt-4  ">
+              {listImage.length > 0 &&
                 listImage.map((item, index) => (
                   <div key={index} className="relative">
                     <img
                       className="h-44 w-44 object-contain border"
-                      src={item.image}
+                      src={item.url}
                       alt={`image ${index + 1}`}
                     />
-                    <Button
-                      className="absolute top-2 left-2 rounded-full w-8 h-8 px-2 bg-red-500 hover:bg-red-700"
-                      onClick={() => deleteImage(index)}
-                    >
-                      <DeleteFilled className="text-white text-md " />
-                    </Button>
                   </div>
                 ))}
             </div>
             <Button
               className="rounded-full p-4 hover:bg-gray-200 hover:text-black mt-8"
-              onClick={handleAddColor}
+              onClick={handleUpdateColor}
             >
-              Thêm màu {color?.name}
+              Cập nhật màu {color.color}
+              {!!listSizeChose.length && ` [${listSizeChose}]`}
             </Button>
             <p className="font-bold mb-4 mt-8">Màu sắc đã chọn</p>
-            <div className="mb-6 flex flex-row flex-wrap gap-4">
+            <div className="mb-6 flex flex-row flex-wrap gap-4 cursor-pointer">
               {listColorChose.length > 0 ? (
                 listColorChose.map((item, index) => (
-                  <div key={index} className="relative flex flex-row ">
-                    <div
-                      className="flex items-center cursor-pointer"
-                      onClick={() => handleSetInfor(item, index)}
-                    >
-                      <img
-                        className="w-10 h-6 object-cover rounded-full mr-1 ml-2"
-                        src={item.color.img}
-                        alt="color"
-                      />
-                      <span>{item.color.name}</span>
-                    </div>
-                    <Button
-                      className="absolute top-2 left-0 rounded-full w-5 h-5 px-2 bg-red-500 hover:bg-red-700"
-                      onClick={() => deleteColorChose(index)}
-                    >
-                      <DeleteFilled className="text-white text-xs " />
-                    </Button>
+                  <div
+                    key={index}
+                    className="relative flex flex-row items-center"
+                    onClick={() => handleSetInfor(item)}
+                  >
+                    <img
+                      className="w-10 h-6 object-cover rounded-full mr-1 ml-2"
+                      src={item.Color.url}
+                      alt="color"
+                    />
+                    <span>
+                      {item.Color.color}[{item.size}]
+                    </span>
                   </div>
                 ))
               ) : (
@@ -520,7 +411,7 @@ const EditProductPage = () => {
       <div className="w-[100%] bg-gray-100 ">
         <Button
           className="w-[95%] rounded-full p-8 mb-20 ml-8"
-          onClick={handleAddProduct}
+          onClick={handleUpdateProduct}
         >
           Hoàn tất
         </Button>

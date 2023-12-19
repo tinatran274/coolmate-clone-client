@@ -35,7 +35,16 @@ const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
   const handleCart = () => {
     router.push('/cart')
   }
-
+  useEffect(() => {
+    const down = (e) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        showSearchComponent()
+      }
+    }
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
   return (
     <div>
       {!searchComponent ? (
@@ -103,7 +112,6 @@ const NavBar = ({ searchComponent, showSearchComponent, isAdmin = false }) => {
                 onClick={handleCart}
                 className="text-white text-3xl"
               />
-              
             </div>
           </div>
         </nav>

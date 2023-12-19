@@ -50,15 +50,16 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 const ProductsPage = () => {
   const [data, setData] = useState([])
-  const [exportData, setExportData] = useState([])
+  const [handleData, setHandleData] = useState([])
   const [headers, setHeaders] = useState([])
+  const [exportData, setExportData] = useState([])
   useEffect(() => {
-    setExportData(
+    setHandleData(
       data
         .map((item) =>
           item.productItems.map((productItems) => {
             return {
-              id: productItems.id,
+              id: productItems.id.toString(),
               categoryId: item.categoryId,
               name: item.name,
               color: productItems.color,
@@ -72,18 +73,7 @@ const ProductsPage = () => {
         .flat()
     )
   }, [data])
-  useEffect(() => {
-    setHeaders([
-      { label: 'Product ID', key: 'id' },
-      { label: 'Category ID', key: 'categoryId' },
-      { label: 'Product Name', key: 'name' },
-      { label: 'Color', key: 'color' },
-      { label: 'Size', key: 'size' },
-      { label: 'Quantity', key: 'quantity' },
-      { label: 'Price', key: 'priceStr' },
-      { label: 'Descriptions', key: 'description' }
-    ])
-  }, [exportData])
+
   const router = useRouter()
   const handleGetAoCacLoai = (
     url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/ao-cac-loai`
@@ -135,6 +125,7 @@ const ProductsPage = () => {
     {
       accessorKey: 'id',
       header: 'ID',
+      label: 'ID',
       cell: ({ row }) => (
         <div
           className="capitalize hover:underline cursor-pointer"
@@ -147,6 +138,7 @@ const ProductsPage = () => {
     {
       accessorKey: 'name',
       header: 'Product Name',
+      label: 'Product Name',
       cell: ({ row }) => (
         <div
           className="capitalize truncate w-[230px] hover:underline cursor-pointer"
@@ -158,6 +150,7 @@ const ProductsPage = () => {
     },
     {
       accessorKey: 'color',
+      label: 'Color',
       header: ({ column }) => (
         <div
           className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
@@ -173,6 +166,7 @@ const ProductsPage = () => {
     },
     {
       accessorKey: 'size',
+      label: 'Size',
       header: ({ column }) => (
         <div
           className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
@@ -188,6 +182,7 @@ const ProductsPage = () => {
     },
     {
       accessorKey: 'quantity',
+      label: 'Quantity',
       header: ({ column }) => (
         <div
           className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
@@ -205,6 +200,7 @@ const ProductsPage = () => {
     },
     {
       accessorKey: 'priceStr',
+      label: 'Price',
       header: ({ column }) => (
         <div
           className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
@@ -221,6 +217,7 @@ const ProductsPage = () => {
       }
     },
     {
+      id: 'deleted',
       accessorKey: 'deleted',
       header: 'Deleted',
       cell: ({ row }) => (
@@ -271,12 +268,17 @@ const ProductsPage = () => {
     }
   ]
   const [sorting, setSorting] = useState()
-  const [filters, setFilters] = useState('name')
+  const [filters, setFilters] = useState('id')
   const [columnFilters, setColumnFilters] = useState()
   const [columnVisibility, setColumnVisibility] = useState()
   const [rowSelection, setRowSelection] = useState({})
+  useEffect(() => {
+    setExportData(
+      handleData.filter((item, index) => rowSelection[index] === true)
+    )
+  }, [handleData, rowSelection])
   const table = useReactTable({
-    data: exportData,
+    data: handleData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -298,6 +300,24 @@ const ProductsPage = () => {
       rowSelection
     }
   })
+  useEffect(() => {
+    setHeaders(
+      table
+        .getAllColumns()
+        .filter(
+          (column) =>
+            column.getIsVisible() &&
+            column.id !== 'select' &&
+            column.id !== 'actions' &&
+            column.id !== 'deleted'
+        )
+        .map((item) => ({
+          label: item.columnDef.label,
+          key: item.id
+        }))
+    )
+  }, [table])
+  console.log(headers)
   return (
     <div className="w-full p-4 pt-6 h-fit">
       <div className="justify-between flex">
@@ -382,7 +402,20 @@ const ProductsPage = () => {
               <div className="border p-2 px-4 text-sm">
                 {Object.keys(rowSelection).length} selected
               </div>
-              <AlertDialog>
+              <Button
+                variant="outline"
+                className="border p-2 px-4 text-sm cursor-pointer rounded-none"
+              >
+                <CSVLink
+                  data={exportData}
+                  filename={'Products.csv'}
+                  headers={headers}
+                >
+                  Export Excel
+                </CSVLink>
+              </Button>
+
+              {/* <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -441,12 +474,12 @@ const ProductsPage = () => {
                     <AlertDialogAction>Continue</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
-              </AlertDialog>
+              </AlertDialog> */}
             </div>
           )}
         </div>
       </div>
-      {exportData.length > 0 && (
+      {handleData.length > 0 && (
         <>
           <div className="rounded-md border">
             <Table>
@@ -523,9 +556,6 @@ const ProductsPage = () => {
           </div>
         </>
       )}
-      <CSVLink data={exportData} filename={'Products.csv'} headers={headers}>
-        Download me
-      </CSVLink>
     </div>
   )
 }

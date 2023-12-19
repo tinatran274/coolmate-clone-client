@@ -14,6 +14,7 @@ const UserAccount = () => {
   const [option, setOption] = useState('Info')
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
+  console.log(user)
   const handleSetOption = (param) => {
     if (param === 'Logout') {
       localStorage.removeItem('token')

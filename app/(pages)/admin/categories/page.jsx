@@ -9,11 +9,24 @@ import { Input } from '@/components/ui/input'
 import Filtering from '../../../../components/treeview/treeview'
 import { useDebounce } from '../../../hooks/useDebounce'
 import axios from 'axios'
+import { useEffect } from 'react'
+import TreeCategory from '../../../../components/category-tree/categoty-tree'
 
 const CategoriesPage = () => {
   const [search, setSearch] = React.useState('')
   const searchDebounced = useDebounce(search, 300)
   const [categories, setCategories] = React.useState([])
+  const [treeData, setTreeData] = React.useState()
+  const handleResponeData = (data) => {
+    data.forEach((item) => {
+      item.name = item.categoryName
+      delete item.categoryName
+      if (item.children.length) {
+        handleResponeData(item.children)
+      }
+    })
+  }
+
   const getAllCategories = (
     url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/category`
   ) => {
@@ -25,7 +38,7 @@ const CategoriesPage = () => {
       axios
         .request(options)
         .then(function (response) {
-          setCategories({ name: '', children: response.data })
+          setCategories(response.data)
         })
         .catch(function (error) {
           console.error(error)
@@ -34,9 +47,13 @@ const CategoriesPage = () => {
       console.log('Error fetching data:', error)
     }
   }
-  React.useEffect(() => {
+  useEffect(() => {
     getAllCategories()
   }, [])
+  useEffect(() => {
+    handleResponeData(categories)
+    setTreeData({ name: '', children: categories })
+  }, [categories])
   const router = useRouter()
   return (
     <div className="w-full p-4 pt-6 h-fit">
@@ -68,7 +85,7 @@ const CategoriesPage = () => {
         </div>
       </div>
       <div className="rounded-md border w-full h-full">
-        <Filtering search={searchDebounced} categories={categories} />
+        <Filtering categories={treeData} search={searchDebounced} />
       </div>
     </div>
   )

@@ -45,294 +45,199 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import { cn } from '@/lib/utils'
-const data = [
-  {
-    id: 'm5gr84i9',
-    deleted: 'true',
-    payment: 'pending',
-    email: 'ken99@yahoo.com',
-    created_at: '2021-09-01 12:00:00'
-  },
-  {
-    id: '3u1reuv4',
-    total: 242,
-    customer_name: 'success',
-    payment: 'paid',
-
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    customer_name: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    customer_name: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    customer_name: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    customer_name: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'bhqecj4p',
-    amount: 721,
-    customer_name: 'failed',
-    email: 'carmella@hotmail.com'
-  }
-]
-
-const columns = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
-  },
-  {
-    accessorKey: 'email',
-    header: 'Customer Email',
-    cell: ({ row }) => (
-      <div className="capitalize truncate w-[200px]">
-        {row.getValue('email')}
-      </div>
-    )
-  },
-  {
-    accessorKey: 'payment',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Payment
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="none"
-            className={cn(
-              row.getValue('payment') === 'pending' &&
-                'rounded-xl bg-zinc-200 w-fit h-6 px-3 ml-5 capitalize',
-              row.getValue('payment') === 'paid' &&
-                'bg-teal-400 rounded-xl w-fit px-3 h-6 ml-8 capitalize pointer-events-none'
-            )}
-          >
-            {row.getValue('payment')}
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-base">
-              Process payment
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure about that?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    )
-  },
-  {
-    accessorKey: 'created_at',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Created At
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => <div>{row.getValue('created_at')}</div>
-  },
-  {
-    accessorKey: 'total',
-    header: ({ column }) => (
-      <div
-        className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Total
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </div>
-    ),
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue('total'))
-
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'VND'
-      }).format(price)
-
-      return <div className="font-medium">{formatted}</div>
-    }
-  },
-  {
-    accessorKey: 'deleted',
-    header: 'Deleted',
-    cell: ({ row }) => (
-      <div className="uppercase">{row.getValue('deleted')}</div>
-    )
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const product = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
-            >
-              Copy customer ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }
-  }
-]
+import { cn, convertPrice, handleDate } from '@/lib/utils'
+import { getApi, putApi } from '@/lib/fetch'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 const OrdersPage = () => {
-  const [sorting, setSorting] = React.useState()
-  const [filters, setFilters] = React.useState('id')
-  const [columnFilters, setColumnFilters] = React.useState()
-  const [columnVisibility, setColumnVisibility] = React.useState()
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = useState()
+  const [filters, setFilters] = useState('id')
+  const [columnFilters, setColumnFilters] = useState()
+  const [columnVisibility, setColumnVisibility] = useState()
+  const [rowSelection, setRowSelection] = useState({})
+  const [data, setData] = useState([])
+  const status = {
+    0: 'Pending',
+    1: 'Completed',
+    2: 'Cancelled'
+  }
+  const fetchData = async () => {
+    const res = await getApi({ endPoint: '/api/order/getAll' })
+    setData(res.data.map((item) => ({ ...item, id: item.id.toString() })))
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
+  const handleProcessPayment = async (id, orderStatus) => {
+    console.log(id, orderStatus)
+    const res = await putApi({
+      endPoint: `/api/order/updateStatus`,
+      data: {
+        orderId: id,
+        status: orderStatus === 0 ? 1 : 0
+      }
+    })
+    if (res.status === 200) {
+      fetchData()
+    }
+  }
+  const columns = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false
+    },
+    {
+      accessorKey: 'id',
+      header: 'OrderID',
+      cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
+    },
+    {
+      accessorKey: 'userId',
+      header: 'UserID',
+      cell: ({ row }) => (
+        <div className="truncate w-[50px]">{row.getValue('userId')}</div>
+      )
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row }) => (
+        <div className="truncate w-[200px]">{row.getValue('email')}</div>
+      )
+    },
+    {
+      accessorKey: 'orderStatus',
+      header: ({ column }) => (
+        <div
+          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="none"
+              className={cn(
+                row.getValue('orderStatus') === 0 &&
+                  'rounded-xl bg-zinc-200 w-fit h-6 px-3 capitalize',
+                row.getValue('orderStatus') === 1 &&
+                  'bg-teal-400 rounded-xl w-fit px-3 h-6 capitalize',
+                row.getValue('orderStatus') === 2 &&
+                  'bg-red-400 rounded-xl w-fit px-3 h-6 capitalize pointer-events-none'
+              )}
+            >
+              {status[row.getValue('orderStatus')]}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-base">
+                Process payment
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure about that?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() =>
+                  handleProcessPayment(
+                    row.getValue('id'),
+                    row.getValue('orderStatus')
+                  )
+                }
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )
+    },
+    {
+      accessorKey: 'orderDate',
+      header: ({ column }) => (
+        <div
+          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground py-2 rounded-md"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex">{handleDate(row.getValue('orderDate'))}</div>
+      )
+    },
+    {
+      accessorKey: 'orderTotal',
+      header: ({ column }) => (
+        <div
+          className="flex cursor-pointer hover:bg-accent hover:text-accent-foreground p-2 rounded-md"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Total
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
+      cell: ({ row }) => {
+        return (
+          <div className="font-medium">
+            {convertPrice(row.getValue('orderTotal'))}
+          </div>
+        )
+      }
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const product = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(product.id)}
+              >
+                Copy customer ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View customer details</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      }
+    }
+  ]
   const table = useReactTable({
     data,
     columns,

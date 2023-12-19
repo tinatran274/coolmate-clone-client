@@ -39,7 +39,7 @@ export function UserDetailIcon() {
     <div>
       <UserOutlined
         className="text-white text-3xl"
-        onClick={() => (!user?.username ? handleSignIn() : showDrawer())}
+        onClick={() => (!user?.token ? handleSignIn() : showDrawer())}
       />
       <Drawer
         title={

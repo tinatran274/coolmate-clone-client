@@ -34,7 +34,7 @@ const categories = [
     //slug:'combo-the-thao'
   }
 ]
-const CasualPage = () => {
+const ActiveWearPage = () => {
   return (
     <div className="pb-[30px]">
       <CollectionBanner imageUrl={imageUrl} />
@@ -49,13 +49,14 @@ const CasualPage = () => {
       <Separator />
       <CollectionFilter categories={categories} />
       <Separator />
-      <FilterProduct title="Đồ thể thao" />
-      <CollectionList />
       <CollectionNewList />
+      <FilterProduct title="Đồ thể thao" />
+
+      <CollectionList />
       <CollectionActiveSlider />
       <CollectionBanner imageUrl="https://mcdn.coolmate.me/image/July2022/mceclip0.jpg" />
     </div>
   )
 }
 
-export default CasualPage
+export default ActiveWearPage

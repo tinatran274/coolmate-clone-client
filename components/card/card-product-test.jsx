@@ -10,18 +10,17 @@ import { useRouter } from 'next/navigation'
 import { notification, Space } from 'antd'
 
 const CardProductTest = (props) => {
-
   const router = useRouter()
   const [isHover, setIsHover] = useState(false)
   const { product } = props
   const [productItem, setProductItem] = useState(product.productItems[0])
 
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
   const openNotificationWithIcon = (type, content) => {
-      api[type]({
+    api[type]({
       message: type,
-      description: content,
-      });
+      description: content
+    })
   }
 
   // console.log(product)
@@ -32,71 +31,74 @@ const CardProductTest = (props) => {
         url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/add`,
         data: {
           productItemId: productItemId,
-          quantity: 1,
+          quantity: 1
         },
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
       axios
-        .request(options, {
-        })
+        .request(options, {})
         .then(function (response) {
           console.log(response.data)
-          openNotificationWithIcon('success', 
-            <div className= "">
-            <b >Đã thêm vào giỏ hàng</b>
-            <div className="flex flex-row mt-2">
-              <img
-                className="rounded-[10px] w-20"
-                src={productItem?.productItemImages[0]}
-                alt={`img ${product.name}`}
-              />
-              <div>
-                <b className="ml-4">{product.name}</b>
-                <p className='text-blue-500 ml-4'>{productItem.color}/{item}</p>
-                <p className="ml-4">{productItem.priceStr}</p>
-                <p className="ml-4">Số lượng: 1</p>
+          openNotificationWithIcon(
+            'success',
+            <div
+              className="cursor-pointer"
+              onClick={() => router.push('/cart')}
+            >
+              <b>Đã thêm vào giỏ hàng</b>
+              <div className="flex flex-row mt-2">
+                <img
+                  className="rounded-[10px] w-20"
+                  src={productItem?.productItemImages[0]}
+                  alt={`img ${product.name}`}
+                />
+                <div>
+                  <b className="ml-4">{product.name}</b>
+                  <p className="text-blue-500 ml-4">
+                    {productItem.color}/{item}
+                  </p>
+                  <p className="ml-4">{productItem.priceStr}</p>
+                  <p className="ml-4">Số lượng: 1</p>
+                </div>
               </div>
             </div>
-          </div>)
+          )
         })
         .catch(function (error) {
           console.log(error)
           if (error.response.status === 401)
             openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
-          else 
-            openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
-      })
-  } catch (error) {
-    console.log('Error')
-  } 
-
+          else openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
+        })
+    } catch (error) {
+      console.log('Error')
+    }
   }
-  
+
   const handleDetailProduct = () => {
     router.push(
       `/product/${encodeURIComponent(
         JSON.stringify({
-          productId: product.id,
+          productId: product.id
         })
       )}`
     )
   }
 
   const addDotsToNumber = (number) => {
-    if(number) {
-        const numberString = number.toString();
-        const length = numberString.length;
-        let result = "";
-        for (let i = 0; i < length; i++) {
-        result += numberString[i];
-        if ((length - i - 1) % 3 === 0 && i !== length - 1) 
-            result += ".";
-        }
-        return result;
+    if (number) {
+      const numberString = number.toString()
+      const length = numberString.length
+      let result = ''
+      for (let i = 0; i < length; i++) {
+        result += numberString[i]
+        if ((length - i - 1) % 3 === 0 && i !== length - 1) result += '.'
+      }
+      return result
     }
-}
+  }
 
   // console.log(productItem)
 
@@ -159,7 +161,9 @@ const CardProductTest = (props) => {
                       <button
                         className="bg-white text-black rounded-[0.5rem] text-[13px] w-[40px] h-[35px] font-[590] hover:text-white hover:bg-gray-300/70"
                         // onClick={() => console.log('click')}
-                        onClick={() => handleAddCart(item, productItem.itemIds[index])}
+                        onClick={() =>
+                          handleAddCart(item, productItem.itemIds[index])
+                        }
                       >
                         {item}
                       </button>
@@ -202,8 +206,10 @@ const CardProductTest = (props) => {
                 </div>
               ))}
             </div>
-            <h3 className="font-[400] text-[14px] mb-[0.75rem] leading-5 cursor-pointer" 
-              onClick={() => handleDetailProduct()}>
+            <h3
+              className="font-[400] text-[14px] mb-[0.75rem] leading-5 cursor-pointer"
+              onClick={() => handleDetailProduct()}
+            >
               {product.name}
             </h3>
             <p className="text-sm mx-0 mt-[-10px] mb-[5px] text-[#0009]">

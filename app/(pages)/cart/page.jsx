@@ -8,7 +8,7 @@ import ListItemCart from '../../../components/list_item_cart/list_item_cart'
 import { Button } from '@/components/ui/button'
 import { UpOutlined } from '@ant-design/icons'
 
-const SignIn = () => {
+const CartPage = () => {
   const [isVisible, setIsVisible] = useState(false)
 
   const scrollToTop = () => {
@@ -50,4 +50,4 @@ const SignIn = () => {
     </div>
   )
 }
-export default SignIn
+export default CartPage

@@ -8,51 +8,50 @@ import { Rate } from 'antd'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { notification, Space } from 'antd'
+import { paymentMethod } from '@/lib/constant'
 
-const DetailPayment = (props) => {
-
-
+const DetailPayment = ({ data }) => {
   const router = useRouter()
-
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
   const openNotificationWithIcon = (type, content) => {
-      api[type]({
+    api[type]({
       message: 'type',
-      description: content,
-      });
+      description: content
+    })
   }
 
   const handleCreateOrder = () => {
     try {
-      const address = `${props.data.adress}, ${props.data.district}, ${props.data.city}, ${props.data.province}`
+      const address = `${data.adress}, ${data.district}, ${data.city}, ${data.province}`
       const options = {
         method: 'POST',
         url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/order/create`,
         data: {
           shippingAddress: address,
-          paymentMethod: 0,
-          shippingMethod: 0
+          paymentMethod: paymentMethod[data.optionPay],
+          shippingMethod: 0,
+          name: data.username,
+          phone: data.phone,
+          email: data.email
         },
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
-      console.log(options)
       axios
-        .request(options, { 
-        })
+        .request(options, {})
         .then(function (response) {
-          console.log(response.data)
-          router.push('/account')
-          openNotificationWithIcon('success', 'Đặt hàng thành công')
-
+          if (data.optionPay === 'COD') {
+            openNotificationWithIcon('success', 'Đặt hàng thành công')
+            router.replace('/cart')
+          } else if (data.optionPay === 'Momo') {
+            router.replace(response.data.payUrl)
+          }
         })
-        .catch(function (error) {
-      })
+        .catch(function (error) {})
     } catch (error) {
       console.log('Error:', error)
     }
-
   }
 
   const addDotsToNumber = (number) => {
@@ -68,12 +67,11 @@ const DetailPayment = (props) => {
     }
   }
   const priceMemo = useMemo(() => {
-    const total = props.data.listProduct.reduce((total, cur) => {
+    const total = data.listProduct.reduce((total, cur) => {
       return total + parseInt(cur.price) * parseInt(cur.qty)
     }, 0)
     return total
   }, [])
-
 
   return (
     <div className="p-8 w-[100%]">
@@ -103,7 +101,7 @@ const DetailPayment = (props) => {
           Khám phá thêm các sản phẩm khác tại đây
         </Button>
       </div>
-      <p className="text-center text-3xl ">Thông tin đơn hàng id</p>
+      <p className="text-center text-3xl ">Thông tin đơn hàng</p>
       <div className="bg-gray-200 mx-4 rounded-b-md rounded-t-xl mt-6">
         <div className="flex justify-between bg-blue-700 px-4 py-3 rounded-xl mt-6">
           <p className="text-sm font-bold text-white">Tên sản phẩm</p>
@@ -113,7 +111,7 @@ const DetailPayment = (props) => {
           <p className="text-sm font-bold text-white">Thành tiền</p>
         </div>
         <div className="px-3 pb-1">
-          {props.data.listProduct.map((product, index) => {
+          {data.listProduct.map((product, index) => {
             return (
               <CardItemPay
                 key={index}
@@ -136,7 +134,7 @@ const DetailPayment = (props) => {
         <hr className="my-6"></hr>
         <div className="flex flex-row justify-between mb-4">
           <p className="">Mã giảm giá:</p>
-          <p className=""></p>
+          <p className="text-muted-foreground">Không có</p>
         </div>
         <hr className="my-6"></hr>
         <div className="flex flex-row justify-between mb-4">
@@ -151,7 +149,10 @@ const DetailPayment = (props) => {
 
         <div className="flex flex-row justify-between px-6 py-4 mt-6 rounded-b-xl bg-black text-white mb-4">
           <p className="font-bold text-lg">Tổng thanh toán:</p>
-          <p className="font-bold text-lg">{addDotsToNumber(priceMemo)}đ</p>
+          <p className="font-bold text-lg">
+            {' '}
+            {priceMemo ? addDotsToNumber(priceMemo) : 0}đ
+          </p>
         </div>
       </div>
       <p className="text-center text-3xl ">Thông tin nhận hàng</p>
@@ -164,21 +165,20 @@ const DetailPayment = (props) => {
           <p className="text-sm my-1">Địa chỉ nhận hàng:</p>
         </div>
         <div>
-          <p className="text-sm my-1">{props.data.username}</p>
-          <p className="text-sm my-1">{props.data.email}</p>
-          <p className="text-sm my-1">{props.data.phone}</p>
-          <p className="text-sm my-1">{props.data.optionPay}</p>
+          <p className="text-sm my-1">{data.username}</p>
+          <p className="text-sm my-1">{data.email}</p>
+          <p className="text-sm my-1">{data.phone}</p>
+          <p className="text-sm my-1">{data.optionPay}</p>
           <p className="text-sm my-1">
-            {props.data.adress}, {props.data.district}, {props.data.city},{' '}
-            {props.data.province}
+            {data.adress}, {data.district}, {data.city}, {data.province}
           </p>
         </div>
       </div>
       <Button
-            className="rounded-full p-8 w-[100%] font-bold text-lg hover:bg-gray-200 hover:text-black"
-            onClick={handleCreateOrder}
-          >
-            Xác nhận đơn hàng
+        className="rounded-full p-8 w-[100%] font-bold text-lg hover:bg-gray-200 hover:text-black"
+        onClick={handleCreateOrder}
+      >
+        Xác nhận đơn hàng
       </Button>
     </div>
   )

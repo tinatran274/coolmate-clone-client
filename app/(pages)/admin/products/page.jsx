@@ -48,6 +48,7 @@ import {
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import ImportExcel from '../../../../components/excel/import-excel'
 const ProductsPage = () => {
   const [data, setData] = useState([])
   const [handleData, setHandleData] = useState([])
@@ -317,7 +318,6 @@ const ProductsPage = () => {
         }))
     )
   }, [table])
-  console.log(headers)
   return (
     <div className="w-full p-4 pt-6 h-fit">
       <div className="justify-between flex">
@@ -332,7 +332,7 @@ const ProductsPage = () => {
       </div>
       <div className="flex items-center py-4">
         <div className="w-full">
-          <div className="flex">
+          <div className="flex items-center">
             <div className="flex relative">
               <Input
                 placeholder={
@@ -370,6 +370,8 @@ const ProductsPage = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+            <ImportExcel getData={handleGetAoCacLoai} />
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">

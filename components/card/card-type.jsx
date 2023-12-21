@@ -5,16 +5,8 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const CardType = () => {
+const CardType = ({ category }) => {
   const [isHover, setIsHover] = useState(false)
-
-  const category = {
-    image:
-      'https://media.coolmate.me/cdn-cgi/image/width=672,height=990,quality=80,format=auto/uploads/September2023/Refdfdctangle_178.png',
-    imageHover: 'https://mcdn.coolmate.me/image/September2023/mceclip0_81.jpg',
-    type: 'Áo các loại',
-    description: 'Áo thun, áo Polo và các áo khác'
-  }
 
   return (
     <div className="px-[16px] overflow-y-hidden overflow-x-auto w-[250px]">

@@ -38,7 +38,7 @@ import { getApi } from '@/lib/fetch'
 
 const ListItemCart = () => {
   const user = useSelector((state) => state.user)
-  const [data, setData] = useState(null)
+  const [data, setData] = useState([])
   const router = useRouter()
   const [listProvince, setListProvince] = useState(
     Object.entries(TinhTP)
@@ -103,7 +103,14 @@ const ListItemCart = () => {
     handleGetCart()
     handleGetAddress()
   }, [])
-
+  useEffect(() => {
+    if (data.length > 0) {
+      setAdress(data[0].streetLine.split(', ')[0])
+      setUsername(data[0].name)
+      setEmail(data[0].email ? data[0].email : user.email)
+      setPhone(data[0].phoneNumber ? data[0].phoneNumber : user.phoneNumber)
+    }
+  }, [data])
   // console.log(responseData)
 
   const handleSetProvince = (value) => {
@@ -254,7 +261,9 @@ const ListItemCart = () => {
     return emailRegex.test(email)
   }
   const handlePayment = () => {
-    if (
+    if (!priceMemo) {
+      openNotificationWithIcon('error', 'Vui lòng thêm hàng vào giỏ')
+    } else if (
       !username ||
       !phone ||
       !email ||
@@ -323,7 +332,7 @@ const ListItemCart = () => {
           <p>
             Tổng đơn ({numProductMemo} sản phẩm){' '}
             <span className="text-blue-600 font-bold">
-              {addDotsToNumber(priceMemo)}đ
+              {priceMemo ? addDotsToNumber(priceMemo) : 0}đ
             </span>
           </p>
         </div>
@@ -350,7 +359,7 @@ const ListItemCart = () => {
                 {() => (
                   <>
                     <ModalHeader className="flex flex-col gap-1">
-                      Modal Title
+                      Sổ địa chỉ
                     </ModalHeader>
                     <ModalBody>
                       {data?.map((item) => (
@@ -585,14 +594,23 @@ const ListItemCart = () => {
         <p className="px-4 mb-8">
           Nếu bạn không hài lòng với sản phẩm của chúng tôi? Bạn hoàn toàn có
           thể trả lại sản phẩm. Tìm hiểu thêm
-          <span className="font-bold"> tại đây</span>.
+          <span
+            className="font-bold cursor-pointer"
+            onClick={() => {
+              router.push(`https://www.coolmate.me/page/chinh-sach-doi-tra`)
+            }}
+          >
+            {' '}
+            tại đây
+          </span>
+          .
         </p>
         <div className="px-4">
           <Button
             className="rounded-lg p-6 w-[100%] hover:bg-gray-200 hover:text-black"
             onClick={handlePayment}
           >
-            Đặt hàng {addDotsToNumber(priceMemo)}đ ({optionPay})
+            Đặt hàng {priceMemo ? addDotsToNumber(priceMemo) : 0}đ ({optionPay})
           </Button>
         </div>
       </div>
@@ -617,7 +635,7 @@ const ListItemCart = () => {
         <hr className="my-10"></hr>
         <div className="flex flex-row justify-between  mb-4">
           <p className="">Tạm tính:</p>
-          <p className="">{addDotsToNumber(priceMemo)}đ</p>
+          <p className=""> {priceMemo ? addDotsToNumber(priceMemo) : 0}đ</p>
         </div>
         <div className="flex flex-row justify-between mb-4">
           <p className="">Giảm giá:</p>
@@ -630,7 +648,10 @@ const ListItemCart = () => {
         <hr className="my-8"></hr>
         <div className="flex flex-row justify-between  mb-4">
           <p className="">Tổng:</p>
-          <p className="font-bold text-xl">{addDotsToNumber(priceMemo)}đ</p>
+          <p className="font-bold text-xl">
+            {' '}
+            {priceMemo ? addDotsToNumber(priceMemo) : 0}đ
+          </p>
         </div>
         <hr className="my-8"></hr>
 

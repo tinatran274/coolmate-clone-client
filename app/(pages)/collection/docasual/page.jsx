@@ -40,9 +40,9 @@ const CasualPage = () => {
     <div className="pb-[30px]">
       <CasualFilter />
       <Separator />
+      <CollectionNewList />
       <FilterProduct title="Đồ mặc hàng ngày" />
       <CollectionList />
-      <CollectionNewList />
       <CollectionActiveSlider />
       <CollectionBanner imageUrl="https://mcdn.coolmate.me/image/July2022/mceclip0.jpg" />
     </div>

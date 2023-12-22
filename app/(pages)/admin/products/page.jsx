@@ -51,33 +51,53 @@ import { useEffect, useState } from 'react'
 import ImportExcel from '../../../../components/excel/import-excel'
 const ProductsPage = () => {
   const [data, setData] = useState([])
-  const [handleData, setHandleData] = useState([])
   const [headers, setHeaders] = useState([])
   const [exportData, setExportData] = useState([])
-  useEffect(() => {
-    setHandleData(
-      data
-        .map((item) =>
-          item.productItems.map((productItems) => {
-            return {
-              id: productItems.id.toString(),
-              categoryId: item.categoryId,
-              name: item.name,
-              color: productItems.color,
-              size: productItems.size,
-              quantity: productItems.qtyInStock,
-              priceStr: item.priceStr,
-              description: item.description
-            }
-          })
-        )
-        .flat()
-    )
-  }, [data])
-
+  // useEffect(() => {
+  //   setHandleData(
+  //     handleData.length > 0
+  //       ? [
+  //           ...handleData,
+  //           ...data
+  //             .map((item) =>
+  //               item.productItems.map((productItems) => {
+  //                 return {
+  //                   id: productItems.id.toString(),
+  //                   categoryId: item.categoryId,
+  //                   name: item.name,
+  //                   color: productItems.color,
+  //                   size: productItems.size,
+  //                   quantity: productItems.qtyInStock,
+  //                   priceStr: item.priceStr,
+  //                   description: item.description
+  //                 }
+  //               })
+  //             )
+  //             .flat()
+  //         ]
+  //       : [
+  //           ...data
+  //             .map((item) =>
+  //               item.productItems.map((productItems) => {
+  //                 return {
+  //                   id: productItems.id.toString(),
+  //                   categoryId: item.categoryId,
+  //                   name: item.name,
+  //                   color: productItems.color,
+  //                   size: productItems.size,
+  //                   quantity: productItems.qtyInStock,
+  //                   priceStr: item.priceStr,
+  //                   description: item.description
+  //                 }
+  //               })
+  //             )
+  //             .flat()
+  //         ]
+  //   )
+  // }, [data])
   const router = useRouter()
   const handleGetAoCacLoai = (
-    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/product/ao-cac-loai`
+    url = `${process.env.NEXT_PUBLIC_API_ROOT}/api/productItem`
   ) => {
     try {
       const options = {
@@ -87,7 +107,7 @@ const ProductsPage = () => {
       axios
         .request(options)
         .then(function (response) {
-          setData(response.data.data)
+          setData(response.data)
         })
         .catch(function (error) {
           console.error(error)
@@ -99,7 +119,6 @@ const ProductsPage = () => {
   useEffect(() => {
     handleGetAoCacLoai()
   }, [])
-
   const handleOnClick = (id) => {
     router.push(`/admin/edit-product/${id}`)
   }
@@ -130,7 +149,7 @@ const ProductsPage = () => {
       cell: ({ row }) => (
         <div
           className="capitalize hover:underline cursor-pointer"
-          onClick={() => handleOnClick(row.getValue('id'))}
+          onClick={() => handleOnClick(row.original.productId)}
         >
           {row.getValue('id')}
         </div>
@@ -143,7 +162,7 @@ const ProductsPage = () => {
       cell: ({ row }) => (
         <div
           className="capitalize truncate w-[230px] hover:underline cursor-pointer"
-          onClick={() => handleOnClick(row.getValue('id'))}
+          onClick={() => handleOnClick(row.original.productId)}
         >
           {row.getValue('name')}
         </div>
@@ -182,7 +201,7 @@ const ProductsPage = () => {
       }
     },
     {
-      accessorKey: 'quantity',
+      accessorKey: 'qtyInStock',
       label: 'Quantity',
       header: ({ column }) => (
         <div
@@ -195,7 +214,7 @@ const ProductsPage = () => {
       ),
       cell: ({ row }) => {
         return (
-          <div className="font-medium flex">{row.getValue('quantity')}</div>
+          <div className="font-medium flex">{row.getValue('qtyInStock')}</div>
         )
       }
     },
@@ -243,14 +262,14 @@ const ProductsPage = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(product.id)}
+                onClick={() => navigator.clipboard.writeText(product.productId)}
                 className="cursor-pointer"
               >
                 Copy product ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => handleOnClick(product.id)}
+                onClick={() => handleOnClick(product.productId)}
                 className="cursor-pointer"
               >
                 Edit product
@@ -274,12 +293,10 @@ const ProductsPage = () => {
   const [columnVisibility, setColumnVisibility] = useState()
   const [rowSelection, setRowSelection] = useState({})
   useEffect(() => {
-    setExportData(
-      handleData.filter((item, index) => rowSelection[index] === true)
-    )
-  }, [handleData, rowSelection])
+    setExportData(data.filter((item, index) => rowSelection[index] === true))
+  }, [data, rowSelection])
   const table = useReactTable({
-    data: handleData,
+    data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -318,6 +335,7 @@ const ProductsPage = () => {
         }))
     )
   }, [table])
+
   return (
     <div className="w-full p-4 pt-6 h-fit">
       <div className="justify-between flex">
@@ -326,6 +344,7 @@ const ProductsPage = () => {
           variant="outline"
           size="sm"
           className="bg-black text-white hover:bg-white hover:text-black"
+          onCLick={() => router.push('/admin/create-product')}
         >
           New Product
         </Button>
@@ -481,7 +500,7 @@ const ProductsPage = () => {
           )}
         </div>
       </div>
-      {handleData.length > 0 && (
+      {data.length > 0 && (
         <>
           <div className="rounded-md border">
             <Table>

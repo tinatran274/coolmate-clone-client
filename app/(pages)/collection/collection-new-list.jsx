@@ -1,8 +1,8 @@
-import CardProduct from '../../../components/card/card-product'
 import CardBanner from '../../../components/card/card-banner'
 import { Button } from '@/components/ui/button'
+import CardProductTest from '../../../components/card/card-product-test'
 
-const CollectionNewList = () => {
+const CollectionNewList = ({ data, response }) => {
   return (
     <div className="max-w-full px-[30px] not-italic">
       <h2 className="text-[2.875rem] font-[600] mb-[30px]">Sản phẩm mới</h2>
@@ -12,26 +12,26 @@ const CollectionNewList = () => {
             'https://mcdn.coolmate.me/image/September2023/mceclip2_42.png'
           }
         />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
-        <CardProduct />
+        {data &&
+          data.map((product, index) => {
+            return <CardProductTest key={index} product={product} />
+          })}
       </div>
-      <div className="flex items-center justify-center flex-col py-[20px] relative mt-[40px] gap-5">
-        <Button
-          variant="outline"
-          className="rounded-[1.5rem] bg-black text-white uppercase h-[45px] py-[0.875rem] px-[2.875rem] font-[700] hover:bg-gray-300/60 hover:text-black"
-        >
-          Xem thêm
-        </Button>
-        <p className="opacity-60 text-xs">
-          Hiển thị 1 - 18 trên tổng số 88 sản phẩm
-        </p>
-      </div>
+      {response.data && response.pageNumber !== response.totalPages && (
+        <div className="flex items-center justify-center flex-col py-[20px] relative mt-[40px] gap-5">
+          <Button
+            variant="outline"
+            className="rounded-[1.5rem] bg-black text-white uppercase h-[45px] py-[0.875rem] px-[2.875rem] font-[700] hover:bg-gray-300/60 hover:text-black"
+            onClick={() => handleGetDoTheThao(response.nextPage)}
+          >
+            Xem thêm
+          </Button>
+          <p className="opacity-60 text-xs">
+            Hiển thị 1 - {Object.keys(response.data).length} trên tổng số{' '}
+            {response.totalRecords} sản phẩm
+          </p>
+        </div>
+      )}
     </div>
   )
 }

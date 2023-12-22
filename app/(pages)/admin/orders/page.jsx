@@ -469,7 +469,6 @@ const OrdersPage = () => {
             Previous
           </Button>
           <Button
-            variant="outline"
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}

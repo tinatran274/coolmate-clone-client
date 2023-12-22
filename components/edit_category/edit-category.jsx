@@ -90,7 +90,6 @@ const EditCategory = () => {
       getAllCategories()
     }
   }
-
   const router = useRouter()
   return (
     <div className="w-[100%] bg-gray-100 ">

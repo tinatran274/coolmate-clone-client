@@ -11,8 +11,7 @@ export const userSlice = createSlice({
     weight: '',
     height: '',
     password: '',
-    isAdmin: false,
-    token: ''
+    isAdmin: false
   },
   reducers: {
     updateUser: (state, action) => {
@@ -26,7 +25,6 @@ export const userSlice = createSlice({
         weight = '',
         height = '',
         password = '',
-        token = '',
         isAdmin = false
       } = action.payload
       state.name = name ? name : state.name
@@ -38,8 +36,7 @@ export const userSlice = createSlice({
       state.height = height ? height : state.height
       state.weight = weight ? weight : state.weight
       state.password = password ? password : state.password
-      state.token = token ? token : state.token
-      state.isAdmin = isAdmin ? isAdmin : state.isAdmin
+      state.isAdmin = isAdmin === true ? isAdmin : state.isAdmin
     },
     resetUser: (state) => {
       state.name = ''
@@ -51,7 +48,6 @@ export const userSlice = createSlice({
       state.height = ''
       state.weight = ''
       state.password = ''
-      state.token = ''
       state.isAdmin = false
     }
   }

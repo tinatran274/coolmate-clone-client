@@ -1,8 +1,11 @@
 import Image from 'next/image'
 
-const CollectionCategory = ({ category }) => {
+const CollectionCategory = ({ category, setSlug }) => {
   return (
-    <div className="mx-8 relative w-[161px] h-[107px] cursor-pointer">
+    <div
+      className="mx-8 relative w-[161px] h-[107px] cursor-pointer"
+      onClick={() => setSlug(category.slug)}
+    >
       <Image
         alt="Collection Category"
         src={category.imageUrl}

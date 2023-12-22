@@ -8,18 +8,21 @@ import Review from './UI_component/review'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetUser } from '../../redux/user/userSlice'
+import { postApi } from '@/lib/fetch'
 
 const UserAccount = () => {
   const router = useRouter()
   const [option, setOption] = useState('Info')
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
-  console.log(user)
-  const handleSetOption = (param) => {
+  const handleSetOption = async (param) => {
     if (param === 'Logout') {
-      localStorage.removeItem('token')
-      dispatch(resetUser())
-      router.push('/')
+      const res = await postApi({ endPoint: '/api/auth/logout' })
+      if (res.status === 200) {
+        localStorage.removeItem('token')
+        dispatch(resetUser())
+        router.push('/')
+      }
     }
     setOption(param)
   }
@@ -33,8 +36,8 @@ const UserAccount = () => {
         <div
           className={
             option === 'Info'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
           }
           onClick={() => handleSetOption('Info')}
         >
@@ -62,8 +65,8 @@ const UserAccount = () => {
           <div
             className={
               option === 'Admin'
-                ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-                : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+                ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+                : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
             }
             onClick={handleGoToAdmin}
           >
@@ -89,8 +92,8 @@ const UserAccount = () => {
         <div
           className={
             option === 'Orders'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
           }
           onClick={() => handleSetOption('Orders')}
         >
@@ -119,8 +122,8 @@ const UserAccount = () => {
         <div
           className={
             option === 'UserAdress'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
           }
           onClick={() => handleSetOption('UserAdress')}
         >
@@ -149,8 +152,8 @@ const UserAccount = () => {
         <div
           className={
             option === 'Review'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
           }
           onClick={() => handleSetOption('Review')}
         >
@@ -179,8 +182,8 @@ const UserAccount = () => {
         <div
           className={
             option === 'Logout'
-              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2'
-              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2'
+              ? 'bg-black flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
+              : 'bg-white flex flex-row px-4 py-3 rounded-md items-center mb-2 cursor-pointer'
           }
           onClick={() => handleSetOption('Logout')}
         >

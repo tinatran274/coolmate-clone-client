@@ -122,7 +122,11 @@ const ActiveWearPage = () => {
             </div>
           )}
       </>
-      <CollectionNewList data={productData.data} response={productData} />
+      <CollectionNewList
+        data={productData.data}
+        response={productData}
+        handleGetData={handleGetDoTheThao}
+      />
       <CollectionActiveSlider />
       <CollectionBanner imageUrl="https://mcdn.coolmate.me/image/July2022/mceclip0.jpg" />
     </div>

@@ -16,19 +16,18 @@ import axios from 'axios'
 import { notification, Space } from 'antd'
 
 const DetailProduct = ({ productId }) => {
-
   const [currentImage, setCurrentImage] = useState(0)
   const [countProduct, setCountProduct] = useState(1)
   const [currentColor, setCurrentColor] = useState(0)
   const [currentSize, setCurrentSize] = useState(0)
   const [responseData, setResponseData] = useState({})
   const [responseReviewData, setResponseReviewData] = useState({})
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
   const openNotificationWithIcon = (type, content) => {
-      api[type]({
+    api[type]({
       message: type,
-      description: content,
-      });
+      description: content
+    })
   }
 
   const handleGetDetailProduct = (
@@ -85,7 +84,7 @@ const DetailProduct = ({ productId }) => {
   }, [])
 
   const groupedByColor = responseData?.productItems?.reduce((acc, item) => {
-    const { id, color, colorImage, size, productItemImages, qtyInStock } = item;
+    const { id, color, colorImage, size, productItemImages, qtyInStock } = item
     if (!acc[color]) {
       acc[color] = {
         color,
@@ -94,28 +93,30 @@ const DetailProduct = ({ productId }) => {
         size: [],
         id: [],
         qtyInStock: []
-      };
+      }
     }
-    acc[color].size = [...new Set([...acc[color].size, size])];
-    acc[color].id = [...new Set([...acc[color].id, id])];
-    acc[color].qtyInStock = [...new Set([...acc[color].qtyInStock, qtyInStock])];
-    
-    return acc;
-  }, {});
+    acc[color].size = [...new Set([...acc[color].size, size])]
+    acc[color].id = [...new Set([...acc[color].id, id])]
+    acc[color].qtyInStock = [...new Set([...acc[color].qtyInStock, qtyInStock])]
 
-  const colorArray = groupedByColor ? Object.entries(groupedByColor).map(([colorName, colorInfo]) => ({
-    color: colorInfo.color,
-    colorImage: colorInfo.colorImage,
-    id: colorInfo.id,
-    productItemImages: colorInfo.productItemImages,
-    qtyInStock: colorInfo.qtyInStock,
-    size: colorInfo.size
-  })) : []
+    return acc
+  }, {})
+
+  const colorArray = groupedByColor
+    ? Object.entries(groupedByColor).map(([colorName, colorInfo]) => ({
+        color: colorInfo.color,
+        colorImage: colorInfo.colorImage,
+        id: colorInfo.id,
+        productItemImages: colorInfo.productItemImages,
+        qtyInStock: colorInfo.qtyInStock,
+        size: colorInfo.size
+      }))
+    : []
   responseData.productItemsColor = colorArray
-  const resultArray = responseData.description ? responseData.description.split('|').map(item => item.trim()) : []
+  const resultArray = responseData.description
+    ? responseData.description.split('|').map((item) => item.trim())
+    : []
   responseData.descriptionArray = resultArray
-
-
 
   const increaseProduct = () => {
     setCountProduct(countProduct + 1)
@@ -127,7 +128,10 @@ const DetailProduct = ({ productId }) => {
 
   const handleNext = () => {
     setCurrentImage(
-      currentImage === responseData?.productItemsColor[currentColor]?.productItemImages.length - 1
+      currentImage ===
+        responseData?.productItemsColor[currentColor]?.productItemImages
+          .length -
+          1
         ? 0
         : currentImage + 1
     )
@@ -136,7 +140,8 @@ const DetailProduct = ({ productId }) => {
   const handlePrev = () => {
     setCurrentImage(
       currentImage === 0
-        ? responseData?.productItemsColor[currentColor]?.productItemImages.length - 1
+        ? responseData?.productItemsColor[currentColor]?.productItemImages
+            .length - 1
         : currentImage - 1
     )
   }
@@ -146,52 +151,71 @@ const DetailProduct = ({ productId }) => {
   }
 
   const handleAddCart = () => {
-    try {
-      const options = {
-        method: 'POST',
-        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/add`,
-        data: {
-          productItemId: responseData.productItemsColor[currentColor].id[currentSize],
-          quantity: countProduct,
-        },
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      }
-      axios
-        .request(options, {
-          
-        })
-        .then(function (response) {
-          console.log(response.data)
-          openNotificationWithIcon('success', 
-          <div className="">
-            <b >Đã thêm vào giỏ hàng</b>
-            <div className="flex flex-row mt-2">
-              <img
-                className="rounded-[10px] w-20"
-                src={responseData?.productItemsColor[currentColor]?.productItemImages[0]?.url}
-                alt={`img ${responseData.name}`}
-              />
-              <div>
-                <b className="ml-4">{responseData.name}</b>
-                <p className='text-blue-500 ml-4'>{responseData?.productItemsColor[currentColor]?.color}/{responseData?.productItemsColor[currentColor]?.size[currentSize]}</p>
-                <p className="ml-4">{responseData.priceStr}</p>
-                <p className="ml-4">Số lượng: {countProduct}</p>
+    const currentQty =
+      responseData?.productItemsColor[currentColor]?.qtyInStock[currentSize]
+    if (countProduct <= currentQty) {
+      try {
+        const options = {
+          method: 'POST',
+          url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/cart/add`,
+          data: {
+            productItemId:
+              responseData.productItemsColor[currentColor].id[currentSize],
+            quantity: countProduct
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+        axios
+          .request(options, {})
+          .then(function (response) {
+            console.log(response.data)
+            openNotificationWithIcon(
+              'success',
+              <div className="">
+                <b>Đã thêm vào giỏ hàng</b>
+                <div className="flex flex-row mt-2">
+                  <img
+                    className="rounded-[10px] w-20"
+                    src={
+                      responseData?.productItemsColor[currentColor]
+                        ?.productItemImages[0]?.url
+                    }
+                    alt={`img ${responseData.name}`}
+                  />
+                  <div>
+                    <b className="ml-4">{responseData.name}</b>
+                    <p className="text-blue-500 ml-4">
+                      {responseData?.productItemsColor[currentColor]?.color}/
+                      {
+                        responseData?.productItemsColor[currentColor]?.size[
+                          currentSize
+                        ]
+                      }
+                    </p>
+                    <p className="ml-4">{responseData.priceStr}</p>
+                    <p className="ml-4">Số lượng: {countProduct}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>)
-        })
-        .catch(function (error) {
-          if (error.response.status === 401)
-            openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
-          else 
-            openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
-      })
-  } catch (error) {
-    console.log('Error:', error)
-  } 
-
+            )
+          })
+          .catch(function (error) {
+            if (error.response.status === 401)
+              openNotificationWithIcon('error', `Đăng nhập để tiếp tục`)
+            else
+              openNotificationWithIcon('error', `Không thể thêm vào giỏ hàng`)
+          })
+      } catch (error) {
+        console.log('Error:', error)
+      }
+    } else {
+      openNotificationWithIcon(
+        'error',
+        `Không đủ số lượng sản phẩm, số lượng còn lại là: ${currentQty}`
+      )
+    }
   }
 
   // console.log(responseData)
@@ -210,7 +234,9 @@ const DetailProduct = ({ productId }) => {
       <div className="flex flex-row">
         <div className="relative w-1/2">
           <div className="flex flex-row justify-center mt-4 mb-4">
-            {responseData?.productItemsColor[currentColor]?.productItemImages?.map((image, index) => (
+            {responseData?.productItemsColor[
+              currentColor
+            ]?.productItemImages?.map((image, index) => (
               <span
                 key={index}
                 className={`h-1 w-10 inline-block rounded-full mx-2 ${
@@ -228,7 +254,10 @@ const DetailProduct = ({ productId }) => {
             <img
               loading="lazy"
               className="rounded-[20px]"
-              src={responseData?.productItemsColor[currentColor]?.productItemImages[currentImage]?.url}
+              src={
+                responseData?.productItemsColor[currentColor]
+                  ?.productItemImages[currentImage]?.url
+              }
               alt={`Slide ${currentImage + 1}`}
             />
             <RightOutlined
@@ -237,7 +266,9 @@ const DetailProduct = ({ productId }) => {
             />
           </div>
           <div className="absolute top-16">
-            {responseData?.productItemsColor[currentColor]?.productItemImages.map((image, index) => (
+            {responseData?.productItemsColor[
+              currentColor
+            ]?.productItemImages.map((image, index) => (
               <img
                 key={index}
                 loading="lazy"
@@ -256,9 +287,15 @@ const DetailProduct = ({ productId }) => {
         </div>
         <div className="mx-20 my-12">
           <p className="text-4xl font-bold mb-6">{responseData.name}</p>
-          <Rate disabled defaultValue={0} value={Math.round(responseReviewData?.rating)} />
+          <Rate
+            disabled
+            defaultValue={0}
+            value={Math.round(responseReviewData?.rating)}
+          />
           <span className="ml-2 text-sm">({responseReviewData.total})</span>
-          <p className="text-2xl font-bold mb-8 mt-4">{responseData.priceStr}</p>
+          <p className="text-2xl font-bold mb-8 mt-4">
+            {responseData.priceStr}
+          </p>
           <p className="mb-2 text-sm">
             Màu sắc:{' '}
             <span className="font-bold">
@@ -283,17 +320,21 @@ const DetailProduct = ({ productId }) => {
           </div>
           <p className="mb-2 text-sm">
             Kích thước Quần:{' '}
-            <span className="font-bold">{responseData?.productItemsColor[currentColor]?.size[currentSize]}</span>
+            <span className="font-bold">
+              {responseData?.productItemsColor[currentColor]?.size[currentSize]}
+            </span>
           </p>
-          {responseData?.productItemsColor[currentColor]?.size.map((size, index) => (
-            <Button
-              key={index}
-              className={`rounded-[15px] p-6 mr-4 bg-gray-300 text-black mb-8 hover:text-white`}
-              onClick={() => setCurrentSize(index)}
-            >
-              {size}
-            </Button>
-          ))}
+          {responseData?.productItemsColor[currentColor]?.size.map(
+            (size, index) => (
+              <Button
+                key={index}
+                className={`rounded-[15px] p-6 mr-4 bg-gray-300 text-black mb-8 hover:text-white`}
+                onClick={() => setCurrentSize(index)}
+              >
+                {size}
+              </Button>
+            )
+          )}
           <div className="flex flex-row items-center gap-4 mt-4">
             <div className="p-2 rounded-full border border-black">
               <MinusOutlined className="mx-2" onClick={decreaseProduct} />
@@ -301,11 +342,12 @@ const DetailProduct = ({ productId }) => {
               <PlusOutlined className="mx-2" onClick={increaseProduct} />
             </div>
             <div>
-              <Button className="px-12 py-[21px] rounded-full"
-                onClick={() => handleAddCart()}>
+              <Button
+                className="px-12 py-[21px] rounded-full"
+                onClick={() => handleAddCart()}
+              >
                 <ShoppingOutlined className="mx-2" />
                 Thêm vào giỏ hàng
-                
               </Button>
             </div>
           </div>
@@ -313,14 +355,14 @@ const DetailProduct = ({ productId }) => {
           <div>
             <p className="mb-6 text-sm font-bold">Đặc điểm nổi bật:</p>
             {responseData?.descriptionArray.map((feature, index) => (
-              <p key={index} className={`my-4 text-sm`}>{feature}
+              <p key={index} className={`my-4 text-sm`}>
+                {feature}
               </p>
             ))}
           </div>
         </div>
       </div>
       <hr className="mt-12"></hr>
-      
     </div>
   )
 }

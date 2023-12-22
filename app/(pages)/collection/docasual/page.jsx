@@ -102,7 +102,7 @@ const CasualPage = () => {
               <Button
                 variant="outline"
                 className="rounded-[1.5rem] bg-black text-white uppercase h-[45px] py-[0.875rem] px-[2.875rem] font-[700] hover:bg-gray-300/60 hover:text-black"
-                onClick={() => handleGetDoTheThao(productData.nextPage)}
+                onClick={() => handleGetMacHangNgay(productData.nextPage)}
               >
                 Xem thêm
               </Button>
@@ -113,7 +113,11 @@ const CasualPage = () => {
             </div>
           )}
       </>
-      <CollectionNewList data={productData.data} response={productData} />
+      <CollectionNewList
+        data={productData.data}
+        response={productData}
+        handleGetData={handleGetMacHangNgay}
+      />
       <CollectionActiveSlider />
       <CollectionBanner imageUrl="https://mcdn.coolmate.me/image/July2022/mceclip0.jpg" />
     </div>

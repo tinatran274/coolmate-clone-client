@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 'use client'
-import React from 'react'
+import React, { useState, useEffect }  from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
-
+import axios from 'axios'
 import './Lifetimesales.scss'
 import { Card } from './Card'
 import Dot from './Dot'
@@ -10,21 +10,43 @@ import Dot from './Dot'
 const COLORS = ['#aee9d1', '#fed3d1', '#a4e8f2']
 const RADIAN = Math.PI / 180
 export default function LifetimeSale({ api }) {
-  const data = {
-    orders: 3634,
-    total: '$102,420,193.60',
-    completed_percentage: 57,
-    cancelled_percentage: 32
+
+  const [salesData, setSalesData] = useState([])
+
+  const handleGetLifeTimeSale = () => {
+    try {
+      const options = {
+        method: 'GET',
+        url: `${process.env.NEXT_PUBLIC_API_ROOT}/api/statistic/lifetimesales`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+      axios
+        .request(options)
+        .then(function (response) {
+          // console.log(period)
+          setSalesData(response.data[0])
+          console.log(response.data[0])
+        })
+        .catch(function (error) {
+          console.error(error.response.data)
+        })
+    } catch (error) {
+      console.log('Error fetching data:', error)
+    }
   }
-  const [fetching, setFetching] = React.useState(true)
-  const { orders, total, completed_percentage, cancelled_percentage } = data
+
+  useEffect(() => {
+    handleGetLifeTimeSale()
+  }, [])
 
   const chartData = [
-    { name: 'Completed', value: completed_percentage },
-    { name: 'Cancelled', value: cancelled_percentage },
+    { name: 'Completed', value: salesData?.completedPercentage },
+    { name: 'Cancelled', value: salesData?.cancelledPercentage },
     {
       name: 'Others',
-      value: 100 - completed_percentage - cancelled_percentage
+      value: 100 - salesData?.completedPercentage - salesData?.cancelledPercentage
     }
   ]
   const renderCustomizedLabel = ({
@@ -40,10 +62,7 @@ export default function LifetimeSale({ api }) {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5
     const x = cx + radius * Math.cos(-midAngle * RADIAN)
     const y = cy + radius * Math.sin(-midAngle * RADIAN)
-    console.log(
-      '{ cx, cy, midAngle, innerRadius, outerRadius, percent, index }',
-      { cx, cy, midAngle, innerRadius, outerRadius, percent, index, rests }
-    )
+
     return (
       <text
         x={x}
@@ -57,43 +76,19 @@ export default function LifetimeSale({ api }) {
     )
   }
 
-  //   if (window !== undefined) {
-  //     fetch(api, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       }
-  //     })
-  //       .then((response) => response.json())
-  //       .then((json) => {
-  //         setData(json);
-  //         setFetching(false);
-  //       })
-  //       .catch((error) => {
-  //         toast.error(error.message);
-  //       });
-  //   }
-  // }, []);
+  const addDotsToNumber = (number) => {
+    if (number) {
+      const numberString = number.toString()
+      const length = numberString.length
+      let result = ''
+      for (let i = 0; i < length; i++) {
+        result += numberString[i]
+        if ((length - i - 1) % 3 === 0 && i !== length - 1) result += '.'
+      }
+      return result
+    }
+  }
 
-  // if (fetching) {
-  //   return (
-  //     <Card title="Lifetime Sales">
-  //       <Card.Session>
-  //         <div className="skeleton-wrapper-lifetime">
-  //           <div className="skeleton" />
-  //           <div className="skeleton" />
-  //           <div className="skeleton" />
-  //           <div className="skeleton" />
-  //         </div>
-  //       </Card.Session>
-  //       <Card.Session>
-  //         <div className="skeleton-wrapper-lifetime">
-  //           <div className="skeleton-chart" />
-  //         </div>
-  //       </Card.Session>
-  //     </Card>
-  //   );
-  // } else {
   return (
     <div className="w-full h-full space-y-4">
       <Card title="Lifetime Sales">
@@ -101,22 +96,22 @@ export default function LifetimeSale({ api }) {
           <div className="grid grid-cols-1 gap-1">
             <div className="flex space-x-2 items-center">
               <Dot color="#a4e8f2" />
-              <div className="self-center text-sm">{orders} orders</div>
+              <div className="self-center text-sm">{salesData?.totalOrders} orders</div>
             </div>
             <div className="flex space-x-2 items-center">
               <Dot color="#a4e8f2" />
-              <div className="self-center text-sm">{total} lifetime sale</div>
+              <div className="self-center text-sm">{addDotsToNumber(salesData?.totalSales)}đ lifetime sale</div>
             </div>
             <div className="flex space-x-2 items-center">
               <Dot color="#aee9d1" />
               <div className="self-center text-sm">
-                {completed_percentage}% of orders completed
+                {salesData?.completedPercentage}% of orders completed
               </div>
             </div>
             <div className="flex space-x-2 items-center">
               <Dot color="#fed3d1" />
               <div className="self-center text-sm">
-                {cancelled_percentage}% of orders cancelled
+                {salesData?.cancelledPercentage}% of orders cancelled
               </div>
             </div>
           </div>
@@ -138,7 +133,6 @@ export default function LifetimeSale({ api }) {
                   dataKey="value"
                 >
                   {
-                    // eslint-disable-next-line react/no-array-index-key
                     chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}

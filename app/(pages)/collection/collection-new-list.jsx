@@ -2,7 +2,7 @@ import CardBanner from '../../../components/card/card-banner'
 import { Button } from '@/components/ui/button'
 import CardProductTest from '../../../components/card/card-product-test'
 
-const CollectionNewList = ({ data, response }) => {
+const CollectionNewList = ({ data, response, handleGetData }) => {
   return (
     <div className="max-w-full px-[30px] not-italic">
       <h2 className="text-[2.875rem] font-[600] mb-[30px]">Sản phẩm mới</h2>
@@ -22,7 +22,7 @@ const CollectionNewList = ({ data, response }) => {
           <Button
             variant="outline"
             className="rounded-[1.5rem] bg-black text-white uppercase h-[45px] py-[0.875rem] px-[2.875rem] font-[700] hover:bg-gray-300/60 hover:text-black"
-            onClick={() => handleGetDoTheThao(response.nextPage)}
+            onClick={() => handleGetData(response.nextPage)}
           >
             Xem thêm
           </Button>

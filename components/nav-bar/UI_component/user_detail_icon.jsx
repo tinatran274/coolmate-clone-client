@@ -1,17 +1,18 @@
 'use client'
-
-import Link from 'next/link'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Drawer, Steps, Col, Row } from 'antd'
+import { Drawer, Steps } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import { Button } from '@/components/ui/button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { IoIosLogOut } from 'react-icons/io'
+import { postApi } from '@/lib/fetch'
+import { resetUser } from '../../../redux/user/userSlice'
 
 export function UserDetailIcon() {
   const user = useSelector((state) => state.user)
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
   const [isHovered, setIsHovered] = useState(false)
 
   const handleSignIn = () => {
@@ -34,18 +35,33 @@ export function UserDetailIcon() {
   const handleMoveToUserDetail = () => {
     router.push('/account')
   }
-
+  const handleLogout = async () => {
+    const res = await postApi({ endPoint: '/api/auth/logout' })
+    if (res.status === 200) {
+      localStorage.removeItem('token')
+      dispatch(resetUser())
+      onClose()
+    }
+  }
   return (
     <div>
       <UserOutlined
         className="text-white text-3xl"
-        onClick={() => (!user?.token ? handleSignIn() : showDrawer())}
+        onClick={() =>
+          !localStorage.getItem('token') ? handleSignIn() : showDrawer()
+        }
       />
       <Drawer
         title={
-          <h2 style={{ fontSize: 40 }} className="uppercase">
-            HI, {user.name ? user.name : user.username}
-          </h2>
+          <div className="flex items-center">
+            <h2 style={{ fontSize: 40 }} className="uppercase">
+              HI, {user.name ? user.name : user.username}
+            </h2>
+            <IoIosLogOut
+              className="ml-auto text-rose-500 h-10 w-10 mr-10 cursor-pointer"
+              onClick={handleLogout}
+            />
+          </div>
         }
         placement="right"
         onClose={onClose}
@@ -72,7 +88,10 @@ export function UserDetailIcon() {
         <div className="bg-gray-100 px-4 py-6 mx-8 rounded-md">
           <p className="my-2">Chi tiêu thêm</p>
           <p className="font-bold text-blue-700 text-2xl my-2">500.000đ</p>
-          <div className="flex my-2 items-center">
+          <div
+            className="flex my-2 items-center cursor-pointer"
+            onClick={() => router.push('/account')}
+          >
             <p className="">để lên hạng </p>
             <img
               className="h-8 object-contain ml-1"
@@ -129,21 +148,30 @@ export function UserDetailIcon() {
         </div>
         <div className="mx-4 mt-4 mb-20">
           <div className="flex px-4 justify-between">
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip1_59.png"
               />
               <p className="w-20 mt-1 text-center">Ví voucher</p>
             </div>
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip0_18.png"
               />
               <p className="w-20 mt-1 text-center">Lịch sử đơn hàng</p>
             </div>
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip2_76.png"
@@ -152,21 +180,30 @@ export function UserDetailIcon() {
             </div>
           </div>
           <div className="flex px-4 py-4 justify-between">
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip6_34.png"
               />
               <p className="w-20 mt-1 text-center">Cài đặt tài khoản</p>
             </div>
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip3_71.png"
               />
               <p className="w-20 mt-1 text-center">Đánh giá và phản hồi</p>
             </div>
-            <div className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center">
+            <div
+              className="bg-gray-100 px-10 py-4 rounded-md flex flex-col items-center cursor-pointer"
+              onClick={() => router.push('/account')}
+            >
               <img
                 className="w-10 object-contain"
                 src="https://mcdn.coolmate.me/image/September2023/mceclip5_95.png"

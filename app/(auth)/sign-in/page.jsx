@@ -1,20 +1,35 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import axios from 'axios'
 import Loading from '@/components/ui/loading'
 import { useDispatch } from 'react-redux'
 import { notification } from 'antd'
 import { updateUser } from '../../../redux/user/userSlice'
+import { GoogleSVG } from '../../../public/google'
 
 const SignIn = () => {
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [api, contextHolder] = notification.useNotification()
+  const param = useSearchParams()
+  useEffect(() => {
+    const signInGG = async () => {
+      setLoading(true)
+      const token = param.get('token')
+      const isAdmin = param.get('isAdmin')
+      localStorage.setItem('token', token)
+      await handleGetDetailUser({ token, isAdmin })
+      router.push('/')
+    }
+    if (param.get('token') && param.get('isAdmin')) {
+      signInGG()
+    }
+  }, [param])
   const openNotification = (description) => {
     api.info({
       message: `Notification`,
@@ -66,17 +81,20 @@ const SignIn = () => {
         }
       }
     )
-    dispatch(updateUser({ ...res?.data, isAdmin, password, token }))
+    dispatch(updateUser({ ...res?.data, isAdmin, password }))
   }
   const handleSignUp = () => {
     router.push('/sign-up')
   }
-
+  const handleSignInGoogle = () => {
+    setLoading(true)
+    router.replace('https://localhost:7107/api/auth/google-login')
+  }
   return (
     <Loading isLoading={loading}>
       {contextHolder}
       <div className="flex items-center justify-center bg-white">
-        <div className="w-1/2 p-20 m-10 rounded-lg shadow-md">
+        <div className="w-1/2 px-20 pt-20 pb-[50px] m-10 rounded-lg shadow-md">
           <div className="flex justify-center items-center">
             <Image
               src="/images/img_logo.png"
@@ -110,7 +128,6 @@ const SignIn = () => {
               onChange={handleOnchangePassword}
             />
           </div>
-
           <div className="flex justify-between items-center">
             <p
               className="text-link cursor-pointer"
@@ -130,6 +147,14 @@ const SignIn = () => {
             <p>Bạn chưa có tài khoản?</p>
             <div className="text-link cursor-pointer" onClick={handleSignUp}>
               Đăng ký
+            </div>
+          </div>
+          <div className="w-full h-fit flex justify-center">
+            <div
+              className="cursor-pointer mt-5 p-4"
+              onClick={handleSignInGoogle}
+            >
+              <GoogleSVG />
             </div>
           </div>
         </div>

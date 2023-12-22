@@ -1,3 +1,4 @@
+'use client'
 import UpdateAddress from './update-address-modal'
 import { deleteApi, postApi } from '@/lib/fetch'
 import { useSelector } from 'react-redux'

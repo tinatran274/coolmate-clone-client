@@ -3,18 +3,16 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { AiFillStar } from 'react-icons/ai'
+import { useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { notification, Space } from 'antd'
+import { notification } from 'antd'
 
 const CardProductTest = (props) => {
   const router = useRouter()
   const [isHover, setIsHover] = useState(false)
   const { product } = props
   const [productItem, setProductItem] = useState(product.productItems[0])
-
   const [api, contextHolder] = notification.useNotification()
   const openNotificationWithIcon = (type, content) => {
     api[type]({
@@ -124,24 +122,14 @@ const CardProductTest = (props) => {
                 onMouseLeave={() => setIsHover(false)}
               />
             </AspectRatio>
-            <div className="absolute top-[0.625rem] left-[0.75rem] z-[2]">
-              <div className="flex items-center mx-[-3px]">
-                <div>4.8</div>
-                <div>
-                  <AiFillStar className="w-[12px] h-[10px] mx-[2px]" />
-                </div>
-                <div className="text-[14px] font-bold tracking-[0.03rem] text-[#2f5acf]">
-                  (40)
-                </div>
-              </div>
-            </div>
+
             <span
               className="absolute top-[0.625rem] right-[0.75rem] text-white bg-[#2f5acf]
           rounded-[5px] px-[10px] font-bold z-[2] text-[0.625rem] h-[22px] justify-center items-center flex capitalize"
             >
               Mới
             </span>
-            {productItem.sizes ? (
+            {productItem?.sizes ? (
               <div
                 className="absolute bottom-[1.5rem] left-[9%] max-w-[calc(100%-3rem)] w-full
             lg:visible opacity-0 backdrop-blur-[20px] group-hover:opacity-100
@@ -216,8 +204,10 @@ const CardProductTest = (props) => {
               {productItem.color}
             </p>
             <div className="flex flex-row-reverse justify-end text-sm font-[400]">
-              <span className="text-red-500 ml-[10px]">-8%</span>
-              <del className="text-[#c4c4c4]">{product.priceStr}</del>
+              <span className="text-red-500 ml-[10px]">-0%</span>
+              <del className="text-[#c4c4c4]">
+                {addDotsToNumber(product.priceInt)}đ
+              </del>
               <ins className="text-[#000] mr-[14px] font-[700] no-underline">
                 {addDotsToNumber(product.priceInt)}đ
               </ins>

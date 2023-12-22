@@ -201,7 +201,10 @@ const CreateProduct = () => {
       axios({
         method: 'post',
         url: 'https://localhost:7107/api/product/add',
-        data: newProduct
+        data: newProduct,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
         // data: {
         //   Name: productName,
         //   PriceInt: costProduct,

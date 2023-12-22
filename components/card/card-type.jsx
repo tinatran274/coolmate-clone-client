@@ -5,11 +5,14 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const CardType = ({ category }) => {
+const CardType = ({ category, setFilter }) => {
   const [isHover, setIsHover] = useState(false)
 
   return (
-    <div className="px-[16px] overflow-y-hidden overflow-x-auto w-[250px]">
+    <div
+      className="px-[16px] cursor-pointer overflow-y-hidden overflow-x-auto w-[250px]"
+      onClick={() => setFilter(category.slug)}
+    >
       <AspectRatio ratio={9 / 16}>
         <div className=" flex flex-col h-[485px] w-full">
           <AspectRatio ratio={9 / 16} className="flex flex-col h-full">

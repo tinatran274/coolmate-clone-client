@@ -35,6 +35,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { notification } from 'antd'
 import { updateUser } from '../../../redux/user/userSlice'
+import localStorage from 'redux-persist/es/storage'
 
 function Info() {
   const user = useSelector((state) => state.user)
@@ -82,7 +83,7 @@ function Info() {
         },
         {
           headers: {
-            Authorization: `Bearer ${user.token}`
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         }
       )
@@ -168,7 +169,7 @@ function Info() {
           },
           {
             headers: {
-              Authorization: `Bearer ${user.token}`
+              Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           }
         )
